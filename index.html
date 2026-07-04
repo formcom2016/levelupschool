@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EduVerse · Level Up Your Mind</title>
+<meta name="description" content="EduVerse CE1 — apprends les mathématiques en explorant un univers de missions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+<!-- Fond spatial -->
+<div class="space-bg" id="spaceBg"><div class="planet"></div></div>
+
+<!-- Dégradés SVG partagés -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="pathGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22D3EE"/><stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="donutGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22C55E"/><stop offset="1" stop-color="#86EFAC"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div id="app">
+
+  <!-- ═══════════ ÉCRAN CONNEXION ═══════════ -->
+  <section class="screen" id="screen-login">
+    <div class="login-wrap">
+      <div class="login-logo"><span class="edu">EDU</span>VERSE</div>
+      <div class="login-tag">Level Up Your Mind</div>
+      <div class="login-card">
+        <p class="login-label">Ton prénom d'explorateur</p>
+        <input class="login-input" id="loginName" maxlength="14" placeholder="Ex : Ali" autocomplete="off">
+        <p class="login-label">Choisis ton avatar</p>
+        <div class="avatar-grid" id="avatarGrid"></div>
+        <button class="btn btn-gold btn-block" id="btnStart">🚀 C'est parti !</button>
+        <p class="login-note">Ta progression est enregistrée sur cet appareil.<br>Version démo · Classe de CE1</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ÉCRAN ACCUEIL (CARTE) ═══════════ -->
+  <section class="screen" id="screen-home">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-name"><span class="edu">EDU</span><span class="verse">VERSE</span></div>
+        <div class="brand-tag">Level Up Your Mind</div>
+      </div>
+      <div class="player-chip">
+        <div class="avatar-bubble" id="homeAvatar">🦊</div>
+        <div class="player-meta">
+          <div class="player-name" id="homeName">—</div>
+          <div class="player-level" id="homeLevel">Niveau 1</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="statbar">
+      <div class="xp-track">
+        <div class="xp-track-top"><span>XP <b id="homeXp">0</b></span><span id="homeXpNext">0 / 200</span></div>
+        <div class="bar"><i id="homeXpBar" style="width:0%"></i></div>
+      </div>
+      <div class="stat-pill stat-coins"><span class="ico">🪙</span><span id="homeCoins">0</span><span class="lbl">pièces</span></div>
+      <div class="stat-pill stat-lives"><span class="ico">❤️</span><span id="homeLives">5/5</span><span class="lbl">vies</span></div>
+      <button class="btn-recharge" id="btnRecharge" style="display:none">⚡ Recharger (démo)</button>
+    </div>
+
+    <div class="hero-banner">
+      <h1>Bienvenue dans ton univers</h1>
+      <p>Choisis ta prochaine mission</p>
+    </div>
+
+    <div class="universe">
+      <svg class="paths-svg" viewBox="0 0 900 420" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M150,105 C 280,180 380,200 450,225"/>
+        <path d="M450,105 C 450,150 450,185 450,215"/>
+        <path d="M750,105 C 620,180 520,200 450,225"/>
+        <path d="M150,340 C 280,300 380,265 450,240"/>
+        <path d="M750,340 C 620,300 520,265 450,240"/>
+      </svg>
+      <div class="islands" id="islandsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ÉCRAN MONDE MATHS ═══════════ -->
+  <section class="screen" id="screen-world">
+    <div class="back-row">
+      <button class="btn-back" data-nav="home">← Retour</button>
+      <div>
+        <div class="screen-title">🏰 Monde des Mathématiques</div>
+        <div class="screen-sub">Chaque mission : 10 questions · Gagne 2 étoiles ⭐⭐ pour débloquer le niveau suivant</div>
+      </div>
+    </div>
+    <div class="comp-grid" id="compGrid"></div>
+  </section>
+
+  <!-- ═══════════ ÉCRAN MISSION ═══════════ -->
+  <section class="screen" id="screen-mission">
+    <div class="mission-top">
+      <button class="btn-back" id="btnQuitMission">← Quitter</button>
+      <div class="mission-tag" id="missionTag">MISSION</div>
+      <div class="lives-row" id="missionLives"></div>
+    </div>
+    <div class="mission-progress">
+      <span class="qcount" id="qCount">QUESTION 1 / 10</span>
+      <div class="bar"><i id="qBar" style="width:0%"></i></div>
+    </div>
+
+    <div class="mission-layout">
+      <div class="q-card">
+        <div class="q-text" id="qText">…</div>
+        <div class="q-visual" id="qVisual" style="display:none"></div>
+        <div class="answers" id="answers"></div>
+        <div class="feedback" id="feedback"><span id="feedbackTxt"></span><span class="fxp" id="feedbackXp"></span></div>
+      </div>
+      <div class="timer-wrap">
+        <div class="timer-box">
+          <svg class="timer-svg" viewBox="0 0 88 88">
+            <circle class="track" cx="44" cy="44" r="38"/>
+            <circle class="prog" id="timerCircle" cx="44" cy="44" r="38"/>
+          </svg>
+          <div class="timer-num" id="timerNum">20</div>
+        </div>
+        <div class="timer-lbl">Temps</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ÉCRAN RÉSULTAT ═══════════ -->
+  <section class="screen" id="screen-result">
+    <div class="result-wrap">
+      <div class="result-title" id="resultTitle">Mission terminée !</div>
+      <div class="medal">
+        <div class="hex"></div>
+        <div class="medal-stars" id="resultStars">⭐⭐⭐</div>
+      </div>
+      <div class="result-msg" id="resultMsg">Excellent travail !</div>
+      <div class="result-score" id="resultScore">Tu as réussi 9 questions sur 10 · Tu as gagné :</div>
+      <div class="reward-row">
+        <div class="reward-card"><div class="reward-lbl">XP</div><div class="reward-val" style="color:var(--gold)" id="rewXp">+0</div></div>
+        <div class="reward-card"><div class="reward-lbl">Pièces</div><div class="reward-val" style="color:var(--gold2)" id="rewCoins">+0</div></div>
+        <div class="reward-card" id="rewLifeCard" style="display:none"><div class="reward-lbl">Vie</div><div class="reward-val" style="color:var(--red)">+1 ❤️</div></div>
+      </div>
+      <div class="badge-toast" id="badgeToast">🏅 Nouveau badge : <b id="badgeName"></b></div>
+      <div class="result-actions">
+        <button class="btn btn-ghost" id="btnReview">Revoir les réponses</button>
+        <button class="btn btn-gold" id="btnContinue">Continuer</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ÉCRAN PROFIL ═══════════ -->
+  <section class="screen" id="screen-profil">
+    <div class="back-row">
+      <div>
+        <div class="screen-title">👤 Mon profil</div>
+        <div class="screen-sub" id="profilSub">Élève · CE1</div>
+      </div>
+    </div>
+    <div class="profil-grid">
+      <div class="panel">
+        <div class="panel-title">Progression globale</div>
+        <div class="donut-row">
+          <div class="donut-box">
+            <svg viewBox="0 0 110 110">
+              <circle class="track" cx="55" cy="55" r="46"/>
+              <circle class="prog" id="donutProg" cx="55" cy="55" r="46"/>
+            </svg>
+            <div class="donut-num" id="donutNum">0%</div>
+          </div>
+          <div class="donut-msg"><b id="donutBravo">Bravo !</b><span id="donutTxt">Continue tes missions pour progresser.</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Compétences · Mathématiques</div>
+        <div id="skillsList"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Récompenses</div>
+        <div class="badges-grid" id="badgesGrid"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Mon aventure</div>
+        <div id="histList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ÉCRAN CLASSEMENT ═══════════ -->
+  <section class="screen" id="screen-classement">
+    <div class="back-row">
+      <div>
+        <div class="screen-title">🏆 Classement des explorateurs</div>
+        <div class="screen-sub">Classe de CE1 · Cette semaine</div>
+      </div>
+    </div>
+    <div class="podium" id="podium"></div>
+    <div class="rank-list" id="rankList"></div>
+  </section>
+
+</div>
+
+<!-- Navigation basse -->
+<nav class="bottom-nav" id="bottomNav" style="display:none">
+  <button class="nav-btn active" data-nav="home"><span class="n-ico">🏠</span><span class="n-lbl">Accueil</span></button>
+  <button class="nav-btn" data-nav="world"><span class="n-ico">🎯</span><span class="n-lbl">Missions</span></button>
+  <button class="nav-btn" data-nav="classement"><span class="n-ico">🏆</span><span class="n-lbl">Classement</span></button>
+  <button class="nav-btn" data-nav="profil"><span class="n-ico">👤</span><span class="n-lbl">Profil</span></button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

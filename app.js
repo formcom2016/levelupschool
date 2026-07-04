@@ -145,9 +145,18 @@ function speak(text){
 
 // ── API BACKEND (Apps Script) ──────────────────────────────
 function api(params){
-  var p = new URLSearchParams(params);
-  return fetch(CONFIG.APPS_URL + '?' + p.toString())
-    .then(function(r){ return r.json(); });
+  return new Promise(function(resolve, reject){
+    var id = 'cb_' + Math.random().toString(36).slice(2);
+    var p = new URLSearchParams(params);
+    p.set('callback', id);
+    var s = document.createElement('script');
+    s.src = CONFIG.APPS_URL + '?' + p.toString();
+    s.onerror = function(){ cleanup(); reject(new Error('JSONP error')); };
+    var timer = setTimeout(function(){ cleanup(); reject(new Error('JSONP timeout')); }, 12000);
+    window[id] = function(data){ cleanup(); resolve(data); };
+    function cleanup(){ clearTimeout(timer); delete window[id]; if(s.parentNode) s.parentNode.removeChild(s); }
+    document.head.appendChild(s);
+  });
 }
 function stateFromServer(el){
   var classe = el.classe || 'ce1';

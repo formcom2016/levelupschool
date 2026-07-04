@@ -1,16 +1,15 @@
 /* ═══════════════════════════════════════════════════════════
-   EDUVERSE CE1 — Logique du jeu (version démo)
-   Sauvegarde locale (localStorage). Le code est structuré
-   pour brancher plus tard un backend Google Apps Script :
-   voir les fonctions apiSave() / apiLoad() en bas de fichier.
+   EDUVERSE — Logique du jeu · v2 multi-niveaux + backend
+   Deux modes :
+   · DÉMO  (APPS_URL vide)      → tout en local, classement fictif
+   · EN LIGNE (APPS_URL rempli) → connexion code+PIN, classement réel,
+     progression synchronisée avec Google Sheets via Apps Script
    ═══════════════════════════════════════════════════════════ */
 
 // ── CONFIGURATION ──────────────────────────────────────────
 var CONFIG = {
-  DEMO_MODE: true,          // true = sauvegarde locale uniquement
-  APPS_URL: '',             // URL Apps Script à renseigner en phase 2
+  APPS_URL: '',             // ← coller ici l'URL /exec du script Google (phase en ligne)
   QUESTIONS_PAR_MISSION: 10,
-  TEMPS_PAR_QUESTION: 20,   // secondes
   XP_BONNE_REPONSE: 10,
   XP_BONUS_PARFAIT: 20,
   XP_BONUS_DEFI: 100,
@@ -19,73 +18,88 @@ var CONFIG = {
   XP_PAR_NIVEAU: 200,
   VIES_MAX: 5
 };
+function isOnline(){ return !!CONFIG.APPS_URL; }
 
 // ── DONNÉES DE RÉFÉRENCE ───────────────────────────────────
 var AVATARS = ['🦊','🐱','🐼','🦁','🐸','🦄','🤖','👾','🧑‍🚀','🐯'];
 
-var MATIERES = [
-  { key: 'maths',    nom: 'Mathématiques', unlocked: true,  art: 'crystal' },
-  { key: 'francais', nom: 'Français',      unlocked: false, art: 'tower'   },
-  { key: 'sciences', nom: 'Sciences',      unlocked: false, art: 'dome'    },
-  { key: 'histoire', nom: 'Histoire',      unlocked: false, art: 'castle'  },
-  { key: 'arabe',    nom: 'Arabe',         unlocked: false, art: 'minaret' }
+var CLASSES = [
+  { key: 'gs',        label: 'Grande Section' },
+  { key: 'ce1',       label: 'CE1' },
+  { key: 'cm2',       label: 'CM2' },
+  { key: 'sixieme',   label: '6e' },
+  { key: 'quatrieme', label: '4e' },
+  { key: 'seconde',   label: 'Seconde' }
 ];
-
-var COMPETENCES = [
-  { key: 'addition',       nom: 'Addition',          ico: '➕' },
-  { key: 'soustraction',   nom: 'Soustraction',      ico: '➖' },
-  { key: 'multiplication', nom: 'Multiplication',    ico: '✖️' },
-  { key: 'doubles',        nom: 'Doubles & moitiés', ico: '🪞' },
-  { key: 'problemes',      nom: 'Petits problèmes',  ico: '🧩' },
-  { key: 'geometrie',      nom: 'Géométrie',         ico: '📐' }
-];
+function classeLabel(k){
+  var c = CLASSES.filter(function(x){ return x.key === k; })[0];
+  return c ? c.label : k;
+}
 
 var BADGES = [
-  { key: 'premiere',  nom: 'Première mission', ico: '🚀' },
-  { key: 'parfait',   nom: 'Sans-faute',       ico: '💯' },
-  { key: 'trois',     nom: '3 étoiles',        ico: '🌟' },
-  { key: 'serie5',    nom: 'Série de 5',       ico: '🔥' },
-  { key: 'defi',      nom: 'Défi quotidien',   ico: '⚡' },
-  { key: 'xp500',     nom: '500 XP',           ico: '🏅' },
-  { key: 'niveau3',   nom: 'Niveau 3 atteint', ico: '👑' },
-  { key: 'explorateur', nom: '10 missions',    ico: '🗺️' }
+  { key: 'premiere',    nom: 'Première mission', ico: '🚀' },
+  { key: 'parfait',     nom: 'Sans-faute',       ico: '💯' },
+  { key: 'trois',       nom: '3 étoiles',        ico: '🌟' },
+  { key: 'serie5',      nom: 'Série de 5',       ico: '🔥' },
+  { key: 'defi',        nom: 'Défi quotidien',   ico: '⚡' },
+  { key: 'xp500',       nom: '500 XP',           ico: '🏅' },
+  { key: 'niveau3',     nom: 'Niveau 3 atteint', ico: '👑' },
+  { key: 'explorateur', nom: '10 missions',      ico: '🗺️' }
 ];
 
-var BOTS = [
-  { nom: 'Yassine', ava: '🐺', xp: 2540 },
-  { nom: 'Salma',   ava: '🦋', xp: 2120 },
-  { nom: 'Imane',   ava: '🐨', xp: 1980 },
-  { nom: 'Adam',    ava: '🦖', xp: 980 },
-  { nom: 'Nour',    ava: '🐬', xp: 870 },
-  { nom: 'Lina',    ava: '🐰', xp: 640 },
-  { nom: 'Rayan',   ava: '🐢', xp: 310 }
+var BOTS = [ // classement fictif du mode démo uniquement
+  { nom: 'Yassine', ava: '🐺', xp: 2540, classe: 'sixieme' },
+  { nom: 'Salma',   ava: '🦋', xp: 2120, classe: 'cm2' },
+  { nom: 'Imane',   ava: '🐨', xp: 1980, classe: 'ce1' },
+  { nom: 'Adam',    ava: '🦖', xp: 980,  classe: 'quatrieme' },
+  { nom: 'Nour',    ava: '🐬', xp: 870,  classe: 'seconde' },
+  { nom: 'Lina',    ava: '🐰', xp: 640,  classe: 'gs' },
+  { nom: 'Rayan',   ava: '🐢', xp: 310,  classe: 'ce1' }
 ];
 
 // ── ÉTAT DU JOUEUR ─────────────────────────────────────────
 var state = null;
+var session = null; // { id, pin } en mode en ligne
 
-function defaultState(){
+function prog(){ return EDU_QUESTIONS.programme(state.classe); }
+function competences(){ return prog().comps; }
+
+function defaultComps(classe){
   var comps = {};
-  COMPETENCES.forEach(function(c){
-    comps[c.key] = { niveau: 1, etoiles: [0, 0, 0] }; // meilleures étoiles par niveau
+  EDU_QUESTIONS.programme(classe).comps.forEach(function(c){
+    comps[c.key] = { niveau: 1, etoiles: [0, 0, 0] };
   });
+  return comps;
+}
+function defaultState(classe){
   return {
-    prenom: '', avatar: AVATARS[0],
+    prenom: '', avatar: AVATARS[0], classe: classe || 'ce1',
     xp: 0, pieces: 0, vies: CONFIG.VIES_MAX,
-    comps: comps, badges: [], missions: 0,
-    dailyDone: '', history: []
+    comps: defaultComps(classe || 'ce1'), badges: [], missions: 0,
+    dailyDone: '', lastDay: '', history: []
   };
 }
 function saveState(){
-  try { localStorage.setItem('eduverse_ce1', JSON.stringify(state)); } catch(e){}
-  if(!CONFIG.DEMO_MODE) apiSave();
+  try { localStorage.setItem('eduverse_save', JSON.stringify(state)); } catch(e){}
 }
 function loadState(){
   try {
-    var raw = localStorage.getItem('eduverse_ce1');
+    var raw = localStorage.getItem('eduverse_save');
     if(raw) return JSON.parse(raw);
   } catch(e){}
   return null;
+}
+function saveSession(){ try { localStorage.setItem('eduverse_session', JSON.stringify(session)); } catch(e){} }
+function loadSession(){
+  try {
+    var raw = localStorage.getItem('eduverse_session');
+    if(raw) return JSON.parse(raw);
+  } catch(e){}
+  return null;
+}
+function clearSession(){
+  session = null;
+  try { localStorage.removeItem('eduverse_session'); localStorage.removeItem('eduverse_save'); } catch(e){}
 }
 
 // ── OUTILS ─────────────────────────────────────────────────
@@ -93,20 +107,21 @@ function $(id){ return document.getElementById(id); }
 function todayStr(){ return new Date().toISOString().slice(0, 10); }
 function playerLevel(){ return Math.floor(state.xp / CONFIG.XP_PAR_NIVEAU) + 1; }
 function compPct(key){
-  var e = state.comps[key].etoiles;
-  return Math.round((e[0] + e[1] + e[2]) / 9 * 100);
+  var c = state.comps[key];
+  if(!c) return 0;
+  return Math.round((c.etoiles[0] + c.etoiles[1] + c.etoiles[2]) / 9 * 100);
 }
 function globalPct(){
-  var t = 0;
-  COMPETENCES.forEach(function(c){ t += compPct(c.key); });
-  return Math.round(t / COMPETENCES.length);
+  var t = 0, list = competences();
+  list.forEach(function(c){ t += compPct(c.key); });
+  return Math.round(t / list.length);
 }
 function toast(msg){
   var t = $('toast');
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(t._h);
-  t._h = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+  t._h = setTimeout(function(){ t.classList.remove('show'); }, 2800);
 }
 function fireConfetti(big){
   if(typeof confetti !== 'function') return;
@@ -116,6 +131,49 @@ function fireConfetti(big){
     confetti({ particleCount: 55, angle: 60, spread: 55, origin: { x: 0, y: .5 } });
     confetti({ particleCount: 55, angle: 120, spread: 55, origin: { x: 1, y: .5 } });
   }, 350);
+}
+// Lecture à voix haute (précieux pour GS/CE1)
+function speak(text){
+  try {
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'fr-FR'; u.rate = .92;
+    window.speechSynthesis.speak(u);
+  } catch(e){}
+}
+
+// ── API BACKEND (Apps Script) ──────────────────────────────
+function api(params){
+  var p = new URLSearchParams(params);
+  return fetch(CONFIG.APPS_URL + '?' + p.toString())
+    .then(function(r){ return r.json(); });
+}
+function stateFromServer(el){
+  var classe = el.classe || 'ce1';
+  var s = defaultState(classe);
+  s.prenom = el.prenom || '';
+  s.avatar = el.avatar || AVATARS[0];
+  s.classe = classe;
+  s.xp = parseInt(el.xp, 10) || 0;
+  s.pieces = parseInt(el.pieces, 10) || 0;
+  s.vies = CONFIG.VIES_MAX;
+  s.missions = parseInt(el.missions, 10) || 0;
+  s.dailyDone = el.dailyDone || '';
+  try { if(el.comps) s.comps = Object.assign(defaultComps(classe), JSON.parse(el.comps)); } catch(e){}
+  try { if(el.badges) s.badges = JSON.parse(el.badges); } catch(e){}
+  try { if(el.history) s.history = JSON.parse(el.history); } catch(e){}
+  return s;
+}
+function apiSaveProgress(detail, xpGain){
+  if(!isOnline() || !session) return Promise.resolve();
+  return api({
+    action: 'save', id: session.id, pin: session.pin,
+    xp: state.xp, pieces: state.pieces, missions: state.missions,
+    comps: JSON.stringify(state.comps), badges: JSON.stringify(state.badges),
+    history: JSON.stringify(state.history.slice(0, 12)),
+    dailyDone: state.dailyDone, detail: detail || '', xpGain: xpGain || 0
+  }).catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────
@@ -152,13 +210,17 @@ document.addEventListener('click', function(e){
 
 // ── ÉCRAN LOGIN ────────────────────────────────────────────
 var selAvatar = AVATARS[0];
-(function initLogin(){
+var selClasse = 'ce1';
+
+function initLoginDemo(){
+  $('loginDemo').style.display = 'block';
+  $('loginOnline').style.display = 'none';
   var grid = $('avatarGrid');
+  grid.innerHTML = '';
   AVATARS.forEach(function(a, i){
     var b = document.createElement('button');
     b.className = 'avatar-opt' + (i === 0 ? ' sel' : '');
     b.textContent = a;
-    b.setAttribute('aria-label', 'Avatar ' + a);
     b.onclick = function(){
       selAvatar = a;
       grid.querySelectorAll('.avatar-opt').forEach(function(x){ x.classList.remove('sel'); });
@@ -166,20 +228,66 @@ var selAvatar = AVATARS[0];
     };
     grid.appendChild(b);
   });
-  $('btnStart').onclick = function(){
-    var name = $('loginName').value.trim();
-    if(!name){ toast('Écris ton prénom pour commencer !'); $('loginName').focus(); return; }
-    state = defaultState();
-    state.prenom = name.charAt(0).toUpperCase() + name.slice(1);
-    state.avatar = selAvatar;
+  var cg = $('classeGrid');
+  cg.innerHTML = '';
+  CLASSES.forEach(function(c, i){
+    var b = document.createElement('button');
+    b.className = 'classe-opt' + (c.key === selClasse ? ' sel' : '');
+    b.textContent = c.label;
+    b.onclick = function(){
+      selClasse = c.key;
+      cg.querySelectorAll('.classe-opt').forEach(function(x){ x.classList.remove('sel'); });
+      b.classList.add('sel');
+    };
+    cg.appendChild(b);
+  });
+}
+function initLoginOnline(){
+  $('loginDemo').style.display = 'none';
+  $('loginOnline').style.display = 'block';
+  try {
+    var urlId = new URLSearchParams(window.location.search).get('id');
+    if(urlId) $('loginCode').value = urlId.toUpperCase();
+  } catch(e){}
+}
+
+$('btnStart').onclick = function(){
+  var name = $('loginName').value.trim();
+  if(!name){ toast('Écris ton prénom pour commencer !'); $('loginName').focus(); return; }
+  state = defaultState(selClasse);
+  state.prenom = name.charAt(0).toUpperCase() + name.slice(1);
+  state.avatar = selAvatar;
+  state.lastDay = todayStr();
+  saveState();
+  fireConfetti(false);
+  show('home');
+};
+$('loginName').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('btnStart').click(); });
+
+$('btnLoginOnline').onclick = function(){
+  var code = $('loginCode').value.trim().toUpperCase();
+  var pin = $('loginPin').value.trim();
+  if(!code || pin.length < 4){ toast('Entre ton code et ton PIN à 4 chiffres'); return; }
+  var btn = $('btnLoginOnline');
+  btn.disabled = true; btn.textContent = 'Connexion…';
+  api({ action: 'login', id: code, pin: pin }).then(function(res){
+    btn.disabled = false; btn.textContent = '🚀 Se connecter';
+    if(res.status !== 'ok'){ toast(res.message || 'Code ou PIN incorrect'); return; }
+    session = { id: code, pin: pin };
+    saveSession();
+    state = stateFromServer(res.eleve);
+    state.lastDay = todayStr();
     saveState();
     fireConfetti(false);
     show('home');
-  };
-  $('loginName').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('btnStart').click(); });
-})();
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = '🚀 Se connecter';
+    toast('Connexion impossible — vérifie ta connexion internet');
+  });
+};
+$('loginPin').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('btnLoginOnline').click(); });
 
-// ── ÎLES : petites silhouettes SVG ─────────────────────────
+// ── ÎLES SVG ───────────────────────────────────────────────
 function islandSvg(kind, active){
   var glow = active ? '#22D3EE' : '#4A5578';
   var body = active ? 'url(#islGrad)' : '#232B4A';
@@ -197,23 +305,30 @@ function islandSvg(kind, active){
     + '</svg>';
 }
 
+var MATIERES = [
+  { key: 'maths',    nom: 'Mathématiques', unlocked: true,  art: 'crystal' },
+  { key: 'francais', nom: 'Français',      unlocked: false, art: 'tower'   },
+  { key: 'sciences', nom: 'Sciences',      unlocked: false, art: 'dome'    },
+  { key: 'histoire', nom: 'Histoire',      unlocked: false, art: 'castle'  },
+  { key: 'arabe',    nom: 'Langues',       unlocked: false, art: 'minaret' }
+];
+
 // ── ÉCRAN ACCUEIL ──────────────────────────────────────────
 function renderHome(){
+  document.body.classList.toggle('cls-gs', state.classe === 'gs');
   $('homeAvatar').textContent = state.avatar;
   $('homeName').textContent = state.prenom;
-  $('homeLevel').textContent = 'Niveau ' + playerLevel() + ' · CE1';
+  $('homeLevel').textContent = 'Niveau ' + playerLevel() + ' · ' + classeLabel(state.classe);
   $('homeXp').textContent = state.xp.toLocaleString('fr-FR');
   var inLevel = state.xp % CONFIG.XP_PAR_NIVEAU;
   $('homeXpNext').textContent = inLevel + ' / ' + CONFIG.XP_PAR_NIVEAU;
   $('homeXpBar').style.width = (inLevel / CONFIG.XP_PAR_NIVEAU * 100) + '%';
   $('homeCoins').textContent = state.pieces;
   $('homeLives').textContent = state.vies + '/' + CONFIG.VIES_MAX;
-  $('btnRecharge').style.display = (CONFIG.DEMO_MODE && state.vies < CONFIG.VIES_MAX) ? 'inline-flex' : 'none';
+  $('btnRecharge').style.display = state.vies < CONFIG.VIES_MAX ? 'inline-flex' : 'none';
 
   var grid = $('islandsGrid');
   grid.innerHTML = '';
-
-  // Rangée 1 : Maths · Défi · Français — Rangée 2 : Histoire · Sciences · Arabe
   var order = [MATIERES[0], null, MATIERES[1], MATIERES[3], MATIERES[2], MATIERES[4]];
   order.forEach(function(m){
     if(m === null){
@@ -250,16 +365,18 @@ $('btnRecharge').onclick = function(e){
   toast('❤️ Vies rechargées !');
 };
 
-// ── ÉCRAN MONDE (compétences maths) ────────────────────────
+// ── ÉCRAN MONDE ────────────────────────────────────────────
 function starsStr(n){
   var out = '';
   for(var i = 1; i <= 3; i++) out += '<span class="' + (i <= n ? '' : 'off') + '">★</span>';
   return out;
 }
 function renderWorld(){
+  $('worldSub').textContent = classeLabel(state.classe)
+    + ' · Chaque mission : ' + CONFIG.QUESTIONS_PAR_MISSION + ' questions · Gagne 2 étoiles ⭐⭐ pour débloquer le niveau suivant';
   var grid = $('compGrid');
   grid.innerHTML = '';
-  COMPETENCES.forEach(function(c){
+  competences().forEach(function(c){
     var st = state.comps[c.key];
     var card = document.createElement('div');
     card.className = 'comp-card';
@@ -292,8 +409,12 @@ var timerHandle = null;
 
 function levelsSnapshot(){
   var out = {};
-  COMPETENCES.forEach(function(c){ out[c.key] = state.comps[c.key].niveau; });
+  competences().forEach(function(c){ out[c.key] = state.comps[c.key].niveau; });
   return out;
+}
+function compName(key){
+  var c = competences().filter(function(x){ return x.key === key; })[0];
+  return c ? c.nom : key;
 }
 
 function startMission(compKey, niveau){
@@ -303,16 +424,15 @@ function startMission(compKey, niveau){
   }
   var isDaily = compKey === 'daily';
   var questions = isDaily
-    ? EDU_QUESTIONS.buildDaily(levelsSnapshot(), CONFIG.QUESTIONS_PAR_MISSION)
-    : EDU_QUESTIONS.buildMission(compKey, niveau, CONFIG.QUESTIONS_PAR_MISSION);
+    ? EDU_QUESTIONS.buildDaily(state.classe, levelsSnapshot(), CONFIG.QUESTIONS_PAR_MISSION)
+    : EDU_QUESTIONS.buildMission(state.classe, compKey, niveau, CONFIG.QUESTIONS_PAR_MISSION);
 
   mission = {
     comp: compKey, niveau: niveau, daily: isDaily,
     questions: questions, index: 0, bonnes: 0, streak: 0, bestStreak: 0,
-    xp: 0, answers: [], startedAt: Date.now()
+    xp: 0, answers: []
   };
-  var compNom = isDaily ? 'Défi quotidien' : COMPETENCES.filter(function(c){ return c.key === compKey; })[0].nom;
-  $('missionTag').textContent = (isDaily ? '☄️ ' : '🎯 ') + compNom.toUpperCase() + (isDaily ? '' : ' · NIV. ' + niveau);
+  $('missionTag').textContent = (isDaily ? '☄️ DÉFI QUOTIDIEN' : '🎯 ' + compName(compKey).toUpperCase() + ' · NIV. ' + niveau);
   show('mission');
   renderQuestion();
 }
@@ -329,9 +449,11 @@ function renderLives(){
 }
 
 var TIMER_CIRC = 2 * Math.PI * 38;
+function tempsQuestion(){ return prog().temps || 20; }
 function startTimer(){
   stopTimer();
-  var left = CONFIG.TEMPS_PAR_QUESTION;
+  var total = tempsQuestion();
+  var left = total;
   var circle = $('timerCircle');
   circle.style.strokeDasharray = TIMER_CIRC;
   circle.style.strokeDashoffset = 0;
@@ -340,7 +462,7 @@ function startTimer(){
   timerHandle = setInterval(function(){
     left--;
     $('timerNum').textContent = Math.max(left, 0);
-    circle.style.strokeDashoffset = TIMER_CIRC * (1 - left / CONFIG.TEMPS_PAR_QUESTION);
+    circle.style.strokeDashoffset = TIMER_CIRC * (1 - left / total);
     if(left <= 5) circle.style.stroke = 'var(--red)';
     if(left <= 0){ stopTimer(); answer(-1); }
   }, 1000);
@@ -370,6 +492,9 @@ function renderQuestion(){
   fb.className = 'feedback';
   startTimer();
 }
+$('btnSpeak').onclick = function(){
+  if(mission) speak(mission.questions[mission.index].q);
+};
 
 function answer(idx){
   stopTimer();
@@ -443,7 +568,7 @@ function endMission(){
   }
   if(mission.bonnes >= 8 && state.vies < CONFIG.VIES_MAX){ state.vies++; gagneVie = true; }
 
-  // Étoiles + déblocage du niveau suivant
+  var detailMission = mission.daily ? 'Défi quotidien' : compName(mission.comp) + ' · Niv. ' + mission.niveau;
   if(!mission.daily){
     var st = state.comps[mission.comp];
     st.etoiles[mission.niveau - 1] = Math.max(st.etoiles[mission.niveau - 1], stars);
@@ -456,14 +581,9 @@ function endMission(){
   state.xp += xp;
   state.pieces += coins;
   state.missions++;
-  state.history.unshift({
-    date: todayStr(),
-    comp: mission.daily ? 'Défi quotidien' : COMPETENCES.filter(function(c){ return c.key === mission.comp; })[0].nom + ' · Niv. ' + mission.niveau,
-    score: mission.bonnes + '/' + total, xp: xp
-  });
+  state.history.unshift({ date: todayStr(), comp: detailMission, score: mission.bonnes + '/' + total, xp: xp });
   state.history = state.history.slice(0, 12);
 
-  // Badges
   function earn(k){ if(state.badges.indexOf(k) < 0){ state.badges.push(k); newBadges.push(k); } }
   if(state.missions === 1) earn('premiere');
   if(mission.bonnes === total) earn('parfait');
@@ -473,8 +593,8 @@ function endMission(){
   if(state.missions >= 10) earn('explorateur');
 
   saveState();
+  apiSaveProgress(detailMission + ' · ' + mission.bonnes + '/' + total, xp);
 
-  // Affichage
   $('resultTitle').textContent = mission.daily ? 'Défi terminé !' : 'Mission terminée !';
   $('resultStars').innerHTML = starsStr(stars);
   $('resultMsg').textContent = stars === 3 ? 'Excellent travail !' : stars === 2 ? 'Très beau vol, explorateur !'
@@ -520,7 +640,7 @@ $('btnReview').onclick = function(){
 // ── ÉCRAN PROFIL ───────────────────────────────────────────
 var DONUT_CIRC = 2 * Math.PI * 46;
 function renderProfil(){
-  $('profilSub').textContent = state.avatar + ' ' + state.prenom + ' · Élève CE1 · Niveau ' + playerLevel();
+  $('profilSub').textContent = state.avatar + ' ' + state.prenom + ' · Élève ' + classeLabel(state.classe) + ' · Niveau ' + playerLevel();
   var pct = globalPct();
   $('donutNum').textContent = pct + '%';
   var d = $('donutProg');
@@ -530,7 +650,7 @@ function renderProfil(){
   $('donutTxt').textContent = pct >= 60 ? 'Tu progresses très bien. Continue comme ça !'
     : 'Chaque mission te fait gagner des étoiles et des XP.';
 
-  $('skillsList').innerHTML = COMPETENCES.map(function(c){
+  $('skillsList').innerHTML = competences().map(function(c){
     var p = compPct(c.key);
     var col = p >= 70 ? '#22C55E' : p >= 40 ? '#F5C518' : '#FF7849';
     return '<div class="skill-row"><span class="skill-name">' + c.ico + ' ' + c.nom + '</span>'
@@ -551,15 +671,41 @@ function renderProfil(){
       }).join('')
     : '<div class="hist-row"><span class="hist-lbl">Lance ta première mission pour écrire ton histoire ! 🚀</span></div>';
 }
+$('btnLogout').onclick = function(){
+  if(confirm('Changer de joueur ? (la progression en ligne est conservée)')){
+    clearSession();
+    state = defaultState('ce1');
+    if(isOnline()) initLoginOnline(); else initLoginDemo();
+    show('login');
+  }
+};
 
 // ── ÉCRAN CLASSEMENT ───────────────────────────────────────
 function renderClassement(){
-  var all = BOTS.map(function(b){ return { nom: b.nom, ava: b.ava, xp: b.xp, me: false }; });
-  all.push({ nom: state.prenom, ava: state.avatar, xp: state.xp, me: true });
+  if(isOnline()){
+    $('rankList').innerHTML = '<div class="rank-row"><span class="rank-name">Chargement du classement… 📡</span></div>';
+    $('podium').innerHTML = '';
+    api({ action: 'leaderboard' }).then(function(res){
+      if(res.status !== 'ok'){ paintClassement(demoBoard()); return; }
+      var rows = res.eleves.map(function(e){
+        return { nom: e.prenom, ava: e.avatar || '🙂', xp: parseInt(e.xp, 10) || 0,
+                 classe: e.classe, me: session && e.id === session.id };
+      });
+      paintClassement(rows);
+    }).catch(function(){ paintClassement(demoBoard()); });
+  } else {
+    paintClassement(demoBoard());
+  }
+}
+function demoBoard(){
+  var all = BOTS.map(function(b){ return { nom: b.nom, ava: b.ava, xp: b.xp, classe: b.classe, me: false }; });
+  all.push({ nom: state.prenom, ava: state.avatar, xp: state.xp, classe: state.classe, me: true });
+  return all;
+}
+function paintClassement(all){
   all.sort(function(a, b){ return b.xp - a.xp; });
-
   var podium = $('podium');
-  var order = [1, 0, 2]; // 2e, 1er, 3e
+  var order = [1, 0, 2];
   podium.innerHTML = order.map(function(i){
     var p = all[i];
     if(!p) return '';
@@ -569,45 +715,54 @@ function renderClassement(){
       + '<div class="pod-xp">' + p.xp.toLocaleString('fr-FR') + ' XP</div>'
       + '<div class="pod-base">' + (i + 1) + '</div></div>';
   }).join('');
-
   $('rankList').innerHTML = all.slice(3).map(function(p, i){
     return '<div class="rank-row' + (p.me ? ' me' : '') + '">'
       + '<span class="rank-num">' + (i + 4) + '</span>'
       + '<span class="rank-ava">' + p.ava + '</span>'
-      + '<span class="rank-name">' + p.nom + (p.me ? ' (toi)' : '') + '<small>Niveau '
-      + (Math.floor(p.xp / CONFIG.XP_PAR_NIVEAU) + 1) + '</small></span>'
+      + '<span class="rank-name">' + p.nom + (p.me ? ' (toi)' : '') + '<small>'
+      + classeLabel(p.classe) + ' · Niveau ' + (Math.floor(p.xp / CONFIG.XP_PAR_NIVEAU) + 1) + '</small></span>'
       + '<span class="rank-xp">' + p.xp.toLocaleString('fr-FR') + ' XP</span></div>';
-  }).join('');
+  }).join('') || '<div class="rank-row"><span class="rank-name">Le classement se remplit dès que les explorateurs jouent !</span></div>';
 }
-
-// ── PHASE 2 : BACKEND GOOGLE SHEETS (préparé, inactif) ─────
-// Quand CONFIG.APPS_URL sera renseignée et DEMO_MODE = false,
-// ces fonctions synchroniseront la progression avec Apps Script
-// (même architecture ?action=... que Form'Com).
-function apiSave(){
-  if(!CONFIG.APPS_URL) return;
-  var p = new URLSearchParams({
-    action: 'saveProgress', prenom: state.prenom, xp: state.xp,
-    pieces: state.pieces, data: JSON.stringify(state.comps)
-  });
-  fetch(CONFIG.APPS_URL + '?' + p.toString()).catch(function(){});
-}
-function apiLoad(){ /* action=getProgress — à implémenter en phase 2 */ }
 
 // ── DÉMARRAGE ──────────────────────────────────────────────
 (function boot(){
+  session = loadSession();
   var saved = loadState();
-  if(saved && saved.prenom){
-    state = saved;
-    // Recharge quotidienne des vies
+
+  if(isOnline()){
+    if(session){
+      // reconnexion silencieuse : cache local puis rafraîchissement serveur
+      if(saved && saved.prenom){ state = saved; refreshDay(); show('home'); }
+      else { state = defaultState('ce1'); show('login'); initLoginOnline(); }
+      api({ action: 'login', id: session.id, pin: session.pin }).then(function(res){
+        if(res.status === 'ok'){
+          var fresh = stateFromServer(res.eleve);
+          // on garde le meilleur des deux (au cas où la sync avait échoué)
+          if(state && state.xp > fresh.xp){ apiSaveProgress('Resynchronisation', 0); }
+          else { state = fresh; refreshDay(); saveState(); }
+          if($('screen-home').classList.contains('active')) renderHome();
+          else { show('home'); }
+        } else {
+          clearSession();
+          state = defaultState('ce1');
+          initLoginOnline(); show('login');
+        }
+      }).catch(function(){ /* hors ligne : on reste sur le cache */ });
+    } else {
+      state = defaultState('ce1');
+      initLoginOnline(); show('login');
+    }
+  } else {
+    if(saved && saved.prenom){ state = saved; refreshDay(); show('home'); }
+    else { state = defaultState('ce1'); initLoginDemo(); show('login'); }
+  }
+
+  function refreshDay(){
     if(state.lastDay !== todayStr()){
       state.lastDay = todayStr();
       state.vies = CONFIG.VIES_MAX;
       saveState();
     }
-    show('home');
-  } else {
-    state = defaultState();
-    show('login');
   }
 })();

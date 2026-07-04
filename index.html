@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>EduVerse · Level Up Your Mind</title>
-<meta name="description" content="EduVerse CE1 — apprends les mathématiques en explorant un univers de missions.">
+<meta name="description" content="EduVerse — apprends les mathématiques en explorant un univers de missions. De la grande section à la seconde.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -35,13 +35,27 @@
     <div class="login-wrap">
       <div class="login-logo"><span class="edu">EDU</span>VERSE</div>
       <div class="login-tag">Level Up Your Mind</div>
-      <div class="login-card">
+
+      <!-- Mode EN LIGNE : code élève + PIN -->
+      <div class="login-card" id="loginOnline" style="display:none">
+        <p class="login-label">Ton code d'explorateur</p>
+        <input class="login-input" id="loginCode" maxlength="10" placeholder="Ex : LEA123" autocomplete="off" style="text-transform:uppercase">
+        <p class="login-label">Ton code secret (PIN)</p>
+        <input class="login-input" id="loginPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="4 chiffres" autocomplete="off">
+        <button class="btn btn-gold btn-block" id="btnLoginOnline">🚀 Se connecter</button>
+        <p class="login-note">Ton code et ton PIN t'ont été donnés par tes parents<br>ou ton enseignant. Ta progression te suit partout !</p>
+      </div>
+
+      <!-- Mode DÉMO : prénom + avatar + classe -->
+      <div class="login-card" id="loginDemo" style="display:none">
         <p class="login-label">Ton prénom d'explorateur</p>
         <input class="login-input" id="loginName" maxlength="14" placeholder="Ex : Ali" autocomplete="off">
+        <p class="login-label">Ta classe</p>
+        <div class="classe-grid" id="classeGrid"></div>
         <p class="login-label">Choisis ton avatar</p>
         <div class="avatar-grid" id="avatarGrid"></div>
         <button class="btn btn-gold btn-block" id="btnStart">🚀 C'est parti !</button>
-        <p class="login-note">Ta progression est enregistrée sur cet appareil.<br>Version démo · Classe de CE1</p>
+        <p class="login-note">Version démo · Ta progression est enregistrée sur cet appareil.</p>
       </div>
     </div>
   </section>
@@ -69,7 +83,7 @@
       </div>
       <div class="stat-pill stat-coins"><span class="ico">🪙</span><span id="homeCoins">0</span><span class="lbl">pièces</span></div>
       <div class="stat-pill stat-lives"><span class="ico">❤️</span><span id="homeLives">5/5</span><span class="lbl">vies</span></div>
-      <button class="btn-recharge" id="btnRecharge" style="display:none">⚡ Recharger (démo)</button>
+      <button class="btn-recharge" id="btnRecharge" style="display:none">⚡ Recharger</button>
     </div>
 
     <div class="hero-banner">
@@ -95,7 +109,7 @@
       <button class="btn-back" data-nav="home">← Retour</button>
       <div>
         <div class="screen-title">🏰 Monde des Mathématiques</div>
-        <div class="screen-sub">Chaque mission : 10 questions · Gagne 2 étoiles ⭐⭐ pour débloquer le niveau suivant</div>
+        <div class="screen-sub" id="worldSub">Chaque mission : 10 questions</div>
       </div>
     </div>
     <div class="comp-grid" id="compGrid"></div>
@@ -115,7 +129,10 @@
 
     <div class="mission-layout">
       <div class="q-card">
-        <div class="q-text" id="qText">…</div>
+        <div class="q-head-row">
+          <div class="q-text" id="qText">…</div>
+          <button class="btn-speak" id="btnSpeak" title="Écouter la question" aria-label="Écouter la question">🔊</button>
+        </div>
         <div class="q-visual" id="qVisual" style="display:none"></div>
         <div class="answers" id="answers"></div>
         <div class="feedback" id="feedback"><span id="feedbackTxt"></span><span class="fxp" id="feedbackXp"></span></div>
@@ -158,11 +175,12 @@
 
   <!-- ═══════════ ÉCRAN PROFIL ═══════════ -->
   <section class="screen" id="screen-profil">
-    <div class="back-row">
+    <div class="back-row" style="justify-content:space-between">
       <div>
         <div class="screen-title">👤 Mon profil</div>
-        <div class="screen-sub" id="profilSub">Élève · CE1</div>
+        <div class="screen-sub" id="profilSub">Élève</div>
       </div>
+      <button class="btn-back" id="btnLogout">Changer de joueur</button>
     </div>
     <div class="profil-grid">
       <div class="panel">
@@ -198,7 +216,7 @@
     <div class="back-row">
       <div>
         <div class="screen-title">🏆 Classement des explorateurs</div>
-        <div class="screen-sub">Classe de CE1 · Cette semaine</div>
+        <div class="screen-sub">Tous niveaux confondus · Le classement récompense le travail (XP) !</div>
       </div>
     </div>
     <div class="podium" id="podium"></div>

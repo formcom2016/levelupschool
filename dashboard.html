@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>EduVerse · Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* Styles propres au dashboard */
+.dash-wrap{max-width:1060px;margin:0 auto;padding:18px 14px 60px;position:relative;z-index:1}
+.dash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.kids-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:18px}
+.kid-card{background:var(--card-glass);border:1px solid var(--border);border-radius:var(--r);padding:16px;backdrop-filter:blur(8px)}
+.kid-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.kid-meta{flex:1}
+.kid-name{font-family:'Exo 2',sans-serif;font-weight:900;font-size:16px}
+.kid-classe{font-size:11px;color:var(--muted);font-weight:700}
+.kid-defi{font-size:18px}
+.kid-stats{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.kid-stat{flex:1;min-width:70px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center}
+.kid-stat b{display:block;font-family:'Exo 2',sans-serif;font-size:16px;color:var(--gold)}
+.kid-stat span{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.kid-skill{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11px}
+.kid-skill .sn{width:105px;flex-shrink:0;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kid-skill .bar{flex:1;height:6px}
+.kid-skill .sp{width:34px;text-align:right;font-family:'Exo 2',sans-serif;font-weight:800}
+.kid-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:10.5px;color:var(--muted)}
+.kid-link{background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.35);color:var(--cyan);border-radius:8px;
+  padding:6px 11px;font-size:10.5px;font-weight:800;cursor:pointer;font-family:'Exo 2',sans-serif}
+.act-table{width:100%;border-collapse:collapse;font-size:12px}
+.act-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.act-table td:first-child{color:var(--muted);white-space:nowrap;font-size:11px}
+.act-xp{font-family:'Exo 2',sans-serif;font-weight:800;color:var(--gold);text-align:right;white-space:nowrap}
+.add-form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+.add-form label{display:block;font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-family:'Exo 2',sans-serif}
+.add-form input,.add-form select{width:100%;padding:11px 13px;border-radius:11px;border:1.5px solid var(--border);
+  background:rgba(5,8,22,.7);color:var(--text);font-size:14px;font-weight:700;font-family:'Exo 2',sans-serif}
+.new-eleve{margin-top:14px;border:1px solid rgba(34,197,94,.45);background:rgba(34,197,94,.08);border-radius:13px;padding:14px;display:none}
+.new-eleve.show{display:block}
+.new-eleve code{background:rgba(0,0,0,.4);padding:3px 9px;border-radius:7px;font-size:14px;color:var(--cyan);font-weight:700}
+@media(max-width:640px){.add-form{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="space-bg" id="spaceBg"><div class="planet"></div></div>
+
+<div class="dash-wrap">
+
+  <!-- Connexion admin -->
+  <div id="dashLogin" class="login-wrap" style="margin-top:8vh">
+    <div class="login-logo"><span class="edu">EDU</span>VERSE</div>
+    <div class="login-tag">Dashboard Parent · Enseignant</div>
+    <div class="login-card">
+      <p class="login-label">Code administrateur</p>
+      <input class="login-input" id="adminCode" type="password" placeholder="Ton code admin" autocomplete="off">
+      <button class="btn btn-gold btn-block" id="btnDashLogin">🔓 Ouvrir le dashboard</button>
+      <p class="login-note" id="dashLoginNote">Le code admin est défini dans le script Google (ADMIN_CODE).</p>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashMain" style="display:none">
+    <div class="dash-head">
+      <div class="brand">
+        <div class="brand-name"><span class="edu">EDU</span><span class="verse">VERSE</span></div>
+        <div class="brand-tag">Dashboard · Suivi des explorateurs</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-cyan" id="btnRefresh">🔄 Actualiser</button>
+        <button class="btn btn-ghost" id="btnDashLogout">Quitter</button>
+      </div>
+    </div>
+
+    <div class="kids-grid" id="kidsGrid"></div>
+
+    <div class="panel" style="margin-bottom:14px">
+      <div class="panel-title">➕ Ajouter un explorateur</div>
+      <div class="add-form">
+        <div><label>Prénom</label><input id="newPrenom" maxlength="14" placeholder="Ex : Léa"></div>
+        <div><label>Classe</label>
+          <select id="newClasse">
+            <option value="gs">Grande Section</option>
+            <option value="ce1" selected>CE1</option>
+            <option value="cm2">CM2</option>
+            <option value="sixieme">6e</option>
+            <option value="quatrieme">4e</option>
+            <option value="seconde">Seconde</option>
+          </select>
+        </div>
+        <button class="btn btn-gold" id="btnAddEleve">Créer</button>
+      </div>
+      <div class="new-eleve" id="newEleveBox"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">📋 Activité récente</div>
+      <table class="act-table" id="actTable"></table>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══ CONFIGURATION — à remplir ═══════════════════════════
+var APPS_URL = '';   // ← URL /exec du script Google (la même que dans app.js)
+var APP_URL  = '';   // ← URL de ton app, ex : https://tonpseudo.github.io/eduverse/
+// ═════════════════════════════════════════════════════════
+
+var CLASSE_LABELS = { gs:'Grande Section', ce1:'CE1', cm2:'CM2', sixieme:'6e', quatrieme:'4e', seconde:'Seconde' };
+var COMP_LABELS = {
+  compter:'Compter', petitscalculs:'Petits calculs', comparer:'Plus ou moins', suites:'Avant/après', formes:'Formes', couleurs:'Couleurs',
+  addition:'Addition', soustraction:'Soustraction', multiplication:'Multiplication', doubles:'Doubles/moitiés', problemes:'Problèmes', geometrie:'Géométrie',
+  grandsnombres:'Grands nombres', division:'Division', fractions:'Fractions', decimaux:'Décimaux', mesures:'Mesures',
+  proportionnalite:'Proportionnalité', perimetres:'Périmètres/aires', divisibilite:'Divisibilité', calculmental:'Calcul mental',
+  relatifs:'Relatifs', puissances:'Puissances', litteral:'Calcul littéral', pythagore:'Pythagore', pourcentages:'Pourcentages',
+  numerique:'Calcul numérique', algebrique:'Dév./factoriser', equations:'Équations', fonctions:'Fonctions', inequations:'Inéquations'
+};
+
+var admin = '';
+function $(id){ return document.getElementById(id); }
+function toast(msg){
+  var t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._h);
+  t._h = setTimeout(function(){ t.classList.remove('show'); }, 2800);
+}
+function api(params){
+  var p = new URLSearchParams(params);
+  return fetch(APPS_URL + '?' + p.toString()).then(function(r){ return r.json(); });
+}
+function todayStr(){ return new Date().toISOString().slice(0, 10); }
+
+// Fond étoilé
+(function(){
+  var bg = $('spaceBg');
+  for(var i = 0; i < 70; i++){
+    var s = document.createElement('div');
+    s.className = 'star';
+    var size = Math.random() * 2.2 + .6;
+    s.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (Math.random() * 100) + '%;top:'
+      + (Math.random() * 100) + '%;animation-delay:' + (Math.random() * 3.4) + 's';
+    bg.appendChild(s);
+  }
+})();
+
+// Connexion
+$('btnDashLogin').onclick = function(){
+  if(!APPS_URL){ $('dashLoginNote').textContent = '⚠️ APPS_URL n\u2019est pas configurée dans dashboard.html'; return; }
+  var code = $('adminCode').value.trim();
+  if(!code){ toast('Entre ton code admin'); return; }
+  var btn = $('btnDashLogin');
+  btn.disabled = true; btn.textContent = 'Connexion…';
+  api({ action: 'dashboard', admin: code }).then(function(res){
+    btn.disabled = false; btn.textContent = '🔓 Ouvrir le dashboard';
+    if(res.status !== 'ok'){ toast(res.message || 'Code incorrect'); return; }
+    admin = code;
+    try { sessionStorage.setItem('eduverse_admin', code); } catch(e){}
+    $('dashLogin').style.display = 'none';
+    $('dashMain').style.display = 'block';
+    paint(res);
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = '🔓 Ouvrir le dashboard';
+    toast('Connexion impossible — vérifie APPS_URL et ta connexion');
+  });
+};
+$('adminCode').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('btnDashLogin').click(); });
+
+$('btnRefresh').onclick = load;
+$('btnDashLogout').onclick = function(){
+  admin = '';
+  try { sessionStorage.removeItem('eduverse_admin'); } catch(e){}
+  $('dashMain').style.display = 'none';
+  $('dashLogin').style.display = 'block';
+};
+
+function load(){
+  api({ action: 'dashboard', admin: admin }).then(function(res){
+    if(res.status === 'ok') paint(res);
+    else toast(res.message || 'Erreur');
+  }).catch(function(){ toast('Actualisation impossible'); });
+}
+
+function paint(res){
+  // Cartes enfants
+  var kids = res.eleves.slice().sort(function(a, b){ return b.xp - a.xp; });
+  $('kidsGrid').innerHTML = kids.map(function(k){
+    var comps = {};
+    try { comps = JSON.parse(k.comps || '{}'); } catch(e){}
+    var skills = Object.keys(comps).map(function(key){
+      var e = comps[key].etoiles || [0, 0, 0];
+      var p = Math.round((e[0] + e[1] + e[2]) / 9 * 100);
+      var col = p >= 70 ? '#22C55E' : p >= 40 ? '#F5C518' : '#FF7849';
+      return '<div class="kid-skill"><span class="sn">' + (COMP_LABELS[key] || key) + '</span>'
+        + '<span class="bar"><i style="width:' + p + '%;background:' + col + '"></i></span>'
+        + '<span class="sp" style="color:' + col + '">' + p + '%</span></div>';
+    }).join('') || '<div class="kid-skill"><span class="sn" style="width:auto">Aucune mission jouée pour l\u2019instant</span></div>';
+
+    var defiFait = k.dailyDone === todayStr();
+    var lien = (APP_URL || './') + '?id=' + encodeURIComponent(k.id);
+    return '<div class="kid-card">'
+      + '<div class="kid-top"><div class="avatar-bubble">' + (k.avatar || '🙂') + '</div>'
+      + '<div class="kid-meta"><div class="kid-name">' + k.prenom + '</div>'
+      + '<div class="kid-classe">' + (CLASSE_LABELS[k.classe] || k.classe) + ' · Code ' + k.id + ' · PIN ' + k.pin + '</div></div>'
+      + '<div class="kid-defi" title="Défi quotidien">' + (defiFait ? '⚡✅' : '⚡▫️') + '</div></div>'
+      + '<div class="kid-stats">'
+      + '<div class="kid-stat"><b>' + k.xp.toLocaleString('fr-FR') + '</b><span>XP</span></div>'
+      + '<div class="kid-stat"><b>' + k.missions + '</b><span>missions</span></div>'
+      + '<div class="kid-stat"><b>' + k.pieces + '</b><span>pièces</span></div>'
+      + '</div>'
+      + skills
+      + '<div class="kid-foot"><span>Dernière activité : ' + (k.derniereActivite || '—') + '</span>'
+      + '<button class="kid-link" data-lien="' + lien + '" data-prenom="' + k.prenom + '" data-pin="' + k.pin + '">📤 Envoyer son lien</button></div>'
+      + '</div>';
+  }).join('') || '<div class="panel">Aucun explorateur pour l\u2019instant — crée le premier ci-dessous ! 👇</div>';
+
+  document.querySelectorAll('.kid-link').forEach(function(b){
+    b.onclick = function(){
+      var msg = '🚀 ' + b.getAttribute('data-prenom') + ', voici ton lien EduVerse :\n'
+        + b.getAttribute('data-lien') + '\nTon PIN secret : ' + b.getAttribute('data-pin') + '\nBonne mission ! ⭐';
+      if(navigator.share){ navigator.share({ title: 'EduVerse', text: msg }).catch(function(){}); }
+      else if(navigator.clipboard){ navigator.clipboard.writeText(msg).then(function(){ toast('Lien copié !'); }); }
+      else { prompt('Copie ce message :', msg); }
+    };
+  });
+
+  // Activité
+  $('actTable').innerHTML = (res.activites || []).map(function(a){
+    return '<tr><td>' + a.date + '</td><td><b>' + a.prenom + '</b></td><td>' + (a.detail || a.type) + '</td>'
+      + '<td class="act-xp">' + (a.xp ? '+' + a.xp + ' XP' : '') + '</td></tr>';
+  }).join('') || '<tr><td>Aucune activité pour l\u2019instant</td></tr>';
+}
+
+// Ajout d'élève
+$('btnAddEleve').onclick = function(){
+  var prenom = $('newPrenom').value.trim();
+  if(!prenom){ toast('Entre un prénom'); return; }
+  var btn = $('btnAddEleve');
+  btn.disabled = true; btn.textContent = 'Création…';
+  api({ action: 'addEleve', admin: admin, prenom: prenom, classe: $('newClasse').value }).then(function(res){
+    btn.disabled = false; btn.textContent = 'Créer';
+    if(res.status !== 'ok'){ toast(res.message || 'Erreur'); return; }
+    var lien = (APP_URL || './') + '?id=' + encodeURIComponent(res.id);
+    var box = $('newEleveBox');
+    box.className = 'new-eleve show';
+    box.innerHTML = '🎉 <b>' + res.prenom + '</b> est prêt à explorer !<br><br>'
+      + 'Code : <code>' + res.id + '</code> · PIN : <code>' + res.pin + '</code><br><br>'
+      + 'Son lien : <code style="font-size:11px">' + lien + '</code><br><br>'
+      + '<button class="kid-link" data-lien="' + lien + '" data-prenom="' + res.prenom + '" data-pin="' + res.pin + '">📤 Envoyer son lien</button>';
+    box.querySelector('.kid-link').onclick = function(){
+      var msg = '🚀 ' + res.prenom + ', voici ton lien EduVerse :\n' + lien + '\nTon PIN secret : ' + res.pin + '\nBonne mission ! ⭐';
+      if(navigator.share){ navigator.share({ title: 'EduVerse', text: msg }).catch(function(){}); }
+      else if(navigator.clipboard){ navigator.clipboard.writeText(msg).then(function(){ toast('Lien copié !'); }); }
+      else { prompt('Copie ce message :', msg); }
+    };
+    $('newPrenom').value = '';
+    load();
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = 'Créer';
+    toast('Création impossible');
+  });
+};
+
+// Reconnexion auto (session du navigateur)
+(function(){
+  try {
+    var saved = sessionStorage.getItem('eduverse_admin');
+    if(saved && APPS_URL){
+      $('adminCode').value = saved;
+      $('btnDashLogin').click();
+    }
+  } catch(e){}
+})();
+</script>
+</body>
+</html>

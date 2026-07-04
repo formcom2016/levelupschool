@@ -8,7 +8,7 @@
 
 // ── CONFIGURATION ──────────────────────────────────────────
 var CONFIG = {
-  APPS_URL: '',             // ← coller ici l'URL /exec du script Google (phase en ligne)
+  APPS_URL: 'https://script.google.com/macros/s/AKfycbzhOLq15kMwmzvxw1mPG5otjVp3x7d7d55cs-0LGJ1025DyYVUxQEjE91vyXLd8sUnU/exec',             // ← coller ici l'URL /exec du script Google (phase en ligne)
   QUESTIONS_PAR_MISSION: 10,
   XP_BONNE_REPONSE: 10,
   XP_BONUS_PARFAIT: 20,

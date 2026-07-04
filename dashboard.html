@@ -132,14 +132,12 @@ function toast(msg){
 function api(params){
   var p = new URLSearchParams(params);
   return new Promise(function(resolve, reject){
-    var id = 'cb_' + Math.random().toString(36).slice(2);
-    p.set('callback', id);
     var s = document.createElement('script');
     s.src = APPS_URL + '?' + p.toString();
-    s.onerror = function(){ cleanup(); reject(new Error('JSONP error')); };
-    var timer = setTimeout(function(){ cleanup(); reject(new Error('JSONP timeout')); }, 12000);
-    window[id] = function(data){ cleanup(); resolve(data); };
-    function cleanup(){ clearTimeout(timer); delete window[id]; if(s.parentNode) s.parentNode.removeChild(s); }
+    var timer = setTimeout(function(){ cleanup(); reject(new Error('timeout')); }, 12000);
+    window.__eduCb = function(data){ cleanup(); resolve(data); };
+    s.onerror = function(){ cleanup(); reject(new Error('script error')); };
+    function cleanup(){ clearTimeout(timer); window.__eduCb = null; if(s.parentNode) s.parentNode.removeChild(s); }
     document.head.appendChild(s);
   });
 }

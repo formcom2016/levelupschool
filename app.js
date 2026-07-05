@@ -161,20 +161,44 @@ function stateFromServer(el){
   s.vies = CONFIG.VIES_MAX;
   s.missions = parseInt(el.missions, 10) || 0;
   s.dailyDone = el.dailyDone || '';
-  try { if(el.comps) s.comps = Object.assign(defaultComps(classe), JSON.parse(el.comps)); } catch(e){}
+  try {
+    if(el.comps){
+      var saved = JSON.parse(el.comps);
+      Object.keys(saved).forEach(function(k){
+        if(s.comps[k]){
+          // Format light : tableau d'étoiles directement
+          if(Array.isArray(saved[k])) s.comps[k].etoiles = saved[k];
+          // Format complet : objet avec etoiles et niveau
+          else if(saved[k].etoiles) s.comps[k] = saved[k];
+        }
+      });
+    }
+  } catch(e){}
   try { if(el.badges) s.badges = JSON.parse(el.badges); } catch(e){}
   try { if(el.history) s.history = JSON.parse(el.history); } catch(e){}
   return s;
 }
 function apiSaveProgress(detail, xpGain){
   if(!isOnline() || !session) return Promise.resolve();
-  return api({
+  var compsLight = {};
+  Object.keys(state.comps).forEach(function(k){
+    compsLight[k] = state.comps[k].etoiles;
+  });
+  var base = CONFIG.APPS_URL;
+  var params = new URLSearchParams({
     action: 'save', id: session.id, pin: session.pin,
     xp: state.xp, pieces: state.pieces, missions: state.missions,
-    comps: JSON.stringify(state.comps), badges: JSON.stringify(state.badges),
-    history: JSON.stringify(state.history.slice(0, 12)),
-    dailyDone: state.dailyDone, detail: detail || '', xpGain: xpGain || 0
-  }).catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
+    comps: JSON.stringify(compsLight),
+    badges: JSON.stringify(state.badges),
+    dailyDone: state.dailyDone || '',
+    detail: detail || '', xpGain: xpGain || 0
+  });
+  return fetch(base + '?' + params.toString())
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if(res.status === 'ok') toast('✅ +' + (xpGain||0) + ' XP sauvegardés !');
+    })
+    .catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────

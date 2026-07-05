@@ -8,7 +8,408 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   EDUVERSE CE1 — Style principal
+   Thème : univers spatial violet/cyan, îles flottantes
+   Palette dérivée de la maquette + base Form'Com
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --bg:#050816;
+  --bg2:#0A0F2E;
+  --card:#0E1730;
+  --card-glass:rgba(14,23,48,.78);
+  --border:rgba(148,163,255,.14);
+  --text:#F0F4FF;
+  --muted:#8A93B2;
+  --violet:#8B5CF6;
+  --violet2:#A78BFA;
+  --cyan:#22D3EE;
+  --blue:#2979FF;
+  --gold:#F5C518;
+  --gold2:#F5A623;
+  --green:#22C55E;
+  --red:#FF4D6D;
+  --r:16px;
+  --rs:10px;
+  --shadow:0 10px 40px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+button{font-family:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+
+/* ── FOND SPATIAL ─────────────────────────────── */
+.space-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(139,92,246,.22) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 15% 90%, rgba(34,211,238,.10) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 40% at 88% 75%, rgba(41,121,255,.12) 0%, transparent 60%),
+    var(--bg);
+}
+.star{position:absolute;border-radius:50%;background:#fff;opacity:.7;animation:twinkle 3.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.85}}
+.planet{position:absolute;top:60px;right:-60px;width:190px;height:190px;border-radius:50%;
+  background:radial-gradient(circle at 32% 30%, #6D5BD0 0%, #3B2E8C 45%, #131048 80%);
+  box-shadow:inset -22px -18px 50px rgba(0,0,0,.55), 0 0 70px rgba(139,92,246,.35);
+  opacity:.85}
+.planet::after{content:'';position:absolute;inset:-16px;border-radius:50%;
+  border:2px solid rgba(167,139,250,.22);transform:rotate(-18deg) scaleY(.42)}
+
+/* ── STRUCTURE APP ────────────────────────────── */
+#app{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:0 14px 96px}
+.screen{display:none;animation:fadeUp .35s ease both}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ── HEADER JOUEUR ────────────────────────────── */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 4px 10px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;line-height:1}
+.brand-name{font-family:'Exo 2',sans-serif;font-weight:900;font-size:22px;letter-spacing:.5px}
+.brand-name .edu{color:var(--cyan)}
+.brand-name .verse{color:var(--text)}
+.brand-tag{font-family:'Exo 2',sans-serif;font-size:8.5px;font-weight:700;letter-spacing:2.6px;
+  text-transform:uppercase;color:var(--muted);margin-top:4px}
+.player-chip{display:flex;align-items:center;gap:10px;background:var(--card-glass);
+  border:1px solid var(--border);border-radius:99px;padding:6px 14px 6px 6px;backdrop-filter:blur(8px)}
+.avatar-bubble{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:21px;background:radial-gradient(circle at 35% 30%, #2B2564, #171243);
+  border:2px solid var(--violet);box-shadow:0 0 14px rgba(139,92,246,.5)}
+.player-meta{line-height:1.15}
+.player-name{font-family:'Exo 2',sans-serif;font-weight:800;font-size:14px}
+.player-level{font-size:10.5px;color:var(--muted);font-weight:600}
+
+.statbar{display:flex;gap:8px;flex-wrap:wrap;margin:2px 4px 14px}
+.stat-pill{display:flex;align-items:center;gap:7px;background:var(--card-glass);border:1px solid var(--border);
+  border-radius:99px;padding:7px 13px;font-family:'Exo 2',sans-serif;font-weight:800;font-size:13px;backdrop-filter:blur(8px)}
+.stat-pill .ico{font-size:15px}
+.stat-pill .lbl{font-family:'Inter',sans-serif;font-weight:600;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.stat-xp{color:var(--gold)}
+.stat-coins{color:var(--gold2)}
+.stat-lives{color:var(--red)}
+.xp-track{flex:1 1 150px;min-width:140px;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:6px 13px;
+  background:var(--card-glass);border:1px solid var(--border);border-radius:99px}
+.xp-track-top{display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--muted);
+  font-family:'Exo 2',sans-serif;letter-spacing:.5px}
+.xp-track-top b{color:var(--gold)}
+.bar{height:7px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar > i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold2),var(--gold));
+  box-shadow:0 0 10px rgba(245,197,24,.55);transition:width .6s cubic-bezier(.22,1,.36,1)}
+
+.btn-recharge{border:1px dashed rgba(255,77,109,.4);background:rgba(255,77,109,.08);color:var(--red);
+  border-radius:99px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer}
+
+/* ── TITRE BANNIÈRE ───────────────────────────── */
+.hero-banner{text-align:center;margin:6px auto 22px;max-width:560px;
+  border:1px solid rgba(34,211,238,.28);border-radius:14px;padding:14px 18px;
+  background:linear-gradient(180deg, rgba(34,211,238,.08), rgba(139,92,246,.06));
+  box-shadow:0 0 30px rgba(34,211,238,.08) inset}
+.hero-banner h1{font-family:'Exo 2',sans-serif;font-weight:900;font-size:clamp(17px,4vw,24px);
+  letter-spacing:1.5px;text-transform:uppercase;
+  background:linear-gradient(90deg,var(--cyan),var(--violet2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-banner p{font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:5px}
+
+/* ── CARTE DE L'UNIVERS ───────────────────────── */
+.universe{position:relative;margin:0 auto 10px;max-width:980px}
+.paths-svg{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.paths-svg path{fill:none;stroke:url(#pathGrad);stroke-width:2.5;stroke-dasharray:3 9;stroke-linecap:round;
+  animation:flow 2.6s linear infinite;opacity:.75}
+@keyframes flow{to{stroke-dashoffset:-48}}
+.islands{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:6px 0 2px}
+.island{position:relative;border-radius:var(--r);padding:16px 14px 14px;text-align:center;cursor:pointer;
+  border:1px solid var(--border);background:linear-gradient(165deg, rgba(31,27,77,.9), rgba(11,16,42,.92));
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s;
+  animation:floaty 5s ease-in-out infinite}
+.island:nth-child(2n){animation-delay:-1.6s}
+.island:nth-child(3n){animation-delay:-3.1s}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.island.unlocked{border-color:rgba(139,92,246,.55);box-shadow:0 0 26px rgba(139,92,246,.22), var(--shadow)}
+.island.unlocked:hover{transform:translateY(-8px) scale(1.02);border-color:var(--cyan);
+  box-shadow:0 0 34px rgba(34,211,238,.3), var(--shadow)}
+.island.locked{opacity:.62;cursor:default;filter:saturate(.55)}
+.island-art{height:58px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:8px}
+.island-art svg{width:96px;height:56px;overflow:visible}
+.island-name{font-family:'Exo 2',sans-serif;font-weight:900;font-size:13.5px;letter-spacing:1.2px;text-transform:uppercase}
+.island-sub{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:7px;
+  font-size:10.5px;font-weight:700;color:var(--muted)}
+.island-sub .mini-bar{width:56px;height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.island-sub .mini-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green),#86EFAC)}
+.lock-badge{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:8px;
+  background:rgba(0,0,0,.45);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px}
+.island-cta{margin-top:10px;font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--cyan)}
+
+/* Défi quotidien (balise centrale) */
+.daily-card{grid-column:2;position:relative;text-align:center;border-radius:var(--r);padding:18px 14px 16px;
+  border:1px solid rgba(245,197,24,.4);cursor:pointer;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(245,197,24,.16), transparent 65%),
+    linear-gradient(165deg, rgba(46,33,10,.55), rgba(11,16,42,.95));
+  box-shadow:0 0 34px rgba(245,197,24,.16), var(--shadow);
+  animation:floaty 5s ease-in-out infinite;animation-delay:-.8s}
+.daily-flame{font-size:30px;filter:drop-shadow(0 0 12px rgba(245,197,24,.7));animation:pulseGlow 1.8s ease-in-out infinite}
+@keyframes pulseGlow{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.daily-title{font-family:'Exo 2',sans-serif;font-weight:900;font-size:13.5px;letter-spacing:1.4px;text-transform:uppercase;margin-top:6px}
+.daily-xp{font-size:11px;font-weight:800;color:var(--gold);margin-top:3px;font-family:'Exo 2',sans-serif}
+.daily-done{font-size:10.5px;font-weight:700;color:var(--green);margin-top:8px}
+
+/* ── BOUTONS ──────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;
+  border-radius:12px;font-family:'Exo 2',sans-serif;font-weight:900;letter-spacing:1px;text-transform:uppercase;
+  transition:transform .12s ease, filter .2s;text-decoration:none}
+.btn:active{transform:scale(.96)}
+.btn-gold{background:linear-gradient(135deg,#FFD84D,var(--gold2));color:#241A00;padding:12px 26px;font-size:13px;
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+  box-shadow:0 0 26px rgba(245,197,24,.45)}
+.btn-gold:hover{filter:brightness(1.08)}
+.btn-ghost{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);padding:11px 20px;font-size:12px}
+.btn-cyan{background:rgba(34,211,238,.13);border:1px solid rgba(34,211,238,.45);color:var(--cyan);padding:11px 20px;font-size:12px}
+.btn-block{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed;filter:saturate(.4)}
+
+/* ── ÉCRAN LOGIN ──────────────────────────────── */
+.login-wrap{max-width:430px;margin:6vh auto 0;text-align:center}
+.login-logo{font-family:'Exo 2',sans-serif;font-weight:900;font-size:38px;letter-spacing:1px}
+.login-logo .edu{color:var(--cyan);text-shadow:0 0 24px rgba(34,211,238,.6)}
+.login-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;
+  color:var(--muted);margin:6px 0 26px}
+.login-card{background:var(--card-glass);border:1px solid var(--border);border-radius:20px;padding:24px 20px;
+  backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+.login-label{font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);
+  text-align:left;margin:0 0 8px;font-family:'Exo 2',sans-serif}
+.login-input{width:100%;padding:13px 16px;border-radius:12px;border:1.5px solid var(--border);
+  background:rgba(5,8,22,.7);color:var(--text);font-size:16px;font-weight:700;font-family:'Exo 2',sans-serif;
+  letter-spacing:.5px;margin-bottom:18px}
+.login-input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.15)}
+.avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:20px}
+.avatar-opt{aspect-ratio:1;border-radius:14px;border:2px solid var(--border);background:rgba(255,255,255,.04);
+  font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.avatar-opt:hover{border-color:var(--violet2);transform:scale(1.06)}
+.avatar-opt.sel{border-color:var(--cyan);background:rgba(34,211,238,.12);box-shadow:0 0 16px rgba(34,211,238,.35);transform:scale(1.08)}
+.login-note{font-size:10.5px;color:var(--muted);margin-top:14px;line-height:1.6}
+
+/* ── ÉCRAN MONDE (compétences) ────────────────── */
+.back-row{display:flex;align-items:center;gap:12px;margin:4px 0 16px}
+.btn-back{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:9px 14px;
+  font-size:12px;font-weight:800;cursor:pointer;font-family:'Exo 2',sans-serif;letter-spacing:.5px}
+.screen-title{font-family:'Exo 2',sans-serif;font-weight:900;font-size:17px;letter-spacing:1.4px;text-transform:uppercase}
+.screen-sub{font-size:11.5px;color:var(--muted);font-weight:600}
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:14px}
+.comp-card{background:var(--card-glass);border:1px solid var(--border);border-radius:var(--r);padding:16px;backdrop-filter:blur(8px)}
+.comp-head{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+.comp-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;
+  background:rgba(139,92,246,.14);border:1px solid rgba(139,92,246,.3)}
+.comp-name{font-family:'Exo 2',sans-serif;font-weight:900;font-size:14px}
+.comp-pct{font-size:11px;font-weight:800;color:var(--green);font-family:'Exo 2',sans-serif}
+.comp-bar{margin-bottom:12px}
+.niv-row{display:flex;gap:8px}
+.niv-btn{flex:1;padding:9px 4px;border-radius:10px;border:1px solid var(--border);cursor:pointer;
+  background:rgba(255,255,255,.045);font-family:'Exo 2',sans-serif;font-weight:800;font-size:11px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;transition:.15s}
+.niv-btn:hover:not([disabled]){border-color:var(--cyan);background:rgba(34,211,238,.1)}
+.niv-btn[disabled]{opacity:.45;cursor:not-allowed}
+.niv-stars{font-size:9px;letter-spacing:1px;color:var(--gold)}
+.niv-stars .off{opacity:.25}
+
+/* ── ÉCRAN MISSION ────────────────────────────── */
+.mission-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 14px;flex-wrap:wrap}
+.mission-tag{font-family:'Exo 2',sans-serif;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase;
+  border:1px solid rgba(34,211,238,.4);color:var(--cyan);border-radius:10px;padding:8px 14px;background:rgba(34,211,238,.07)}
+.lives-row{display:flex;gap:4px;font-size:16px;filter:drop-shadow(0 0 6px rgba(255,77,109,.6))}
+.lives-row .lost{opacity:.22;filter:grayscale(1)}
+.mission-progress{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.mission-progress .qcount{font-family:'Exo 2',sans-serif;font-size:11px;font-weight:800;color:var(--muted);white-space:nowrap;letter-spacing:.6px}
+.mission-progress .bar{flex:1}
+.mission-progress .bar > i{background:linear-gradient(90deg,var(--cyan),var(--violet));box-shadow:0 0 10px rgba(34,211,238,.5)}
+
+.mission-layout{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start}
+.q-card{background:var(--card-glass);border:1px solid var(--border);border-radius:20px;padding:24px 22px;
+  backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+.q-text{font-family:'Exo 2',sans-serif;font-weight:800;font-size:clamp(19px,3.4vw,25px);line-height:1.35;margin-bottom:6px}
+.q-visual{margin:14px 0 4px;display:flex;justify-content:center}
+.q-visual svg{width:120px;height:120px;filter:drop-shadow(0 0 14px rgba(34,211,238,.35))}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.ans-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:13px;cursor:pointer;
+  border:1.5px solid var(--border);background:rgba(5,8,22,.55);font-size:18px;font-weight:800;
+  font-family:'Exo 2',sans-serif;transition:.15s;text-align:left}
+.ans-btn:hover:not([disabled]){border-color:var(--cyan);background:rgba(34,211,238,.08);transform:translateY(-2px)}
+.ans-letter{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.4);color:var(--violet2);flex-shrink:0}
+.ans-btn.correct{border-color:var(--green);background:rgba(34,197,94,.16);box-shadow:0 0 18px rgba(34,197,94,.35)}
+.ans-btn.correct .ans-letter{background:var(--green);border-color:var(--green);color:#03210F}
+.ans-btn.wrong{border-color:var(--red);background:rgba(255,77,109,.13);animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.ans-btn[disabled]{cursor:default}
+
+.timer-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.timer-svg{width:88px;height:88px;transform:rotate(-90deg)}
+.timer-svg .track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:7}
+.timer-svg .prog{fill:none;stroke:var(--cyan);stroke-width:7;stroke-linecap:round;
+  filter:drop-shadow(0 0 6px rgba(34,211,238,.7));transition:stroke-dashoffset 1s linear, stroke .3s}
+.timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Exo 2',sans-serif;font-weight:900;font-size:24px;transform:rotate(0)}
+.timer-box{position:relative;width:88px;height:88px}
+.timer-lbl{font-size:9.5px;font-weight:800;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-family:'Exo 2',sans-serif}
+
+.feedback{margin-top:16px;border-radius:13px;padding:13px 16px;font-family:'Exo 2',sans-serif;font-weight:800;
+  font-size:14.5px;display:none;align-items:center;gap:10px;border:1.5px solid}
+.feedback.show{display:flex;animation:fadeUp .25s ease both}
+.feedback.good{border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.1);color:#7CF5AE}
+.feedback.bad{border-color:rgba(255,77,109,.5);background:rgba(255,77,109,.09);color:#FF9EB2}
+.feedback .fxp{margin-left:auto;color:var(--gold);white-space:nowrap}
+
+/* ── ÉCRAN RÉSULTAT ───────────────────────────── */
+.result-wrap{max-width:520px;margin:4vh auto 0;text-align:center}
+.result-title{font-family:'Exo 2',sans-serif;font-weight:900;font-size:clamp(24px,5vw,32px);letter-spacing:2px;
+  text-transform:uppercase;color:var(--cyan);text-shadow:0 0 30px rgba(34,211,238,.5)}
+.medal{position:relative;width:150px;height:150px;margin:26px auto 10px;display:flex;align-items:center;justify-content:center}
+.medal .hex{position:absolute;inset:0;background:linear-gradient(160deg,var(--violet),#5B21B6);
+  clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+  box-shadow:0 0 50px rgba(139,92,246,.65);animation:pulseGlow 2.4s ease-in-out infinite}
+.medal .hex::before{content:'';position:absolute;inset:7px;background:linear-gradient(160deg,#2E1065,#171243);
+  clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.medal-stars{position:relative;z-index:1;font-size:30px;letter-spacing:2px;filter:drop-shadow(0 0 10px rgba(245,197,24,.8))}
+.medal-stars .off{opacity:.25;filter:grayscale(1)}
+.result-msg{font-family:'Exo 2',sans-serif;font-weight:900;font-size:18px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);margin:14px 0 4px}
+.result-score{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:20px}
+.reward-row{display:flex;gap:10px;justify-content:center;margin-bottom:26px;flex-wrap:wrap}
+.reward-card{background:var(--card-glass);border:1px solid var(--border);border-radius:14px;padding:12px 20px;min-width:104px}
+.reward-lbl{font-size:9.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);font-family:'Exo 2',sans-serif}
+.reward-val{font-family:'Exo 2',sans-serif;font-weight:900;font-size:21px;margin-top:4px}
+.result-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.badge-toast{margin:0 auto 20px;max-width:340px;border:1px solid rgba(245,197,24,.45);border-radius:13px;
+  background:rgba(245,197,24,.08);padding:11px 16px;font-size:13px;font-weight:700;display:none}
+.badge-toast.show{display:block;animation:fadeUp .3s .2s ease both}
+.badge-toast b{color:var(--gold)}
+
+/* ── ÉCRAN PROFIL ─────────────────────────────── */
+.profil-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{background:var(--card-glass);border:1px solid var(--border);border-radius:var(--r);padding:18px;backdrop-filter:blur(8px)}
+.panel-title{font-family:'Exo 2',sans-serif;font-size:11px;font-weight:800;letter-spacing:1.8px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.donut-row{display:flex;align-items:center;gap:18px}
+.donut-box{position:relative;width:110px;height:110px;flex-shrink:0}
+.donut-box svg{width:110px;height:110px;transform:rotate(-90deg)}
+.donut-box .track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:10}
+.donut-box .prog{fill:none;stroke:url(#donutGrad);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1s ease;
+  filter:drop-shadow(0 0 8px rgba(34,197,94,.5))}
+.donut-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Exo 2',sans-serif;font-weight:900;font-size:24px;color:var(--green)}
+.donut-msg b{display:block;font-family:'Exo 2',sans-serif;font-size:15px;color:var(--green);margin-bottom:4px}
+.donut-msg span{font-size:12px;color:var(--muted);line-height:1.5}
+.skill-row{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.skill-row:last-child{margin-bottom:0}
+.skill-name{width:110px;font-size:12px;font-weight:700;flex-shrink:0}
+.skill-row .bar{flex:1}
+.skill-pct{width:40px;text-align:right;font-family:'Exo 2',sans-serif;font-size:11.5px;font-weight:800;flex-shrink:0}
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:10px}
+.badge-item{text-align:center;border:1px solid var(--border);border-radius:13px;padding:11px 5px;background:rgba(255,255,255,.03)}
+.badge-item.earned{border-color:rgba(245,197,24,.45);background:rgba(245,197,24,.07);box-shadow:0 0 14px rgba(245,197,24,.14)}
+.badge-item .b-ico{font-size:22px}
+.badge-item.locked .b-ico{filter:grayscale(1);opacity:.3}
+.badge-item .b-name{font-size:8.8px;font-weight:700;color:var(--muted);margin-top:5px;line-height:1.25}
+.badge-item.earned .b-name{color:var(--gold)}
+.hist-row{display:flex;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px}
+.hist-row:last-child{border-bottom:none}
+.hist-lbl{color:var(--muted);font-weight:600}
+.hist-val{font-family:'Exo 2',sans-serif;font-weight:800;color:var(--gold)}
+
+/* ── ÉCRAN CLASSEMENT ─────────────────────────── */
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin:10px 0 22px}
+.pod-col{text-align:center;flex:1;max-width:120px}
+.pod-avatar{width:52px;height:52px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;
+  font-size:26px;background:radial-gradient(circle at 35% 30%, #2B2564, #171243);border:2px solid var(--violet)}
+.pod-name{font-family:'Exo 2',sans-serif;font-weight:800;font-size:12px;margin-bottom:2px}
+.pod-xp{font-size:10.5px;color:var(--gold);font-weight:800;font-family:'Exo 2',sans-serif;margin-bottom:8px}
+.pod-base{border-radius:12px 12px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:9px;
+  font-family:'Exo 2',sans-serif;font-weight:900;font-size:22px}
+.pod-1 .pod-base{height:92px;background:linear-gradient(180deg,#FFD84D,#8a6a00);color:#241A00;box-shadow:0 0 30px rgba(245,197,24,.35)}
+.pod-1 .pod-avatar{border-color:var(--gold);box-shadow:0 0 18px rgba(245,197,24,.55)}
+.pod-2 .pod-base{height:66px;background:linear-gradient(180deg,#C9D2E8,#59627A);color:#111}
+.pod-3 .pod-base{height:50px;background:linear-gradient(180deg,#E2955C,#6E3E1B);color:#2A1500}
+.rank-list{display:flex;flex-direction:column;gap:9px}
+.rank-row{display:flex;align-items:center;gap:12px;background:var(--card-glass);border:1px solid var(--border);
+  border-radius:13px;padding:10px 14px}
+.rank-row.me{border-color:rgba(34,211,238,.55);background:rgba(34,211,238,.07);box-shadow:0 0 18px rgba(34,211,238,.15)}
+.rank-num{font-family:'Exo 2',sans-serif;font-weight:900;font-size:15px;width:26px;color:var(--muted)}
+.rank-row.me .rank-num{color:var(--cyan)}
+.rank-ava{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;
+  background:rgba(139,92,246,.15);border:1.5px solid rgba(139,92,246,.4)}
+.rank-name{font-family:'Exo 2',sans-serif;font-weight:800;font-size:13.5px;flex:1}
+.rank-name small{display:block;font-family:'Inter',sans-serif;font-size:9.5px;color:var(--muted);font-weight:600;letter-spacing:.5px}
+.rank-xp{font-family:'Exo 2',sans-serif;font-weight:900;font-size:13px;color:var(--gold)}
+
+/* ── NAVIGATION BASSE ─────────────────────────── */
+.bottom-nav{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;
+  display:flex;gap:4px;background:rgba(10,15,40,.88);border:1px solid var(--border);border-radius:99px;
+  padding:6px;backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+.nav-btn{border:none;background:transparent;border-radius:99px;padding:9px 17px;cursor:pointer;
+  display:flex;align-items:center;gap:7px;font-family:'Exo 2',sans-serif;font-weight:800;font-size:11.5px;
+  letter-spacing:.6px;color:var(--muted);transition:.2s;text-transform:uppercase}
+.nav-btn .n-ico{font-size:15px}
+.nav-btn.active{background:linear-gradient(135deg,rgba(139,92,246,.35),rgba(34,211,238,.25));color:var(--text);
+  box-shadow:0 0 14px rgba(139,92,246,.3)}
+.nav-btn span.n-lbl{display:inline}
+
+/* ── TOAST ────────────────────────────────────── */
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(90px);z-index:60;
+  background:var(--card);border:1px solid rgba(34,211,238,.5);color:var(--text);padding:11px 22px;border-radius:99px;
+  font-family:'Exo 2',sans-serif;font-size:13px;font-weight:800;transition:.3s;opacity:0;white-space:nowrap;
+  box-shadow:0 0 24px rgba(34,211,238,.25)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ── RESPONSIVE ───────────────────────────────── */
+@media(max-width:860px){
+  .islands{grid-template-columns:1fr 1fr}
+  .daily-card{grid-column:1 / -1;order:-1}
+  .paths-svg{display:none}
+  .profil-grid{grid-template-columns:1fr}
+  .planet{width:120px;height:120px;top:20px;right:-30px}
+}
+@media(max-width:560px){
+  .mission-layout{grid-template-columns:1fr}
+  .timer-wrap{flex-direction:row;justify-content:center}
+  .answers{grid-template-columns:1fr}
+  .nav-btn{padding:9px 13px}
+  .nav-btn span.n-lbl{display:none}
+  .nav-btn.active span.n-lbl{display:inline}
+  .islands{grid-template-columns:1fr 1fr;gap:11px}
+  .hero-banner{margin-top:0}
+}
+
+/* ── V2 : sélecteur de classe, lecture audio, mode GS ───── */
+.classe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.classe-opt{padding:10px 4px;border-radius:11px;border:2px solid var(--border);background:rgba(255,255,255,.04);
+  font-family:'Exo 2',sans-serif;font-weight:800;font-size:12px;cursor:pointer;transition:.15s;color:var(--text)}
+.classe-opt:hover{border-color:var(--violet2)}
+.classe-opt.sel{border-color:var(--cyan);background:rgba(34,211,238,.12);box-shadow:0 0 14px rgba(34,211,238,.3)}
+
+.q-head-row{display:flex;align-items:flex-start;gap:10px}
+.q-head-row .q-text{flex:1}
+.btn-speak{flex-shrink:0;width:42px;height:42px;border-radius:12px;border:1.5px solid rgba(34,211,238,.4);
+  background:rgba(34,211,238,.1);font-size:19px;cursor:pointer;transition:.15s}
+.btn-speak:hover{background:rgba(34,211,238,.2);transform:scale(1.06)}
+
+/* Grande Section : tout plus gros, plus lisible */
+body.cls-gs .q-text{font-size:clamp(22px,4.5vw,30px)}
+body.cls-gs .ans-btn{font-size:24px;padding:18px}
+body.cls-gs .ans-letter{width:36px;height:36px;font-size:15px}
+body.cls-gs .q-visual svg{width:150px;height:150px}
+body.cls-gs .btn-speak{width:52px;height:52px;font-size:24px}
+
+</style>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
@@ -235,7 +636,1282 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="questions.js"></script>
-<script src="app.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   EDUVERSE — Banque de questions Mathématiques multi-niveaux
+   Classes : GS, CE1, CM2, 6e, 4e, Seconde
+   Chaque classe = 6 compétences × 3 niveaux de difficulté.
+   Une question = { q, choices[], answer(index), svg? }
+   ═══════════════════════════════════════════════════════════ */
+
+var EDU_QUESTIONS = (function(){
+
+  // ── Utilitaires ─────────────────────────────────────────
+  function rnd(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+  function pick(arr){ return arr[rnd(0, arr.length - 1)]; }
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i = a.length - 1; i > 0; i--){
+      var j = rnd(0, i); var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  // Choix numériques autour de la bonne réponse
+  function buildChoices(answer, count){
+    count = count || 4;
+    var set = {}; set[answer] = true;
+    var pool = [answer + 1, answer - 1, answer + 2, answer - 2, answer + 10, answer - 10, answer + 3, answer + 5];
+    var ds = [];
+    for(var i = 0; i < pool.length && ds.length < count - 1; i++){
+      var d = pool[i];
+      if(d >= 0 && !set[d]){ set[d] = true; ds.push(d); }
+    }
+    var k = 4;
+    while(ds.length < count - 1){
+      var d2 = answer + k; k++;
+      if(d2 >= 0 && !set[d2]){ set[d2] = true; ds.push(d2); }
+    }
+    var choices = shuffle([answer].concat(ds));
+    return { choices: choices.map(String), answer: choices.indexOf(answer) };
+  }
+  function numQ(text, answer, svg, count){
+    var c = buildChoices(answer, count);
+    return { q: text, choices: c.choices, answer: c.answer, svg: svg || null };
+  }
+  // Choix textuels : good = chaîne, wrongs = chaînes
+  function textQ(text, good, wrongs, svg, count){
+    count = count || 4;
+    var uniq = [];
+    shuffle(wrongs).forEach(function(w){
+      if(w !== good && uniq.indexOf(w) < 0 && uniq.length < count - 1) uniq.push(w);
+    });
+    var choices = shuffle([good].concat(uniq));
+    return { q: text, choices: choices, answer: choices.indexOf(good), svg: svg || null };
+  }
+  // Réponses décimales françaises (calcul en dixièmes pour éviter les flottants)
+  function fr(nTenths){ return (nTenths / 10).toLocaleString('fr-FR'); }
+  function decQ(text, answerTenths){
+    var wrongsT = shuffle([answerTenths + 1, answerTenths - 1, answerTenths + 10, answerTenths - 10, answerTenths + 5])
+      .filter(function(x){ return x >= 0 && x !== answerTenths; }).slice(0, 3);
+    return textQ(text, fr(answerTenths), wrongsT.map(fr));
+  }
+
+  // ── Visuels ─────────────────────────────────────────────
+  var S = 'stroke="#22D3EE" stroke-width="5" fill="rgba(34,211,238,.12)" stroke-linejoin="round"';
+  var SHAPES = {
+    carre:     { name: 'un carré',     cotes: 4, svg: '<svg viewBox="0 0 120 120"><rect x="22" y="22" width="76" height="76" ' + S + '/></svg>' },
+    rectangle: { name: 'un rectangle', cotes: 4, svg: '<svg viewBox="0 0 120 120"><rect x="12" y="35" width="96" height="50" ' + S + '/></svg>' },
+    triangle:  { name: 'un triangle',  cotes: 3, svg: '<svg viewBox="0 0 120 120"><polygon points="60,16 106,100 14,100" ' + S + '/></svg>' },
+    cercle:    { name: 'un cercle',    cotes: 0, svg: '<svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="42" ' + S + '/></svg>' },
+    losange:   { name: 'un losange',   cotes: 4, svg: '<svg viewBox="0 0 120 120"><polygon points="60,12 100,60 60,108 20,60" ' + S + '/></svg>' },
+    hexagone:  { name: 'un hexagone',  cotes: 6, svg: '<svg viewBox="0 0 120 120"><polygon points="60,12 100,36 100,84 60,108 20,84 20,36" ' + S + '/></svg>' },
+    pentagone: { name: 'un pentagone', cotes: 5, svg: '<svg viewBox="0 0 120 120"><polygon points="60,12 105,47 88,102 32,102 15,47" ' + S + '/></svg>' }
+  };
+  var SHAPE_NAMES = ['un carré','un rectangle','un triangle','un cercle','un losange','un hexagone','un pentagone'];
+  function shapeQ(keys, count){
+    var sh = SHAPES[pick(keys)];
+    return textQ('Comment s\u2019appelle cette figure ?', sh.name, SHAPE_NAMES.filter(function(n){ return n !== sh.name; }), sh.svg, count);
+  }
+  function sidesQ(keys){
+    var sh = SHAPES[pick(keys)];
+    return numQ('Combien de c\u00f4t\u00e9s a cette figure ?', sh.cotes, sh.svg);
+  }
+  function emojiBlock(str){
+    return '<div style="font-size:36px;line-height:1.6;text-align:center;max-width:290px;word-break:break-all">' + str + '</div>';
+  }
+  function repeatE(e, n){ var s = ''; for(var i = 0; i < n; i++) s += e; return s; }
+
+  var KIDS = ['Léa','Tom','Nour','Adam','Lina','Rayan','Salma','Hugo','Imane','Malo'];
+  var THINGS = [
+    { e: '🍎', p: 'pommes' }, { e: '⚽', p: 'ballons' }, { e: '⭐', p: 'étoiles' },
+    { e: '🚗', p: 'voitures' }, { e: '🍓', p: 'fraises' }, { e: '✏️', p: 'crayons' }
+  ];
+  var COLORS = [
+    { name: 'rouge', hex: '#EF4444' }, { name: 'bleu', hex: '#3B82F6' }, { name: 'vert', hex: '#22C55E' },
+    { name: 'jaune', hex: '#F5C518' }, { name: 'violet', hex: '#8B5CF6' }, { name: 'orange', hex: '#FB923C' }
+  ];
+
+  // ═════════════════════════════════════════════════════════
+  //  GÉNÉRATEURS PAR CLASSE
+  // ═════════════════════════════════════════════════════════
+
+  // ── GRANDE SECTION (visuel, peu de texte, 3 choix) ──────
+  var GEN_GS = {
+    compter: function(niv){
+      var max = niv === 1 ? 5 : niv === 2 ? 8 : 10;
+      var n = rnd(2, max), th = pick(THINGS);
+      return numQ('Combien y a-t-il de ' + th.p + ' ?', n, emojiBlock(repeatE(th.e, n)), 3);
+    },
+    formes: function(niv){
+      return niv <= 2 ? shapeQ(['carre','triangle','cercle'], 3) : shapeQ(['carre','triangle','cercle','rectangle'], 3);
+    },
+    comparer: function(niv){
+      var max = niv === 1 ? 5 : 9;
+      var a = rnd(1, max), b = rnd(1, max);
+      while(b === a) b = rnd(1, max);
+      var th = pick(THINGS);
+      var k1 = pick(KIDS), k2 = pick(KIDS.filter(function(k){ return k !== k1; }));
+      var vis = emojiBlock(k1 + ' : ' + repeatE(th.e, a) + '<br>' + k2 + ' : ' + repeatE(th.e, b));
+      return textQ('Qui a le plus de ' + th.p + ' ?', a > b ? k1 : k2, [a > b ? k2 : k1], vis, 2);
+    },
+    petitscalculs: function(niv){
+      var max = niv === 1 ? 3 : niv === 2 ? 4 : 5;
+      var a = rnd(1, max), b = rnd(1, max), th = pick(THINGS);
+      return numQ(a + ' ' + th.p + ' et ' + b + ' ' + th.p + '. Combien de ' + th.p + ' en tout ?',
+        a + b, emojiBlock(repeatE(th.e, a) + ' ➕ ' + repeatE(th.e, b)), 3);
+    },
+    suites: function(niv){
+      var max = niv === 1 ? 8 : niv === 2 ? 15 : 25;
+      var n = rnd(1, max - 1);
+      return rnd(0, 1) === 0
+        ? numQ('Quel nombre vient juste après ' + n + ' ?', n + 1, null, 3)
+        : numQ('Quel nombre vient juste avant ' + (n + 1) + ' ?', n, null, 3);
+    },
+    couleurs: function(niv){
+      var c = pick(COLORS);
+      var svg = '<svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="42" fill="' + c.hex + '"/></svg>';
+      return textQ('De quelle couleur est ce rond ?', c.name,
+        COLORS.map(function(x){ return x.name; }).filter(function(n){ return n !== c.name; }), svg, 3);
+    }
+  };
+
+  // ── CE1 ─────────────────────────────────────────────────
+  var GEN_CE1 = {
+    addition: function(niv){
+      var a, b;
+      if(niv === 1){ a = rnd(2, 10); b = rnd(2, 10); }
+      else if(niv === 2){ a = rnd(11, 40); b = rnd(3, 29); }
+      else { a = rnd(25, 70); b = rnd(15, 30); }
+      return numQ('Combien font ' + a + ' + ' + b + ' ?', a + b);
+    },
+    soustraction: function(niv){
+      var a, b;
+      if(niv === 1){ a = rnd(6, 20); b = rnd(1, a - 1); }
+      else if(niv === 2){ a = rnd(20, 50); b = rnd(4, 19); }
+      else { a = rnd(45, 99); b = rnd(12, 40); }
+      return numQ('Combien font ' + a + ' \u2212 ' + b + ' ?', a - b);
+    },
+    multiplication: function(niv){
+      var t = niv === 1 ? 2 : niv === 2 ? pick([2, 5, 10]) : pick([2, 3, 4, 5]);
+      var n = rnd(niv === 3 ? 2 : 1, 10);
+      return numQ('Combien font ' + t + ' \u00d7 ' + n + ' ?', t * n);
+    },
+    doubles: function(niv){
+      if(niv === 1){ var n = rnd(1, 10); return numQ('Quel est le double de ' + n + ' ?', n * 2); }
+      if(niv === 2){
+        if(rnd(0, 1) === 0){ var m = rnd(6, 25); return numQ('Quel est le double de ' + m + ' ?', m * 2); }
+        var p = rnd(1, 10) * 2; return numQ('Quelle est la moitié de ' + p + ' ?', p / 2);
+      }
+      var p2 = rnd(6, 49) * 2; return numQ('Quelle est la moitié de ' + p2 + ' ?', p2 / 2);
+    },
+    problemes: function(niv){
+      var kid = pick(KIDS), kid2 = pick(KIDS.filter(function(k){ return k !== kid; }));
+      var th = pick(THINGS), a, b, c;
+      if(niv === 1){
+        a = rnd(3, 9); b = rnd(2, 8);
+        if(rnd(0, 1) === 0) return numQ(kid + ' a ' + a + ' ' + th.p + '. ' + kid2 + ' lui en donne ' + b + '. Combien en a-t-il maintenant ?', a + b);
+        var big = Math.max(a, b) + rnd(1, 4);
+        return numQ(kid + ' a ' + big + ' ' + th.p + '. Il en perd ' + Math.min(a, b) + '. Combien lui en reste-t-il ?', big - Math.min(a, b));
+      }
+      if(niv === 2){
+        a = rnd(12, 35); b = rnd(5, 15);
+        if(rnd(0, 1) === 0) return numQ('Dans la classe, il y a ' + a + ' livres. La maîtresse en apporte ' + b + '. Combien de livres en tout ?', a + b);
+        return numQ(kid + ' a ' + a + ' ' + th.p + ' et en offre ' + b + ' à ' + kid2 + '. Combien lui en reste-t-il ?', a - b);
+      }
+      a = rnd(15, 40); b = rnd(6, 15); c = rnd(3, 10);
+      return numQ(kid + ' a ' + a + ' ' + th.p + '. Il en gagne ' + b + ', puis en donne ' + c + ' à ' + kid2 + '. Combien lui en reste-t-il ?', a + b - c);
+    },
+    geometrie: function(niv){
+      if(niv === 1) return shapeQ(['carre','rectangle','triangle','cercle']);
+      if(niv === 2) return rnd(0, 1) === 0 ? sidesQ(['carre','rectangle','triangle']) : shapeQ(['carre','rectangle','triangle','cercle','losange']);
+      var m = rnd(0, 2);
+      if(m === 0) return sidesQ(['losange','hexagone','pentagone','triangle']);
+      if(m === 1) return shapeQ(['losange','hexagone','pentagone','carre']);
+      return textQ('Quelle figure a 4 côtés tous de la même longueur ?', 'le carré', ['le rectangle','le triangle','le cercle','l\u2019hexagone'], SHAPES.carre.svg);
+    }
+  };
+
+  // ── CM2 ─────────────────────────────────────────────────
+  var GEN_CM2 = {
+    grandsnombres: function(niv){
+      if(niv === 1){
+        var n = rnd(100, 999);
+        var pos = pick([['unités', n % 10], ['dizaines', Math.floor(n / 10) % 10], ['centaines', Math.floor(n / 100) % 10]]);
+        return numQ('Dans ' + n + ', quel est le chiffre des ' + pos[0] + ' ?', pos[1]);
+      }
+      if(niv === 2){
+        var m = rnd(1000, 99999);
+        var pos2 = pick([['centaines', Math.floor(m / 100) % 10], ['milliers', Math.floor(m / 1000) % 10], ['dizaines', Math.floor(m / 10) % 10]]);
+        return numQ('Dans ' + m.toLocaleString('fr-FR') + ', quel est le chiffre des ' + pos2[0] + ' ?', pos2[1]);
+      }
+      var base = rnd(10000, 90000);
+      var nums = shuffle([base, base + rnd(100, 900), base - rnd(100, 900), base + rnd(1000, 5000)]);
+      var best = Math.max.apply(null, nums);
+      return textQ('Quel est le plus grand nombre ?', best.toLocaleString('fr-FR'),
+        nums.filter(function(x){ return x !== best; }).map(function(x){ return x.toLocaleString('fr-FR'); }));
+    },
+    multiplication: function(niv){
+      if(niv === 1){ var t = rnd(3, 9), n = rnd(3, 9); return numQ('Combien font ' + t + ' \u00d7 ' + n + ' ?', t * n); }
+      if(niv === 2){ var a = rnd(3, 99); var f = pick([10, 100]); return numQ('Combien font ' + a + ' \u00d7 ' + f + ' ?', a * f); }
+      var b = rnd(12, 49), c = rnd(3, 9);
+      return numQ('Combien font ' + b + ' \u00d7 ' + c + ' ?', b * c);
+    },
+    division: function(niv){
+      if(niv === 1){ var d = rnd(2, 9), q = rnd(2, 9); return numQ('Combien font ' + (d * q) + ' \u00f7 ' + d + ' ?', q); }
+      if(niv === 2){ var d2 = rnd(3, 9), q2 = rnd(6, 15); return numQ('Combien font ' + (d2 * q2) + ' \u00f7 ' + d2 + ' ?', q2); }
+      var d3 = rnd(3, 9), q3 = rnd(4, 12), r = rnd(1, d3 - 1);
+      return numQ('Quel est le reste de la division de ' + (d3 * q3 + r) + ' par ' + d3 + ' ?', r);
+    },
+    fractions: function(niv){
+      if(niv === 1){ var n = rnd(2, 12) * 2; return numQ('Combien vaut la moitié de ' + n + ' ?', n / 2); }
+      if(niv === 2){ var m = rnd(2, 10) * 4; return numQ('Combien vaut le quart de ' + m + ' ?', m / 4); }
+      var k = rnd(2, 8) * 4;
+      return numQ('Combien valent les trois quarts de ' + k + ' ?', k * 3 / 4);
+    },
+    decimaux: function(niv){
+      if(niv === 1){ var a = rnd(10, 89), b = rnd(2, 9); return decQ('Combien font ' + fr(a) + ' + ' + fr(b) + ' ?', a + b); }
+      if(niv === 2){ var c = rnd(30, 99), d = rnd(11, 29); return decQ('Combien font ' + fr(c) + ' \u2212 ' + fr(d) + ' ?', c - d); }
+      var e = rnd(11, 45);
+      return decQ('Combien font ' + fr(e) + ' \u00d7 10 ?', e * 10);
+    },
+    mesures: function(niv){
+      if(niv === 1){ var m = rnd(2, 9); return numQ('Combien y a-t-il de centimètres dans ' + m + ' m ?', m * 100); }
+      if(niv === 2){ var h = rnd(1, 3), mn = pick([15, 30, 45]); return numQ('Combien de minutes dans ' + h + ' h ' + mn + ' min ?', h * 60 + mn); }
+      var prix = rnd(3, 9), nb = rnd(3, 8), billet = 50;
+      return numQ('Un cahier coûte ' + prix + ' €. ' + pick(KIDS) + ' en achète ' + nb + ' et paie avec un billet de ' + billet + ' €. Combien lui rend-on ?', billet - prix * nb);
+    }
+  };
+
+  // ── SIXIÈME ─────────────────────────────────────────────
+  function simplifiable(){
+    var f = pick([[2,4],[3,4],[2,6],[4,6],[6,8],[3,9],[4,10],[6,10],[5,10],[8,12],[9,12]]);
+    return f;
+  }
+  function pgcd(a, b){ return b ? pgcd(b, a % b) : a; }
+  var GEN_6E = {
+    fractions: function(niv){
+      if(niv === 1){ var n = rnd(3, 12) * 2; return numQ('Combien vaut 1/2 de ' + n + ' ?', n / 2); }
+      if(niv === 2){
+        var f = simplifiable(), g = pgcd(f[0], f[1]);
+        return textQ('Simplifie la fraction ' + f[0] + '/' + f[1], (f[0] / g) + '/' + (f[1] / g),
+          [f[0] + '/' + (f[1] / g), (f[0] / g) + '/' + f[1], (f[0] * 2) + '/' + (f[1] * 2), '1/' + f[1]]);
+      }
+      var k = rnd(2, 8) * 4;
+      return numQ('Combien valent 3/4 de ' + k + ' ?', k * 3 / 4);
+    },
+    decimaux: function(niv){
+      if(niv === 1){ var a = rnd(15, 89), b = rnd(6, 30); return decQ('Combien font ' + fr(a) + ' + ' + fr(b) + ' ?', a + b); }
+      if(niv === 2){ var c = rnd(12, 60); return decQ('Combien font ' + fr(c) + ' \u00d7 100 ?', c * 100); }
+      var d = rnd(5, 30), e = rnd(2, 9);
+      return decQ('Combien font ' + fr(d) + ' \u00d7 ' + e + ' ?', d * e);
+    },
+    proportionnalite: function(niv){
+      var prix = rnd(2, 6), n1 = rnd(2, 4), n2 = rnd(5, 9);
+      if(niv === 1) return numQ('Un stylo coûte ' + prix + ' €. Combien coûtent ' + n2 + ' stylos ?', prix * n2);
+      if(niv === 2) return numQ(n1 + ' croissants coûtent ' + (prix * n1) + ' €. Combien coûtent ' + n2 + ' croissants ?', prix * n2);
+      var v = rnd(4, 9) * 10;
+      return numQ('Une voiture roule à ' + v + ' km/h. Quelle distance parcourt-elle en 3 heures ?', v * 3);
+    },
+    perimetres: function(niv){
+      var L = rnd(5, 12), l = rnd(2, L - 1);
+      if(niv === 1){ var c = rnd(3, 12); return numQ('Quel est le périmètre d\u2019un carré de côté ' + c + ' cm ? (en cm)', c * 4); }
+      if(niv === 2) return numQ('Quel est le périmètre d\u2019un rectangle de longueur ' + L + ' cm et de largeur ' + l + ' cm ? (en cm)', 2 * (L + l));
+      return numQ('Quelle est l\u2019aire d\u2019un rectangle de longueur ' + L + ' cm et de largeur ' + l + ' cm ? (en cm²)', L * l);
+    },
+    divisibilite: function(niv){
+      var d = niv === 1 ? pick([2, 5]) : niv === 2 ? pick([3, 5, 10]) : pick([3, 4, 9]);
+      var good = d * rnd(4, 20);
+      var wrongs = [];
+      while(wrongs.length < 3){
+        var w = good + rnd(1, d - 1) + d * rnd(-2, 2);
+        if(w > 0 && w % d !== 0 && wrongs.indexOf(String(w)) < 0) wrongs.push(String(w));
+      }
+      return textQ('Quel nombre est divisible par ' + d + ' ?', String(good), wrongs);
+    },
+    calculmental: function(niv){
+      if(niv === 1){ var a = rnd(3, 9), b = rnd(3, 9), c = rnd(2, 9); return numQ('Combien font ' + a + ' + ' + b + ' \u00d7 ' + c + ' ? (attention aux priorités !)', a + b * c); }
+      if(niv === 2){ var d = rnd(20, 60), e = rnd(2, 9), f = rnd(2, 9); return numQ('Combien font ' + d + ' \u2212 ' + e + ' \u00d7 ' + f + ' ?', d - e * f); }
+      var g = rnd(2, 6), h = rnd(2, 6), i = rnd(2, 9);
+      return numQ('Combien font (' + g + ' + ' + h + ') \u00d7 ' + i + ' ?', (g + h) * i);
+    }
+  };
+
+  // ── QUATRIÈME ───────────────────────────────────────────
+  var TRIPLES = [[3,4,5],[6,8,10],[5,12,13],[9,12,15],[8,15,17]];
+  var GEN_4E = {
+    relatifs: function(niv){
+      var a = rnd(2, 15), b = rnd(2, 15);
+      if(niv === 1) return numQ('Combien font (\u2212' + a + ') + (+' + b + ') ?', b - a);
+      if(niv === 2) return numQ('Combien font (\u2212' + a + ') \u2212 (+' + b + ') ?', -a - b);
+      return numQ('Combien font (\u2212' + a + ') \u00d7 (\u2212' + b + ') ?', a * b);
+    },
+    puissances: function(niv){
+      if(niv === 1){ var n = rnd(2, 12); return numQ('Combien vaut ' + n + '² ?', n * n); }
+      if(niv === 2){ var p = rnd(2, 5); return numQ('Combien vaut 10^' + p + ' ?', Math.pow(10, p)); }
+      var m = rnd(2, 5);
+      return numQ('Combien vaut ' + m + '³ ?', m * m * m);
+    },
+    litteral: function(niv){
+      var a = rnd(2, 9), b = rnd(2, 9), x = rnd(2, 6);
+      if(niv === 1) return textQ('Réduis : ' + a + 'x + ' + b + 'x', (a + b) + 'x', [(a + b + 1) + 'x', (a * b) + 'x', (a + b) + 'x²', Math.abs(a - b) + 'x']);
+      if(niv === 2) return textQ('Développe : ' + a + '(x + ' + b + ')', a + 'x + ' + (a * b), [a + 'x + ' + b, a + 'x + ' + (a + b), (a * b) + 'x', 'x + ' + (a * b)]);
+      return numQ('Si x = ' + x + ', combien vaut ' + a + 'x + ' + b + ' ?', a * x + b);
+    },
+    fractions: function(niv){
+      var d = pick([3, 4, 5, 7]), a = rnd(1, d - 1), b = rnd(1, d - 1);
+      if(niv === 1) return textQ('Combien font ' + a + '/' + d + ' + ' + b + '/' + d + ' ?', (a + b) + '/' + d,
+        [(a + b) + '/' + (d * 2), (a * b) + '/' + d, (a + b + 1) + '/' + d, a + '/' + d]);
+      if(niv === 2){ var k = rnd(2, 4); return textQ('Combien font ' + a + '/' + d + ' \u00d7 ' + k + ' ?', (a * k) + '/' + d,
+        [(a * k) + '/' + (d * k), (a + k) + '/' + d, a + '/' + (d * k), (a * k + 1) + '/' + d]); }
+      var n2 = rnd(1, 4);
+      return textQ('Combien font 1/2 + ' + n2 + '/4 ?', (2 + n2) + '/4', [(1 + n2) + '/4', (1 + n2) + '/6', (2 + n2) + '/8', n2 + '/4']);
+    },
+    pythagore: function(niv){
+      var t = pick(TRIPLES);
+      if(niv === 1){ var n = rnd(3, 13); return numQ('Combien vaut ' + n + '² ?', n * n); }
+      if(niv === 2) return numQ('Un triangle rectangle a des côtés de ' + t[0] + ' cm et ' + t[1] + ' cm. Quelle est la longueur de l\u2019hypoténuse ? (en cm)', t[2]);
+      return numQ('Un triangle rectangle a une hypoténuse de ' + t[2] + ' cm et un côté de ' + t[0] + ' cm. Quelle est la longueur du troisième côté ? (en cm)', t[1]);
+    },
+    pourcentages: function(niv){
+      if(niv === 1){ var n = rnd(2, 9) * 10; return numQ('Combien vaut 50 % de ' + n + ' ?', n / 2); }
+      if(niv === 2){ var m = rnd(2, 9) * 10; var p = pick([10, 20, 25]); return numQ('Combien vaut ' + p + ' % de ' + m + ' ?', m * p / 100); }
+      var prix = rnd(4, 20) * 10, r = pick([10, 20, 30, 50]);
+      return numQ('Un article coûte ' + prix + ' €. Il est soldé à \u2212' + r + ' %. Quel est le nouveau prix ? (en €)', prix - prix * r / 100);
+    }
+  };
+
+  // ── SECONDE ─────────────────────────────────────────────
+  var GEN_2NDE = {
+    numerique: function(niv){
+      if(niv === 1){ var n = rnd(4, 15); return numQ('Combien vaut \u221a(' + (n * n) + ') ?', n); }
+      if(niv === 2){ var a = rnd(2, 6), p = rnd(2, 3), q = rnd(2, 3); return numQ('Combien vaut ' + a + '^' + p + ' \u00d7 ' + a + '^' + q + ' ? (donne le résultat sous forme ' + a + '^n : n = ?)', p + q); }
+      var b = rnd(2, 9), c = rnd(2, 9);
+      return textQ('Combien font ' + b + '/10 + ' + c + '/100 ?', fr10c(b * 10 + c), [fr10c(b + c), fr10c(b * 10 + c + 10), fr10c(b * 100 + c), fr10c(b * 10 + c + 1)]);
+    },
+    algebrique: function(niv){
+      var a = rnd(2, 6), b = rnd(2, 9);
+      if(niv === 1) return textQ('Factorise : ' + a + 'x + ' + (a * b), a + '(x + ' + b + ')',
+        [a + '(x + ' + (a * b) + ')', b + '(x + ' + a + ')', a + 'x(1 + ' + b + ')', '(x + ' + a + ')(x + ' + b + ')']);
+      if(niv === 2) return textQ('Développe : (x + ' + a + ')²', 'x² + ' + (2 * a) + 'x + ' + (a * a),
+        ['x² + ' + a + 'x + ' + (a * a), 'x² + ' + (a * a), 'x² + ' + (2 * a) + 'x + ' + (2 * a), 'x² \u2212 ' + (2 * a) + 'x + ' + (a * a)]);
+      return textQ('Développe : (x + ' + a + ')(x \u2212 ' + a + ')', 'x² \u2212 ' + (a * a),
+        ['x² + ' + (a * a), 'x² \u2212 ' + (2 * a) + 'x', 'x² \u2212 ' + (2 * a), '2x \u2212 ' + (a * a)]);
+    },
+    equations: function(niv){
+      var a = rnd(2, 9), x = rnd(2, 12), b = rnd(1, 20);
+      if(niv === 1) return numQ('Résous : x + ' + b + ' = ' + (x + b) + '. x = ?', x);
+      if(niv === 2) return numQ('Résous : ' + a + 'x = ' + (a * x) + '. x = ?', x);
+      return numQ('Résous : ' + a + 'x + ' + b + ' = ' + (a * x + b) + '. x = ?', x);
+    },
+    fonctions: function(niv){
+      var a = rnd(2, 6), b = rnd(1, 10), x = rnd(2, 9);
+      if(niv === 1) return numQ('Soit f(x) = ' + a + 'x + ' + b + '. Combien vaut f(' + x + ') ?', a * x + b);
+      if(niv === 2) return numQ('Soit f(x) = ' + a + 'x + ' + b + '. Quel est l\u2019antécédent de ' + (a * x + b) + ' ?', x);
+      return numQ('Soit f(x) = x² + ' + b + '. Combien vaut f(' + x + ') ?', x * x + b);
+    },
+    pourcentages: function(niv){
+      if(niv === 1){ var n = rnd(2, 9) * 100; var p = pick([10, 20, 25, 50]); return numQ('Combien vaut ' + p + ' % de ' + n + ' ?', n * p / 100); }
+      if(niv === 2){ var h = pick([10, 20, 50]); return textQ('Une hausse de ' + h + ' % correspond à quel coefficient multiplicateur ?', fr10c(100 + h), [fr10c(h), fr10c(100 - h), fr10c(100 + h * 10), '1/' + fr10c(100 + h)]); }
+      var prix = rnd(2, 9) * 100, hh = pick([10, 20, 50]);
+      return numQ('Un article à ' + prix + ' € augmente de ' + hh + ' %. Quel est le nouveau prix ? (en €)', prix * (100 + hh) / 100);
+    },
+    inequations: function(niv){
+      var a = rnd(2, 9), x = rnd(2, 12), b = rnd(1, 15);
+      if(niv === 1) return numQ('Résous : x + ' + b + ' > ' + (x + b) + '. La solution est x > ?', x);
+      if(niv === 2) return numQ('Résous : ' + a + 'x < ' + (a * x) + '. La solution est x < ?', x);
+      return numQ('Résous : ' + a + 'x \u2212 ' + b + ' \u2265 ' + (a * x - b) + '. La solution est x \u2265 ?', x);
+    }
+  };
+  // centièmes → chaîne française ("1,2")
+  function fr10c(nHundredths){ return (nHundredths / 100).toLocaleString('fr-FR'); }
+
+  // ═════════════════════════════════════════════════════════
+  //  PROGRAMMES : compétences affichées par classe
+  // ═════════════════════════════════════════════════════════
+  var PROGRAMMES = {
+    gs: {
+      label: 'Grande Section', temps: 45, gens: GEN_GS,
+      comps: [
+        { key: 'compter',       nom: 'Compter',           ico: '🔢' },
+        { key: 'petitscalculs', nom: 'Petits calculs',    ico: '➕' },
+        { key: 'comparer',      nom: 'Plus ou moins',     ico: '⚖️' },
+        { key: 'suites',        nom: 'Avant / après',     ico: '➡️' },
+        { key: 'formes',        nom: 'Les formes',        ico: '🔷' },
+        { key: 'couleurs',      nom: 'Les couleurs',      ico: '🎨' }
+      ]
+    },
+    ce1: {
+      label: 'CE1', temps: 20, gens: GEN_CE1,
+      comps: [
+        { key: 'addition',       nom: 'Addition',          ico: '➕' },
+        { key: 'soustraction',   nom: 'Soustraction',      ico: '➖' },
+        { key: 'multiplication', nom: 'Multiplication',    ico: '✖️' },
+        { key: 'doubles',        nom: 'Doubles & moitiés', ico: '🪞' },
+        { key: 'problemes',      nom: 'Petits problèmes',  ico: '🧩' },
+        { key: 'geometrie',      nom: 'Géométrie',         ico: '📐' }
+      ]
+    },
+    cm2: {
+      label: 'CM2', temps: 25, gens: GEN_CM2,
+      comps: [
+        { key: 'grandsnombres',  nom: 'Grands nombres',    ico: '🔢' },
+        { key: 'multiplication', nom: 'Multiplication',    ico: '✖️' },
+        { key: 'division',       nom: 'Division',          ico: '➗' },
+        { key: 'fractions',      nom: 'Fractions',         ico: '🍕' },
+        { key: 'decimaux',       nom: 'Nombres décimaux',  ico: '🔟' },
+        { key: 'mesures',        nom: 'Mesures & problèmes', ico: '📏' }
+      ]
+    },
+    sixieme: {
+      label: '6e', temps: 25, gens: GEN_6E,
+      comps: [
+        { key: 'fractions',        nom: 'Fractions',        ico: '🍕' },
+        { key: 'decimaux',         nom: 'Décimaux',         ico: '🔟' },
+        { key: 'proportionnalite', nom: 'Proportionnalité', ico: '⚖️' },
+        { key: 'perimetres',       nom: 'Périmètres & aires', ico: '📐' },
+        { key: 'divisibilite',     nom: 'Divisibilité',     ico: '➗' },
+        { key: 'calculmental',     nom: 'Calcul & priorités', ico: '🧠' }
+      ]
+    },
+    quatrieme: {
+      label: '4e', temps: 30, gens: GEN_4E,
+      comps: [
+        { key: 'relatifs',     nom: 'Nombres relatifs',  ico: '🌡️' },
+        { key: 'puissances',   nom: 'Puissances',        ico: '⚡' },
+        { key: 'litteral',     nom: 'Calcul littéral',   ico: '🔤' },
+        { key: 'fractions',    nom: 'Fractions',         ico: '🍕' },
+        { key: 'pythagore',    nom: 'Pythagore',         ico: '📐' },
+        { key: 'pourcentages', nom: 'Pourcentages',      ico: '💯' }
+      ]
+    },
+    seconde: {
+      label: 'Seconde', temps: 35, gens: GEN_2NDE,
+      comps: [
+        { key: 'numerique',    nom: 'Calcul numérique',      ico: '🧮' },
+        { key: 'algebrique',   nom: 'Développer / factoriser', ico: '🔤' },
+        { key: 'equations',    nom: 'Équations',             ico: '⚖️' },
+        { key: 'fonctions',    nom: 'Fonctions',             ico: '📈' },
+        { key: 'pourcentages', nom: 'Pourcentages & évolutions', ico: '💯' },
+        { key: 'inequations',  nom: 'Inéquations',           ico: '↔️' }
+      ]
+    }
+  };
+
+  // ═════════════════════════════════════════════════════════
+  //  API PUBLIQUE
+  // ═════════════════════════════════════════════════════════
+  function programme(classe){ return PROGRAMMES[classe] || PROGRAMMES.ce1; }
+
+  function buildMission(classe, compKey, niveau, nb){
+    nb = nb || 10;
+    var gens = programme(classe).gens;
+    var out = [], seen = {}, guard = 0;
+    while(out.length < nb && guard < 400){
+      guard++;
+      var q = gens[compKey](niveau);
+      if(!seen[q.q + q.choices.join('|')]){ seen[q.q + q.choices.join('|')] = true; out.push(q); }
+    }
+    return out;
+  }
+
+  function buildDaily(classe, levels, nb){
+    nb = nb || 10;
+    var prog = programme(classe);
+    var keys = prog.comps.map(function(c){ return c.key; });
+    var out = [], seen = {}, guard = 0;
+    while(out.length < nb && guard < 400){
+      guard++;
+      var k = pick(keys);
+      var q = prog.gens[k]((levels && levels[k]) || 1);
+      if(!seen[q.q + q.choices.join('|')]){ seen[q.q + q.choices.join('|')] = true; out.push(q); }
+    }
+    return out;
+  }
+
+  return { programme: programme, buildMission: buildMission, buildDaily: buildDaily, CLASSES: Object.keys(PROGRAMMES) };
+})();
+
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   EDUVERSE — Logique du jeu · v2 multi-niveaux + backend
+   Deux modes :
+   · DÉMO  (APPS_URL vide)      → tout en local, classement fictif
+   · EN LIGNE (APPS_URL rempli) → connexion code+PIN, classement réel,
+     progression synchronisée avec Google Sheets via Apps Script
+   ═══════════════════════════════════════════════════════════ */
+
+// ── CONFIGURATION ──────────────────────────────────────────
+var CONFIG = {
+  APPS_URL: '',             // ← coller ici l'URL /exec du script Google (phase en ligne)
+  QUESTIONS_PAR_MISSION: 10,
+  XP_BONNE_REPONSE: 10,
+  XP_BONUS_PARFAIT: 20,
+  XP_BONUS_DEFI: 100,
+  PIECES_BONNE_REPONSE: 2,
+  PIECES_MISSION_REUSSIE: 10,
+  XP_PAR_NIVEAU: 200,
+  VIES_MAX: 5
+};
+function isOnline(){ return !!CONFIG.APPS_URL; }
+
+// ── DONNÉES DE RÉFÉRENCE ───────────────────────────────────
+var AVATARS = ['🦊','🐱','🐼','🦁','🐸','🦄','🤖','👾','🧑‍🚀','🐯'];
+
+var CLASSES = [
+  { key: 'gs',        label: 'Grande Section' },
+  { key: 'ce1',       label: 'CE1' },
+  { key: 'cm2',       label: 'CM2' },
+  { key: 'sixieme',   label: '6e' },
+  { key: 'quatrieme', label: '4e' },
+  { key: 'seconde',   label: 'Seconde' }
+];
+function classeLabel(k){
+  var c = CLASSES.filter(function(x){ return x.key === k; })[0];
+  return c ? c.label : k;
+}
+
+var BADGES = [
+  { key: 'premiere',    nom: 'Première mission', ico: '🚀' },
+  { key: 'parfait',     nom: 'Sans-faute',       ico: '💯' },
+  { key: 'trois',       nom: '3 étoiles',        ico: '🌟' },
+  { key: 'serie5',      nom: 'Série de 5',       ico: '🔥' },
+  { key: 'defi',        nom: 'Défi quotidien',   ico: '⚡' },
+  { key: 'xp500',       nom: '500 XP',           ico: '🏅' },
+  { key: 'niveau3',     nom: 'Niveau 3 atteint', ico: '👑' },
+  { key: 'explorateur', nom: '10 missions',      ico: '🗺️' }
+];
+
+var BOTS = [ // classement fictif du mode démo uniquement
+  { nom: 'Yassine', ava: '🐺', xp: 2540, classe: 'sixieme' },
+  { nom: 'Salma',   ava: '🦋', xp: 2120, classe: 'cm2' },
+  { nom: 'Imane',   ava: '🐨', xp: 1980, classe: 'ce1' },
+  { nom: 'Adam',    ava: '🦖', xp: 980,  classe: 'quatrieme' },
+  { nom: 'Nour',    ava: '🐬', xp: 870,  classe: 'seconde' },
+  { nom: 'Lina',    ava: '🐰', xp: 640,  classe: 'gs' },
+  { nom: 'Rayan',   ava: '🐢', xp: 310,  classe: 'ce1' }
+];
+
+// ── ÉTAT DU JOUEUR ─────────────────────────────────────────
+var state = null;
+var session = null; // { id, pin } en mode en ligne
+
+function prog(){ return EDU_QUESTIONS.programme(state.classe); }
+function competences(){ return prog().comps; }
+
+function defaultComps(classe){
+  var comps = {};
+  EDU_QUESTIONS.programme(classe).comps.forEach(function(c){
+    comps[c.key] = { niveau: 1, etoiles: [0, 0, 0] };
+  });
+  return comps;
+}
+function defaultState(classe){
+  return {
+    prenom: '', avatar: AVATARS[0], classe: classe || 'ce1',
+    xp: 0, pieces: 0, vies: CONFIG.VIES_MAX,
+    comps: defaultComps(classe || 'ce1'), badges: [], missions: 0,
+    dailyDone: '', lastDay: '', history: []
+  };
+}
+function saveState(){
+  try { localStorage.setItem('eduverse_save', JSON.stringify(state)); } catch(e){}
+}
+function loadState(){
+  try {
+    var raw = localStorage.getItem('eduverse_save');
+    if(raw) return JSON.parse(raw);
+  } catch(e){}
+  return null;
+}
+function saveSession(){ try { localStorage.setItem('eduverse_session', JSON.stringify(session)); } catch(e){} }
+function loadSession(){
+  try {
+    var raw = localStorage.getItem('eduverse_session');
+    if(raw) return JSON.parse(raw);
+  } catch(e){}
+  return null;
+}
+function clearSession(){
+  session = null;
+  try { localStorage.removeItem('eduverse_session'); localStorage.removeItem('eduverse_save'); } catch(e){}
+}
+
+// ── OUTILS ─────────────────────────────────────────────────
+function $(id){ return document.getElementById(id); }
+function todayStr(){ return new Date().toISOString().slice(0, 10); }
+function playerLevel(){ return Math.floor(state.xp / CONFIG.XP_PAR_NIVEAU) + 1; }
+function compPct(key){
+  var c = state.comps[key];
+  if(!c) return 0;
+  return Math.round((c.etoiles[0] + c.etoiles[1] + c.etoiles[2]) / 9 * 100);
+}
+function globalPct(){
+  var t = 0, list = competences();
+  list.forEach(function(c){ t += compPct(c.key); });
+  return Math.round(t / list.length);
+}
+function toast(msg){
+  var t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._h);
+  t._h = setTimeout(function(){ t.classList.remove('show'); }, 2800);
+}
+function fireConfetti(big){
+  if(typeof confetti !== 'function') return;
+  confetti({ particleCount: big ? 130 : 70, spread: 80, origin: { y: .35 },
+    colors: ['#F5C518', '#8B5CF6', '#22D3EE', '#22C55E', '#fff'] });
+  if(big) setTimeout(function(){
+    confetti({ particleCount: 55, angle: 60, spread: 55, origin: { x: 0, y: .5 } });
+    confetti({ particleCount: 55, angle: 120, spread: 55, origin: { x: 1, y: .5 } });
+  }, 350);
+}
+// Lecture à voix haute (précieux pour GS/CE1)
+function speak(text){
+  try {
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'fr-FR'; u.rate = .92;
+    window.speechSynthesis.speak(u);
+  } catch(e){}
+}
+
+// ── API BACKEND (Apps Script) ──────────────────────────────
+function api(params, usePost){
+  // Si APPS_URL vide, on utilise l'URL courante (mode Apps Script hébergé)
+  var base = CONFIG.APPS_URL || window.location.href.split('?')[0];
+  if(usePost){
+    return fetch(base, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params)
+    }).then(function(r){ return r.json(); });
+  }
+  var p = new URLSearchParams(params);
+  return fetch(base + '?' + p.toString())
+    .then(function(r){ return r.json(); });
+}
+function stateFromServer(el){
+  var classe = el.classe || 'ce1';
+  var s = defaultState(classe);
+  s.prenom = el.prenom || '';
+  s.avatar = el.avatar || AVATARS[0];
+  s.classe = classe;
+  s.xp = parseInt(el.xp, 10) || 0;
+  s.pieces = parseInt(el.pieces, 10) || 0;
+  s.vies = CONFIG.VIES_MAX;
+  s.missions = parseInt(el.missions, 10) || 0;
+  s.dailyDone = el.dailyDone || '';
+  try { if(el.comps) s.comps = Object.assign(defaultComps(classe), JSON.parse(el.comps)); } catch(e){}
+  try { if(el.badges) s.badges = JSON.parse(el.badges); } catch(e){}
+  try { if(el.history) s.history = JSON.parse(el.history); } catch(e){}
+  return s;
+}
+function apiSaveProgress(detail, xpGain){
+  if(!isOnline() || !session) return Promise.resolve();
+  return api({
+    action: 'save', id: session.id, pin: session.pin,
+    xp: state.xp, pieces: state.pieces, missions: state.missions,
+    comps: JSON.stringify(state.comps), badges: JSON.stringify(state.badges),
+    history: JSON.stringify(state.history.slice(0, 12)),
+    dailyDone: state.dailyDone, detail: detail || '', xpGain: xpGain || 0
+  }, true).catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────
+function show(name){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  $('screen-' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-nav') === name);
+  });
+  $('bottomNav').style.display = (name === 'login' || name === 'mission') ? 'none' : 'flex';
+  if(name === 'home') renderHome();
+  if(name === 'world') renderWorld();
+  if(name === 'profil') renderProfil();
+  if(name === 'classement') renderClassement();
+  window.scrollTo(0, 0);
+}
+document.addEventListener('click', function(e){
+  var nav = e.target.closest('[data-nav]');
+  if(nav) show(nav.getAttribute('data-nav'));
+});
+
+// ── FOND ÉTOILÉ ────────────────────────────────────────────
+(function stars(){
+  var bg = $('spaceBg');
+  for(var i = 0; i < 90; i++){
+    var s = document.createElement('div');
+    s.className = 'star';
+    var size = Math.random() * 2.2 + .6;
+    s.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (Math.random() * 100) + '%;top:'
+      + (Math.random() * 100) + '%;animation-delay:' + (Math.random() * 3.4) + 's';
+    bg.appendChild(s);
+  }
+})();
+
+// ── ÉCRAN LOGIN ────────────────────────────────────────────
+var selAvatar = AVATARS[0];
+var selClasse = 'ce1';
+
+function initLoginDemo(){
+  $('loginDemo').style.display = 'block';
+  $('loginOnline').style.display = 'none';
+  var grid = $('avatarGrid');
+  grid.innerHTML = '';
+  AVATARS.forEach(function(a, i){
+    var b = document.createElement('button');
+    b.className = 'avatar-opt' + (i === 0 ? ' sel' : '');
+    b.textContent = a;
+    b.onclick = function(){
+      selAvatar = a;
+      grid.querySelectorAll('.avatar-opt').forEach(function(x){ x.classList.remove('sel'); });
+      b.classList.add('sel');
+    };
+    grid.appendChild(b);
+  });
+  var cg = $('classeGrid');
+  cg.innerHTML = '';
+  CLASSES.forEach(function(c, i){
+    var b = document.createElement('button');
+    b.className = 'classe-opt' + (c.key === selClasse ? ' sel' : '');
+    b.textContent = c.label;
+    b.onclick = function(){
+      selClasse = c.key;
+      cg.querySelectorAll('.classe-opt').forEach(function(x){ x.classList.remove('sel'); });
+      b.classList.add('sel');
+    };
+    cg.appendChild(b);
+  });
+}
+function initLoginOnline(){
+  $('loginDemo').style.display = 'none';
+  $('loginOnline').style.display = 'block';
+  try {
+    var urlId = new URLSearchParams(window.location.search).get('id');
+    if(urlId) $('loginCode').value = urlId.toUpperCase();
+  } catch(e){}
+}
+
+$('btnStart').onclick = function(){
+  var name = $('loginName').value.trim();
+  if(!name){ toast('Écris ton prénom pour commencer !'); $('loginName').focus(); return; }
+  state = defaultState(selClasse);
+  state.prenom = name.charAt(0).toUpperCase() + name.slice(1);
+  state.avatar = selAvatar;
+  state.lastDay = todayStr();
+  saveState();
+  fireConfetti(false);
+  show('home');
+};
+$('loginName').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('btnStart').click(); });
+
+$('btnLoginOnline').onclick = function(){
+  var code = $('loginCode').value.trim().toUpperCase();
+  var pin = $('loginPin').value.trim();
+  if(!code || pin.length < 4){ toast('Entre ton code et ton PIN à 4 chiffres'); return; }
+  var btn = $('btnLoginOnline');
+  btn.disabled = true; btn.textContent = 'Connexion…';
+  api({ action: 'login', id: code, pin: pin }).then(function(res){
+    btn.disabled = false; btn.textContent = '🚀 Se connecter';
+    if(res.status !== 'ok'){ toast(res.message || 'Code ou PIN incorrect'); return; }
+    session = { id: code, pin: pin };
+    saveSession();
+    state = stateFromServer(res.eleve);
+    state.lastDay = todayStr();
+    saveState();
+    fireConfetti(false);
+    show('home');
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = '🚀 Se connecter';
+    toast('Connexion impossible — vérifie ta connexion internet');
+  });
+};
+$('loginPin').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('btnLoginOnline').click(); });
+
+// ── ÎLES SVG ───────────────────────────────────────────────
+function islandSvg(kind, active){
+  var glow = active ? '#22D3EE' : '#4A5578';
+  var body = active ? 'url(#islGrad)' : '#232B4A';
+  var top = '';
+  if(kind === 'crystal') top = '<polygon points="48,4 58,26 38,26" fill="' + glow + '" opacity=".9"/><polygon points="30,12 38,28 22,28" fill="' + glow + '" opacity=".55"/><polygon points="66,14 74,28 58,28" fill="' + glow + '" opacity=".55"/>';
+  else if(kind === 'tower') top = '<rect x="42" y="6" width="12" height="22" rx="2" fill="' + glow + '" opacity=".8"/><rect x="28" y="16" width="9" height="12" rx="2" fill="' + glow + '" opacity=".5"/><rect x="59" y="16" width="9" height="12" rx="2" fill="' + glow + '" opacity=".5"/>';
+  else if(kind === 'dome') top = '<path d="M32 28 a16 16 0 0 1 32 0 z" fill="' + glow + '" opacity=".8"/><rect x="46" y="6" width="4" height="10" fill="' + glow + '"/>';
+  else if(kind === 'castle') top = '<rect x="34" y="12" width="28" height="16" fill="' + glow + '" opacity=".7"/><rect x="34" y="8" width="6" height="6" fill="' + glow + '"/><rect x="45" y="8" width="6" height="6" fill="' + glow + '"/><rect x="56" y="8" width="6" height="6" fill="' + glow + '"/>';
+  else top = '<rect x="44" y="4" width="8" height="24" rx="4" fill="' + glow + '" opacity=".85"/><circle cx="48" cy="6" r="3.4" fill="' + glow + '"/>';
+  return '<svg viewBox="0 0 96 56" aria-hidden="true">'
+    + '<defs><linearGradient id="islGrad" x1="0" y1="0" x2="0" y2="1">'
+    + '<stop offset="0" stop-color="#3B2E8C"/><stop offset="1" stop-color="#131048"/></linearGradient></defs>'
+    + top
+    + '<path d="M10 32 Q 48 22 86 32 L 74 50 Q 48 58 22 50 Z" fill="' + body + '" stroke="' + glow + '" stroke-opacity=".5" stroke-width="1.5"/>'
+    + '</svg>';
+}
+
+var MATIERES = [
+  { key: 'maths',    nom: 'Mathématiques', unlocked: true,  art: 'crystal' },
+  { key: 'francais', nom: 'Français',      unlocked: false, art: 'tower'   },
+  { key: 'sciences', nom: 'Sciences',      unlocked: false, art: 'dome'    },
+  { key: 'histoire', nom: 'Histoire',      unlocked: false, art: 'castle'  },
+  { key: 'arabe',    nom: 'Langues',       unlocked: false, art: 'minaret' }
+];
+
+// ── ÉCRAN ACCUEIL ──────────────────────────────────────────
+function renderHome(){
+  document.body.classList.toggle('cls-gs', state.classe === 'gs');
+  $('homeAvatar').textContent = state.avatar;
+  $('homeName').textContent = state.prenom;
+  $('homeLevel').textContent = 'Niveau ' + playerLevel() + ' · ' + classeLabel(state.classe);
+  $('homeXp').textContent = state.xp.toLocaleString('fr-FR');
+  var inLevel = state.xp % CONFIG.XP_PAR_NIVEAU;
+  $('homeXpNext').textContent = inLevel + ' / ' + CONFIG.XP_PAR_NIVEAU;
+  $('homeXpBar').style.width = (inLevel / CONFIG.XP_PAR_NIVEAU * 100) + '%';
+  $('homeCoins').textContent = state.pieces;
+  $('homeLives').textContent = state.vies + '/' + CONFIG.VIES_MAX;
+  $('btnRecharge').style.display = state.vies < CONFIG.VIES_MAX ? 'inline-flex' : 'none';
+
+  var grid = $('islandsGrid');
+  grid.innerHTML = '';
+  var order = [MATIERES[0], null, MATIERES[1], MATIERES[3], MATIERES[2], MATIERES[4]];
+  order.forEach(function(m){
+    if(m === null){
+      var daily = document.createElement('div');
+      daily.className = 'daily-card';
+      var done = state.dailyDone === todayStr();
+      daily.innerHTML = '<div class="daily-flame">' + (done ? '✅' : '☄️') + '</div>'
+        + '<div class="daily-title">Défi quotidien</div>'
+        + '<div class="daily-xp">+' + CONFIG.XP_BONUS_DEFI + ' XP</div>'
+        + (done
+            ? '<div class="daily-done">Défi du jour réussi ! Reviens demain 🌙</div>'
+            : '<div style="margin-top:10px"><span class="btn btn-gold" style="font-size:11px;padding:9px 20px">Commencer</span></div>');
+      if(!done) daily.onclick = function(){ startMission('daily', 0); };
+      grid.appendChild(daily);
+      return;
+    }
+    var card = document.createElement('div');
+    card.className = 'island ' + (m.unlocked ? 'unlocked' : 'locked');
+    var pct = m.unlocked ? globalPct() : 0;
+    card.innerHTML = '<div class="island-art">' + islandSvg(m.art, m.unlocked) + '</div>'
+      + '<div class="island-name">' + m.nom + '</div>'
+      + '<div class="island-sub"><span>Niveau ' + (m.unlocked ? playerLevel() : 1) + '</span>'
+      + '<span class="mini-bar"><i style="width:' + pct + '%"></i></span><span>' + pct + '%</span></div>'
+      + (m.unlocked ? '<div class="island-cta">Explorer →</div>' : '<div class="lock-badge">🔒</div>');
+    if(m.unlocked) card.onclick = function(){ show('world'); };
+    else card.onclick = function(){ toast('🔒 Ce monde sera bientôt débloqué !'); };
+    grid.appendChild(card);
+  });
+}
+$('btnRecharge').onclick = function(e){
+  e.stopPropagation();
+  state.vies = CONFIG.VIES_MAX;
+  saveState(); renderHome();
+  toast('❤️ Vies rechargées !');
+};
+
+// ── ÉCRAN MONDE ────────────────────────────────────────────
+function starsStr(n){
+  var out = '';
+  for(var i = 1; i <= 3; i++) out += '<span class="' + (i <= n ? '' : 'off') + '">★</span>';
+  return out;
+}
+function renderWorld(){
+  $('worldSub').textContent = classeLabel(state.classe)
+    + ' · Chaque mission : ' + CONFIG.QUESTIONS_PAR_MISSION + ' questions · Gagne 2 étoiles ⭐⭐ pour débloquer le niveau suivant';
+  var grid = $('compGrid');
+  grid.innerHTML = '';
+  competences().forEach(function(c){
+    var st = state.comps[c.key];
+    var card = document.createElement('div');
+    card.className = 'comp-card';
+    var pct = compPct(c.key);
+    var nivBtns = '';
+    for(var n = 1; n <= 3; n++){
+      var unlocked = n === 1 || st.etoiles[n - 2] >= 2;
+      nivBtns += '<button class="niv-btn" ' + (unlocked ? '' : 'disabled')
+        + ' data-comp="' + c.key + '" data-niv="' + n + '">'
+        + '<span>' + (unlocked ? 'Niv. ' + n : '🔒 Niv. ' + n) + '</span>'
+        + '<span class="niv-stars">' + starsStr(st.etoiles[n - 1]) + '</span></button>';
+    }
+    card.innerHTML = '<div class="comp-head"><div class="comp-ico">' + c.ico + '</div>'
+      + '<div style="flex:1"><div class="comp-name">' + c.nom + '</div>'
+      + '<div class="comp-pct">' + pct + '% maîtrisé</div></div></div>'
+      + '<div class="bar comp-bar"><i style="width:' + pct + '%;background:linear-gradient(90deg,#22C55E,#86EFAC)"></i></div>'
+      + '<div class="niv-row">' + nivBtns + '</div>';
+    grid.appendChild(card);
+  });
+  grid.querySelectorAll('.niv-btn:not([disabled])').forEach(function(b){
+    b.onclick = function(){
+      startMission(b.getAttribute('data-comp'), parseInt(b.getAttribute('data-niv'), 10));
+    };
+  });
+}
+
+// ── MOTEUR DE MISSION ──────────────────────────────────────
+var mission = null;
+var timerHandle = null;
+
+function levelsSnapshot(){
+  var out = {};
+  competences().forEach(function(c){ out[c.key] = state.comps[c.key].niveau; });
+  return out;
+}
+function compName(key){
+  var c = competences().filter(function(x){ return x.key === key; })[0];
+  return c ? c.nom : key;
+}
+
+function startMission(compKey, niveau){
+  if(state.vies <= 0){
+    toast('💔 Plus de vies ! Recharge-les sur l\u2019accueil.');
+    return;
+  }
+  var isDaily = compKey === 'daily';
+  var questions = isDaily
+    ? EDU_QUESTIONS.buildDaily(state.classe, levelsSnapshot(), CONFIG.QUESTIONS_PAR_MISSION)
+    : EDU_QUESTIONS.buildMission(state.classe, compKey, niveau, CONFIG.QUESTIONS_PAR_MISSION);
+
+  mission = {
+    comp: compKey, niveau: niveau, daily: isDaily,
+    questions: questions, index: 0, bonnes: 0, streak: 0, bestStreak: 0,
+    xp: 0, answers: []
+  };
+  $('missionTag').textContent = (isDaily ? '☄️ DÉFI QUOTIDIEN' : '🎯 ' + compName(compKey).toUpperCase() + ' · NIV. ' + niveau);
+  show('mission');
+  renderQuestion();
+}
+
+function renderLives(){
+  var el = $('missionLives');
+  el.innerHTML = '';
+  for(var i = 1; i <= CONFIG.VIES_MAX; i++){
+    var s = document.createElement('span');
+    s.textContent = '❤️';
+    if(i > state.vies) s.className = 'lost';
+    el.appendChild(s);
+  }
+}
+
+var TIMER_CIRC = 2 * Math.PI * 38;
+function tempsQuestion(){ return prog().temps || 20; }
+function startTimer(){
+  stopTimer();
+  var total = tempsQuestion();
+  var left = total;
+  var circle = $('timerCircle');
+  circle.style.strokeDasharray = TIMER_CIRC;
+  circle.style.strokeDashoffset = 0;
+  circle.style.stroke = 'var(--cyan)';
+  $('timerNum').textContent = left;
+  timerHandle = setInterval(function(){
+    left--;
+    $('timerNum').textContent = Math.max(left, 0);
+    circle.style.strokeDashoffset = TIMER_CIRC * (1 - left / total);
+    if(left <= 5) circle.style.stroke = 'var(--red)';
+    if(left <= 0){ stopTimer(); answer(-1); }
+  }, 1000);
+}
+function stopTimer(){ if(timerHandle){ clearInterval(timerHandle); timerHandle = null; } }
+
+function renderQuestion(){
+  var q = mission.questions[mission.index];
+  renderLives();
+  $('qCount').textContent = 'QUESTION ' + (mission.index + 1) + ' / ' + mission.questions.length;
+  $('qBar').style.width = (mission.index / mission.questions.length * 100) + '%';
+  $('qText').textContent = q.q;
+  var vis = $('qVisual');
+  if(q.svg){ vis.innerHTML = q.svg; vis.style.display = 'flex'; }
+  else { vis.innerHTML = ''; vis.style.display = 'none'; }
+  var box = $('answers');
+  box.innerHTML = '';
+  var letters = ['A', 'B', 'C', 'D'];
+  q.choices.forEach(function(c, i){
+    var b = document.createElement('button');
+    b.className = 'ans-btn';
+    b.innerHTML = '<span class="ans-letter">' + letters[i] + '</span><span>' + c + '</span>';
+    b.onclick = function(){ answer(i); };
+    box.appendChild(b);
+  });
+  var fb = $('feedback');
+  fb.className = 'feedback';
+  startTimer();
+}
+$('btnSpeak').onclick = function(){
+  if(mission) speak(mission.questions[mission.index].q);
+};
+
+function answer(idx){
+  stopTimer();
+  var q = mission.questions[mission.index];
+  var good = idx === q.answer;
+  var btns = $('answers').querySelectorAll('.ans-btn');
+  btns.forEach(function(b, i){
+    b.disabled = true;
+    if(i === q.answer) b.classList.add('correct');
+    if(i === idx && !good) b.classList.add('wrong');
+  });
+  mission.answers.push({ q: q.q, choisi: idx >= 0 ? q.choices[idx] : '⏱ temps écoulé', bon: q.choices[q.answer], ok: good });
+
+  var fb = $('feedback');
+  if(good){
+    mission.bonnes++;
+    mission.streak++;
+    mission.bestStreak = Math.max(mission.bestStreak, mission.streak);
+    mission.xp += CONFIG.XP_BONNE_REPONSE;
+    $('feedbackTxt').textContent = pickMsg(['Bonne réponse !', 'Bravo !', 'Super !', 'Génial !', 'Exact !']);
+    $('feedbackXp').textContent = '+' + CONFIG.XP_BONNE_REPONSE + ' XP ⚡';
+    fb.className = 'feedback show good';
+  } else {
+    mission.streak = 0;
+    state.vies = Math.max(0, state.vies - 1);
+    renderLives();
+    $('feedbackTxt').textContent = (idx < 0 ? '⏱ Temps écoulé ! ' : 'Presque ! ') + 'La bonne réponse était ' + q.choices[q.answer] + '.';
+    $('feedbackXp').textContent = '−1 ❤️';
+    fb.className = 'feedback show bad';
+  }
+  saveState();
+
+  setTimeout(function(){
+    mission.index++;
+    if(mission.index >= mission.questions.length || state.vies <= 0) endMission();
+    else renderQuestion();
+  }, good ? 1100 : 1900);
+}
+function pickMsg(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+
+$('btnQuitMission').onclick = function(){
+  stopTimer();
+  if(confirm('Quitter la mission ? Ta progression de cette mission sera perdue.')) show(mission && mission.daily ? 'home' : 'world');
+  else if(mission) startTimer();
+};
+
+// ── FIN DE MISSION ─────────────────────────────────────────
+function computeStars(bonnes, total){
+  var r = bonnes / total;
+  if(r >= .9) return 3;
+  if(r >= .7) return 2;
+  if(r >= .5) return 1;
+  return 0;
+}
+
+function endMission(){
+  stopTimer();
+  var total = mission.questions.length;
+  var stars = computeStars(mission.bonnes, total);
+  var xp = mission.xp;
+  var coins = mission.bonnes * CONFIG.PIECES_BONNE_REPONSE;
+  var gagneVie = false;
+  var newBadges = [];
+
+  if(mission.bonnes === total) xp += CONFIG.XP_BONUS_PARFAIT;
+  if(stars >= 2) coins += CONFIG.PIECES_MISSION_REUSSIE;
+  if(mission.daily && stars >= 1){
+    xp += CONFIG.XP_BONUS_DEFI;
+    state.dailyDone = todayStr();
+    if(state.badges.indexOf('defi') < 0){ state.badges.push('defi'); newBadges.push('defi'); }
+  }
+  if(mission.bonnes >= 8 && state.vies < CONFIG.VIES_MAX){ state.vies++; gagneVie = true; }
+
+  var detailMission = mission.daily ? 'Défi quotidien' : compName(mission.comp) + ' · Niv. ' + mission.niveau;
+  if(!mission.daily){
+    var st = state.comps[mission.comp];
+    st.etoiles[mission.niveau - 1] = Math.max(st.etoiles[mission.niveau - 1], stars);
+    if(stars >= 2 && mission.niveau < 3 && st.niveau < mission.niveau + 1){
+      st.niveau = mission.niveau + 1;
+      if(st.niveau === 3 && state.badges.indexOf('niveau3') < 0){ state.badges.push('niveau3'); newBadges.push('niveau3'); }
+    }
+  }
+
+  state.xp += xp;
+  state.pieces += coins;
+  state.missions++;
+  state.history.unshift({ date: todayStr(), comp: detailMission, score: mission.bonnes + '/' + total, xp: xp });
+  state.history = state.history.slice(0, 12);
+
+  function earn(k){ if(state.badges.indexOf(k) < 0){ state.badges.push(k); newBadges.push(k); } }
+  if(state.missions === 1) earn('premiere');
+  if(mission.bonnes === total) earn('parfait');
+  if(stars === 3) earn('trois');
+  if(mission.bestStreak >= 5) earn('serie5');
+  if(state.xp >= 500) earn('xp500');
+  if(state.missions >= 10) earn('explorateur');
+
+  saveState();
+  apiSaveProgress(detailMission + ' · ' + mission.bonnes + '/' + total, xp);
+
+  $('resultTitle').textContent = mission.daily ? 'Défi terminé !' : 'Mission terminée !';
+  $('resultStars').innerHTML = starsStr(stars);
+  $('resultMsg').textContent = stars === 3 ? 'Excellent travail !' : stars === 2 ? 'Très beau vol, explorateur !'
+    : stars === 1 ? 'Bien joué, continue !' : 'Courage, réessaie ta mission !';
+  $('resultScore').textContent = 'Tu as réussi ' + mission.bonnes + ' question' + (mission.bonnes > 1 ? 's' : '') + ' sur ' + total + ' · Tu as gagné :';
+  $('rewXp').textContent = '+' + xp;
+  $('rewCoins').textContent = '+' + coins;
+  $('rewLifeCard').style.display = gagneVie ? 'block' : 'none';
+
+  var bt = $('badgeToast');
+  if(newBadges.length){
+    var names = newBadges.map(function(k){
+      return BADGES.filter(function(b){ return b.key === k; })[0].nom;
+    }).join(' · ');
+    $('badgeName').textContent = names;
+    bt.classList.add('show');
+  } else bt.classList.remove('show');
+
+  var review = document.getElementById('reviewPanel');
+  if(review) review.remove();
+
+  show('result');
+  if(stars >= 2) fireConfetti(stars === 3);
+}
+
+$('btnContinue').onclick = function(){ show(mission && mission.daily ? 'home' : 'world'); };
+$('btnReview').onclick = function(){
+  var old = document.getElementById('reviewPanel');
+  if(old){ old.remove(); return; }
+  var panel = document.createElement('div');
+  panel.id = 'reviewPanel';
+  panel.className = 'panel';
+  panel.style.cssText = 'margin-top:20px;text-align:left';
+  panel.innerHTML = '<div class="panel-title">Revoir les réponses</div>'
+    + mission.answers.map(function(a, i){
+        return '<div class="hist-row"><span class="hist-lbl" style="flex:1">'
+          + (i + 1) + '. ' + a.q + '<br><span style="color:' + (a.ok ? 'var(--green)' : 'var(--red)') + ';font-weight:800">'
+          + (a.ok ? '✔ ' + a.choisi : '✘ ' + a.choisi + ' → ' + a.bon) + '</span></span></div>';
+      }).join('');
+  document.querySelector('.result-wrap').appendChild(panel);
+};
+
+// ── ÉCRAN PROFIL ───────────────────────────────────────────
+var DONUT_CIRC = 2 * Math.PI * 46;
+function renderProfil(){
+  $('profilSub').textContent = state.avatar + ' ' + state.prenom + ' · Élève ' + classeLabel(state.classe) + ' · Niveau ' + playerLevel();
+  var pct = globalPct();
+  $('donutNum').textContent = pct + '%';
+  var d = $('donutProg');
+  d.style.strokeDasharray = DONUT_CIRC;
+  d.style.strokeDashoffset = DONUT_CIRC * (1 - pct / 100);
+  $('donutBravo').textContent = pct >= 60 ? 'Bravo ' + state.prenom + ' !' : 'En route, ' + state.prenom + ' !';
+  $('donutTxt').textContent = pct >= 60 ? 'Tu progresses très bien. Continue comme ça !'
+    : 'Chaque mission te fait gagner des étoiles et des XP.';
+
+  $('skillsList').innerHTML = competences().map(function(c){
+    var p = compPct(c.key);
+    var col = p >= 70 ? '#22C55E' : p >= 40 ? '#F5C518' : '#FF7849';
+    return '<div class="skill-row"><span class="skill-name">' + c.ico + ' ' + c.nom + '</span>'
+      + '<span class="bar"><i style="width:' + p + '%;background:' + col + ';box-shadow:0 0 8px ' + col + '"></i></span>'
+      + '<span class="skill-pct" style="color:' + col + '">' + p + '%</span></div>';
+  }).join('');
+
+  $('badgesGrid').innerHTML = BADGES.map(function(b){
+    var got = state.badges.indexOf(b.key) >= 0;
+    return '<div class="badge-item ' + (got ? 'earned' : 'locked') + '">'
+      + '<div class="b-ico">' + b.ico + '</div><div class="b-name">' + b.nom + '</div></div>';
+  }).join('');
+
+  $('histList').innerHTML = state.history.length
+    ? state.history.map(function(h){
+        return '<div class="hist-row"><span class="hist-lbl">' + h.comp + ' · ' + h.score + '</span>'
+          + '<span class="hist-val">+' + h.xp + ' XP</span></div>';
+      }).join('')
+    : '<div class="hist-row"><span class="hist-lbl">Lance ta première mission pour écrire ton histoire ! 🚀</span></div>';
+}
+$('btnLogout').onclick = function(){
+  if(confirm('Changer de joueur ? (la progression en ligne est conservée)')){
+    clearSession();
+    state = defaultState('ce1');
+    if(isOnline()) initLoginOnline(); else initLoginDemo();
+    show('login');
+  }
+};
+
+// ── ÉCRAN CLASSEMENT ───────────────────────────────────────
+function renderClassement(){
+  if(isOnline()){
+    $('rankList').innerHTML = '<div class="rank-row"><span class="rank-name">Chargement du classement… 📡</span></div>';
+    $('podium').innerHTML = '';
+    api({ action: 'leaderboard' }).then(function(res){
+      if(res.status !== 'ok'){ paintClassement(demoBoard()); return; }
+      var rows = res.eleves.map(function(e){
+        return { nom: e.prenom, ava: e.avatar || '🙂', xp: parseInt(e.xp, 10) || 0,
+                 classe: e.classe, me: session && e.id === session.id };
+      });
+      paintClassement(rows);
+    }).catch(function(){ paintClassement(demoBoard()); });
+  } else {
+    paintClassement(demoBoard());
+  }
+}
+function demoBoard(){
+  var all = BOTS.map(function(b){ return { nom: b.nom, ava: b.ava, xp: b.xp, classe: b.classe, me: false }; });
+  all.push({ nom: state.prenom, ava: state.avatar, xp: state.xp, classe: state.classe, me: true });
+  return all;
+}
+function paintClassement(all){
+  all.sort(function(a, b){ return b.xp - a.xp; });
+  var podium = $('podium');
+  var order = [1, 0, 2];
+  podium.innerHTML = order.map(function(i){
+    var p = all[i];
+    if(!p) return '';
+    return '<div class="pod-col pod-' + (i + 1) + '">'
+      + '<div class="pod-avatar">' + p.ava + '</div>'
+      + '<div class="pod-name">' + p.nom + (p.me ? ' (toi)' : '') + '</div>'
+      + '<div class="pod-xp">' + p.xp.toLocaleString('fr-FR') + ' XP</div>'
+      + '<div class="pod-base">' + (i + 1) + '</div></div>';
+  }).join('');
+  $('rankList').innerHTML = all.slice(3).map(function(p, i){
+    return '<div class="rank-row' + (p.me ? ' me' : '') + '">'
+      + '<span class="rank-num">' + (i + 4) + '</span>'
+      + '<span class="rank-ava">' + p.ava + '</span>'
+      + '<span class="rank-name">' + p.nom + (p.me ? ' (toi)' : '') + '<small>'
+      + classeLabel(p.classe) + ' · Niveau ' + (Math.floor(p.xp / CONFIG.XP_PAR_NIVEAU) + 1) + '</small></span>'
+      + '<span class="rank-xp">' + p.xp.toLocaleString('fr-FR') + ' XP</span></div>';
+  }).join('') || '<div class="rank-row"><span class="rank-name">Le classement se remplit dès que les explorateurs jouent !</span></div>';
+}
+
+// ── DÉMARRAGE ──────────────────────────────────────────────
+(function boot(){
+  session = loadSession();
+  var saved = loadState();
+
+  if(isOnline()){
+    if(session){
+      // reconnexion silencieuse : cache local puis rafraîchissement serveur
+      if(saved && saved.prenom){ state = saved; refreshDay(); show('home'); }
+      else { state = defaultState('ce1'); show('login'); initLoginOnline(); }
+      api({ action: 'login', id: session.id, pin: session.pin }).then(function(res){
+        if(res.status === 'ok'){
+          var fresh = stateFromServer(res.eleve);
+          // on garde le meilleur des deux (au cas où la sync avait échoué)
+          if(state && state.xp > fresh.xp){ apiSaveProgress('Resynchronisation', 0); }
+          else { state = fresh; refreshDay(); saveState(); }
+          if($('screen-home').classList.contains('active')) renderHome();
+          else { show('home'); }
+        } else {
+          clearSession();
+          state = defaultState('ce1');
+          initLoginOnline(); show('login');
+        }
+      }).catch(function(){ /* hors ligne : on reste sur le cache */ });
+    } else {
+      state = defaultState('ce1');
+      initLoginOnline(); show('login');
+    }
+  } else {
+    if(saved && saved.prenom){ state = saved; refreshDay(); show('home'); }
+    else { state = defaultState('ce1'); initLoginDemo(); show('login'); }
+  }
+
+  function refreshDay(){
+    if(state.lastDay !== todayStr()){
+      state.lastDay = todayStr();
+      state.vies = CONFIG.VIES_MAX;
+      saveState();
+    }
+  }
+})();
+
+</script>
 </body>
 </html>

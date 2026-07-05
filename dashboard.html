@@ -6,7 +6,408 @@
 <title>EduVerse · Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   EDUVERSE CE1 — Style principal
+   Thème : univers spatial violet/cyan, îles flottantes
+   Palette dérivée de la maquette + base Form'Com
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --bg:#050816;
+  --bg2:#0A0F2E;
+  --card:#0E1730;
+  --card-glass:rgba(14,23,48,.78);
+  --border:rgba(148,163,255,.14);
+  --text:#F0F4FF;
+  --muted:#8A93B2;
+  --violet:#8B5CF6;
+  --violet2:#A78BFA;
+  --cyan:#22D3EE;
+  --blue:#2979FF;
+  --gold:#F5C518;
+  --gold2:#F5A623;
+  --green:#22C55E;
+  --red:#FF4D6D;
+  --r:16px;
+  --rs:10px;
+  --shadow:0 10px 40px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+button{font-family:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+
+/* ── FOND SPATIAL ─────────────────────────────── */
+.space-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(139,92,246,.22) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 15% 90%, rgba(34,211,238,.10) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 40% at 88% 75%, rgba(41,121,255,.12) 0%, transparent 60%),
+    var(--bg);
+}
+.star{position:absolute;border-radius:50%;background:#fff;opacity:.7;animation:twinkle 3.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.85}}
+.planet{position:absolute;top:60px;right:-60px;width:190px;height:190px;border-radius:50%;
+  background:radial-gradient(circle at 32% 30%, #6D5BD0 0%, #3B2E8C 45%, #131048 80%);
+  box-shadow:inset -22px -18px 50px rgba(0,0,0,.55), 0 0 70px rgba(139,92,246,.35);
+  opacity:.85}
+.planet::after{content:'';position:absolute;inset:-16px;border-radius:50%;
+  border:2px solid rgba(167,139,250,.22);transform:rotate(-18deg) scaleY(.42)}
+
+/* ── STRUCTURE APP ────────────────────────────── */
+#app{position:relative;z-index:1;max-width:1060px;margin:0 auto;padding:0 14px 96px}
+.screen{display:none;animation:fadeUp .35s ease both}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ── HEADER JOUEUR ────────────────────────────── */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 4px 10px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;line-height:1}
+.brand-name{font-family:'Exo 2',sans-serif;font-weight:900;font-size:22px;letter-spacing:.5px}
+.brand-name .edu{color:var(--cyan)}
+.brand-name .verse{color:var(--text)}
+.brand-tag{font-family:'Exo 2',sans-serif;font-size:8.5px;font-weight:700;letter-spacing:2.6px;
+  text-transform:uppercase;color:var(--muted);margin-top:4px}
+.player-chip{display:flex;align-items:center;gap:10px;background:var(--card-glass);
+  border:1px solid var(--border);border-radius:99px;padding:6px 14px 6px 6px;backdrop-filter:blur(8px)}
+.avatar-bubble{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:21px;background:radial-gradient(circle at 35% 30%, #2B2564, #171243);
+  border:2px solid var(--violet);box-shadow:0 0 14px rgba(139,92,246,.5)}
+.player-meta{line-height:1.15}
+.player-name{font-family:'Exo 2',sans-serif;font-weight:800;font-size:14px}
+.player-level{font-size:10.5px;color:var(--muted);font-weight:600}
+
+.statbar{display:flex;gap:8px;flex-wrap:wrap;margin:2px 4px 14px}
+.stat-pill{display:flex;align-items:center;gap:7px;background:var(--card-glass);border:1px solid var(--border);
+  border-radius:99px;padding:7px 13px;font-family:'Exo 2',sans-serif;font-weight:800;font-size:13px;backdrop-filter:blur(8px)}
+.stat-pill .ico{font-size:15px}
+.stat-pill .lbl{font-family:'Inter',sans-serif;font-weight:600;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.stat-xp{color:var(--gold)}
+.stat-coins{color:var(--gold2)}
+.stat-lives{color:var(--red)}
+.xp-track{flex:1 1 150px;min-width:140px;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:6px 13px;
+  background:var(--card-glass);border:1px solid var(--border);border-radius:99px}
+.xp-track-top{display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--muted);
+  font-family:'Exo 2',sans-serif;letter-spacing:.5px}
+.xp-track-top b{color:var(--gold)}
+.bar{height:7px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar > i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold2),var(--gold));
+  box-shadow:0 0 10px rgba(245,197,24,.55);transition:width .6s cubic-bezier(.22,1,.36,1)}
+
+.btn-recharge{border:1px dashed rgba(255,77,109,.4);background:rgba(255,77,109,.08);color:var(--red);
+  border-radius:99px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer}
+
+/* ── TITRE BANNIÈRE ───────────────────────────── */
+.hero-banner{text-align:center;margin:6px auto 22px;max-width:560px;
+  border:1px solid rgba(34,211,238,.28);border-radius:14px;padding:14px 18px;
+  background:linear-gradient(180deg, rgba(34,211,238,.08), rgba(139,92,246,.06));
+  box-shadow:0 0 30px rgba(34,211,238,.08) inset}
+.hero-banner h1{font-family:'Exo 2',sans-serif;font-weight:900;font-size:clamp(17px,4vw,24px);
+  letter-spacing:1.5px;text-transform:uppercase;
+  background:linear-gradient(90deg,var(--cyan),var(--violet2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-banner p{font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-top:5px}
+
+/* ── CARTE DE L'UNIVERS ───────────────────────── */
+.universe{position:relative;margin:0 auto 10px;max-width:980px}
+.paths-svg{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.paths-svg path{fill:none;stroke:url(#pathGrad);stroke-width:2.5;stroke-dasharray:3 9;stroke-linecap:round;
+  animation:flow 2.6s linear infinite;opacity:.75}
+@keyframes flow{to{stroke-dashoffset:-48}}
+.islands{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:6px 0 2px}
+.island{position:relative;border-radius:var(--r);padding:16px 14px 14px;text-align:center;cursor:pointer;
+  border:1px solid var(--border);background:linear-gradient(165deg, rgba(31,27,77,.9), rgba(11,16,42,.92));
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s;
+  animation:floaty 5s ease-in-out infinite}
+.island:nth-child(2n){animation-delay:-1.6s}
+.island:nth-child(3n){animation-delay:-3.1s}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.island.unlocked{border-color:rgba(139,92,246,.55);box-shadow:0 0 26px rgba(139,92,246,.22), var(--shadow)}
+.island.unlocked:hover{transform:translateY(-8px) scale(1.02);border-color:var(--cyan);
+  box-shadow:0 0 34px rgba(34,211,238,.3), var(--shadow)}
+.island.locked{opacity:.62;cursor:default;filter:saturate(.55)}
+.island-art{height:58px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:8px}
+.island-art svg{width:96px;height:56px;overflow:visible}
+.island-name{font-family:'Exo 2',sans-serif;font-weight:900;font-size:13.5px;letter-spacing:1.2px;text-transform:uppercase}
+.island-sub{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:7px;
+  font-size:10.5px;font-weight:700;color:var(--muted)}
+.island-sub .mini-bar{width:56px;height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.island-sub .mini-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green),#86EFAC)}
+.lock-badge{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:8px;
+  background:rgba(0,0,0,.45);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px}
+.island-cta{margin-top:10px;font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--cyan)}
+
+/* Défi quotidien (balise centrale) */
+.daily-card{grid-column:2;position:relative;text-align:center;border-radius:var(--r);padding:18px 14px 16px;
+  border:1px solid rgba(245,197,24,.4);cursor:pointer;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(245,197,24,.16), transparent 65%),
+    linear-gradient(165deg, rgba(46,33,10,.55), rgba(11,16,42,.95));
+  box-shadow:0 0 34px rgba(245,197,24,.16), var(--shadow);
+  animation:floaty 5s ease-in-out infinite;animation-delay:-.8s}
+.daily-flame{font-size:30px;filter:drop-shadow(0 0 12px rgba(245,197,24,.7));animation:pulseGlow 1.8s ease-in-out infinite}
+@keyframes pulseGlow{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.daily-title{font-family:'Exo 2',sans-serif;font-weight:900;font-size:13.5px;letter-spacing:1.4px;text-transform:uppercase;margin-top:6px}
+.daily-xp{font-size:11px;font-weight:800;color:var(--gold);margin-top:3px;font-family:'Exo 2',sans-serif}
+.daily-done{font-size:10.5px;font-weight:700;color:var(--green);margin-top:8px}
+
+/* ── BOUTONS ──────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;
+  border-radius:12px;font-family:'Exo 2',sans-serif;font-weight:900;letter-spacing:1px;text-transform:uppercase;
+  transition:transform .12s ease, filter .2s;text-decoration:none}
+.btn:active{transform:scale(.96)}
+.btn-gold{background:linear-gradient(135deg,#FFD84D,var(--gold2));color:#241A00;padding:12px 26px;font-size:13px;
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+  box-shadow:0 0 26px rgba(245,197,24,.45)}
+.btn-gold:hover{filter:brightness(1.08)}
+.btn-ghost{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);padding:11px 20px;font-size:12px}
+.btn-cyan{background:rgba(34,211,238,.13);border:1px solid rgba(34,211,238,.45);color:var(--cyan);padding:11px 20px;font-size:12px}
+.btn-block{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed;filter:saturate(.4)}
+
+/* ── ÉCRAN LOGIN ──────────────────────────────── */
+.login-wrap{max-width:430px;margin:6vh auto 0;text-align:center}
+.login-logo{font-family:'Exo 2',sans-serif;font-weight:900;font-size:38px;letter-spacing:1px}
+.login-logo .edu{color:var(--cyan);text-shadow:0 0 24px rgba(34,211,238,.6)}
+.login-tag{font-family:'Exo 2',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;
+  color:var(--muted);margin:6px 0 26px}
+.login-card{background:var(--card-glass);border:1px solid var(--border);border-radius:20px;padding:24px 20px;
+  backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+.login-label{font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);
+  text-align:left;margin:0 0 8px;font-family:'Exo 2',sans-serif}
+.login-input{width:100%;padding:13px 16px;border-radius:12px;border:1.5px solid var(--border);
+  background:rgba(5,8,22,.7);color:var(--text);font-size:16px;font-weight:700;font-family:'Exo 2',sans-serif;
+  letter-spacing:.5px;margin-bottom:18px}
+.login-input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.15)}
+.avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:20px}
+.avatar-opt{aspect-ratio:1;border-radius:14px;border:2px solid var(--border);background:rgba(255,255,255,.04);
+  font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.avatar-opt:hover{border-color:var(--violet2);transform:scale(1.06)}
+.avatar-opt.sel{border-color:var(--cyan);background:rgba(34,211,238,.12);box-shadow:0 0 16px rgba(34,211,238,.35);transform:scale(1.08)}
+.login-note{font-size:10.5px;color:var(--muted);margin-top:14px;line-height:1.6}
+
+/* ── ÉCRAN MONDE (compétences) ────────────────── */
+.back-row{display:flex;align-items:center;gap:12px;margin:4px 0 16px}
+.btn-back{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:9px 14px;
+  font-size:12px;font-weight:800;cursor:pointer;font-family:'Exo 2',sans-serif;letter-spacing:.5px}
+.screen-title{font-family:'Exo 2',sans-serif;font-weight:900;font-size:17px;letter-spacing:1.4px;text-transform:uppercase}
+.screen-sub{font-size:11.5px;color:var(--muted);font-weight:600}
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:14px}
+.comp-card{background:var(--card-glass);border:1px solid var(--border);border-radius:var(--r);padding:16px;backdrop-filter:blur(8px)}
+.comp-head{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+.comp-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;
+  background:rgba(139,92,246,.14);border:1px solid rgba(139,92,246,.3)}
+.comp-name{font-family:'Exo 2',sans-serif;font-weight:900;font-size:14px}
+.comp-pct{font-size:11px;font-weight:800;color:var(--green);font-family:'Exo 2',sans-serif}
+.comp-bar{margin-bottom:12px}
+.niv-row{display:flex;gap:8px}
+.niv-btn{flex:1;padding:9px 4px;border-radius:10px;border:1px solid var(--border);cursor:pointer;
+  background:rgba(255,255,255,.045);font-family:'Exo 2',sans-serif;font-weight:800;font-size:11px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;transition:.15s}
+.niv-btn:hover:not([disabled]){border-color:var(--cyan);background:rgba(34,211,238,.1)}
+.niv-btn[disabled]{opacity:.45;cursor:not-allowed}
+.niv-stars{font-size:9px;letter-spacing:1px;color:var(--gold)}
+.niv-stars .off{opacity:.25}
+
+/* ── ÉCRAN MISSION ────────────────────────────── */
+.mission-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 14px;flex-wrap:wrap}
+.mission-tag{font-family:'Exo 2',sans-serif;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase;
+  border:1px solid rgba(34,211,238,.4);color:var(--cyan);border-radius:10px;padding:8px 14px;background:rgba(34,211,238,.07)}
+.lives-row{display:flex;gap:4px;font-size:16px;filter:drop-shadow(0 0 6px rgba(255,77,109,.6))}
+.lives-row .lost{opacity:.22;filter:grayscale(1)}
+.mission-progress{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.mission-progress .qcount{font-family:'Exo 2',sans-serif;font-size:11px;font-weight:800;color:var(--muted);white-space:nowrap;letter-spacing:.6px}
+.mission-progress .bar{flex:1}
+.mission-progress .bar > i{background:linear-gradient(90deg,var(--cyan),var(--violet));box-shadow:0 0 10px rgba(34,211,238,.5)}
+
+.mission-layout{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start}
+.q-card{background:var(--card-glass);border:1px solid var(--border);border-radius:20px;padding:24px 22px;
+  backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+.q-text{font-family:'Exo 2',sans-serif;font-weight:800;font-size:clamp(19px,3.4vw,25px);line-height:1.35;margin-bottom:6px}
+.q-visual{margin:14px 0 4px;display:flex;justify-content:center}
+.q-visual svg{width:120px;height:120px;filter:drop-shadow(0 0 14px rgba(34,211,238,.35))}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.ans-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:13px;cursor:pointer;
+  border:1.5px solid var(--border);background:rgba(5,8,22,.55);font-size:18px;font-weight:800;
+  font-family:'Exo 2',sans-serif;transition:.15s;text-align:left}
+.ans-btn:hover:not([disabled]){border-color:var(--cyan);background:rgba(34,211,238,.08);transform:translateY(-2px)}
+.ans-letter{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.4);color:var(--violet2);flex-shrink:0}
+.ans-btn.correct{border-color:var(--green);background:rgba(34,197,94,.16);box-shadow:0 0 18px rgba(34,197,94,.35)}
+.ans-btn.correct .ans-letter{background:var(--green);border-color:var(--green);color:#03210F}
+.ans-btn.wrong{border-color:var(--red);background:rgba(255,77,109,.13);animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.ans-btn[disabled]{cursor:default}
+
+.timer-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.timer-svg{width:88px;height:88px;transform:rotate(-90deg)}
+.timer-svg .track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:7}
+.timer-svg .prog{fill:none;stroke:var(--cyan);stroke-width:7;stroke-linecap:round;
+  filter:drop-shadow(0 0 6px rgba(34,211,238,.7));transition:stroke-dashoffset 1s linear, stroke .3s}
+.timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Exo 2',sans-serif;font-weight:900;font-size:24px;transform:rotate(0)}
+.timer-box{position:relative;width:88px;height:88px}
+.timer-lbl{font-size:9.5px;font-weight:800;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-family:'Exo 2',sans-serif}
+
+.feedback{margin-top:16px;border-radius:13px;padding:13px 16px;font-family:'Exo 2',sans-serif;font-weight:800;
+  font-size:14.5px;display:none;align-items:center;gap:10px;border:1.5px solid}
+.feedback.show{display:flex;animation:fadeUp .25s ease both}
+.feedback.good{border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.1);color:#7CF5AE}
+.feedback.bad{border-color:rgba(255,77,109,.5);background:rgba(255,77,109,.09);color:#FF9EB2}
+.feedback .fxp{margin-left:auto;color:var(--gold);white-space:nowrap}
+
+/* ── ÉCRAN RÉSULTAT ───────────────────────────── */
+.result-wrap{max-width:520px;margin:4vh auto 0;text-align:center}
+.result-title{font-family:'Exo 2',sans-serif;font-weight:900;font-size:clamp(24px,5vw,32px);letter-spacing:2px;
+  text-transform:uppercase;color:var(--cyan);text-shadow:0 0 30px rgba(34,211,238,.5)}
+.medal{position:relative;width:150px;height:150px;margin:26px auto 10px;display:flex;align-items:center;justify-content:center}
+.medal .hex{position:absolute;inset:0;background:linear-gradient(160deg,var(--violet),#5B21B6);
+  clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+  box-shadow:0 0 50px rgba(139,92,246,.65);animation:pulseGlow 2.4s ease-in-out infinite}
+.medal .hex::before{content:'';position:absolute;inset:7px;background:linear-gradient(160deg,#2E1065,#171243);
+  clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.medal-stars{position:relative;z-index:1;font-size:30px;letter-spacing:2px;filter:drop-shadow(0 0 10px rgba(245,197,24,.8))}
+.medal-stars .off{opacity:.25;filter:grayscale(1)}
+.result-msg{font-family:'Exo 2',sans-serif;font-weight:900;font-size:18px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);margin:14px 0 4px}
+.result-score{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:20px}
+.reward-row{display:flex;gap:10px;justify-content:center;margin-bottom:26px;flex-wrap:wrap}
+.reward-card{background:var(--card-glass);border:1px solid var(--border);border-radius:14px;padding:12px 20px;min-width:104px}
+.reward-lbl{font-size:9.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);font-family:'Exo 2',sans-serif}
+.reward-val{font-family:'Exo 2',sans-serif;font-weight:900;font-size:21px;margin-top:4px}
+.result-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.badge-toast{margin:0 auto 20px;max-width:340px;border:1px solid rgba(245,197,24,.45);border-radius:13px;
+  background:rgba(245,197,24,.08);padding:11px 16px;font-size:13px;font-weight:700;display:none}
+.badge-toast.show{display:block;animation:fadeUp .3s .2s ease both}
+.badge-toast b{color:var(--gold)}
+
+/* ── ÉCRAN PROFIL ─────────────────────────────── */
+.profil-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{background:var(--card-glass);border:1px solid var(--border);border-radius:var(--r);padding:18px;backdrop-filter:blur(8px)}
+.panel-title{font-family:'Exo 2',sans-serif;font-size:11px;font-weight:800;letter-spacing:1.8px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.donut-row{display:flex;align-items:center;gap:18px}
+.donut-box{position:relative;width:110px;height:110px;flex-shrink:0}
+.donut-box svg{width:110px;height:110px;transform:rotate(-90deg)}
+.donut-box .track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:10}
+.donut-box .prog{fill:none;stroke:url(#donutGrad);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1s ease;
+  filter:drop-shadow(0 0 8px rgba(34,197,94,.5))}
+.donut-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Exo 2',sans-serif;font-weight:900;font-size:24px;color:var(--green)}
+.donut-msg b{display:block;font-family:'Exo 2',sans-serif;font-size:15px;color:var(--green);margin-bottom:4px}
+.donut-msg span{font-size:12px;color:var(--muted);line-height:1.5}
+.skill-row{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.skill-row:last-child{margin-bottom:0}
+.skill-name{width:110px;font-size:12px;font-weight:700;flex-shrink:0}
+.skill-row .bar{flex:1}
+.skill-pct{width:40px;text-align:right;font-family:'Exo 2',sans-serif;font-size:11.5px;font-weight:800;flex-shrink:0}
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:10px}
+.badge-item{text-align:center;border:1px solid var(--border);border-radius:13px;padding:11px 5px;background:rgba(255,255,255,.03)}
+.badge-item.earned{border-color:rgba(245,197,24,.45);background:rgba(245,197,24,.07);box-shadow:0 0 14px rgba(245,197,24,.14)}
+.badge-item .b-ico{font-size:22px}
+.badge-item.locked .b-ico{filter:grayscale(1);opacity:.3}
+.badge-item .b-name{font-size:8.8px;font-weight:700;color:var(--muted);margin-top:5px;line-height:1.25}
+.badge-item.earned .b-name{color:var(--gold)}
+.hist-row{display:flex;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px}
+.hist-row:last-child{border-bottom:none}
+.hist-lbl{color:var(--muted);font-weight:600}
+.hist-val{font-family:'Exo 2',sans-serif;font-weight:800;color:var(--gold)}
+
+/* ── ÉCRAN CLASSEMENT ─────────────────────────── */
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin:10px 0 22px}
+.pod-col{text-align:center;flex:1;max-width:120px}
+.pod-avatar{width:52px;height:52px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;
+  font-size:26px;background:radial-gradient(circle at 35% 30%, #2B2564, #171243);border:2px solid var(--violet)}
+.pod-name{font-family:'Exo 2',sans-serif;font-weight:800;font-size:12px;margin-bottom:2px}
+.pod-xp{font-size:10.5px;color:var(--gold);font-weight:800;font-family:'Exo 2',sans-serif;margin-bottom:8px}
+.pod-base{border-radius:12px 12px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:9px;
+  font-family:'Exo 2',sans-serif;font-weight:900;font-size:22px}
+.pod-1 .pod-base{height:92px;background:linear-gradient(180deg,#FFD84D,#8a6a00);color:#241A00;box-shadow:0 0 30px rgba(245,197,24,.35)}
+.pod-1 .pod-avatar{border-color:var(--gold);box-shadow:0 0 18px rgba(245,197,24,.55)}
+.pod-2 .pod-base{height:66px;background:linear-gradient(180deg,#C9D2E8,#59627A);color:#111}
+.pod-3 .pod-base{height:50px;background:linear-gradient(180deg,#E2955C,#6E3E1B);color:#2A1500}
+.rank-list{display:flex;flex-direction:column;gap:9px}
+.rank-row{display:flex;align-items:center;gap:12px;background:var(--card-glass);border:1px solid var(--border);
+  border-radius:13px;padding:10px 14px}
+.rank-row.me{border-color:rgba(34,211,238,.55);background:rgba(34,211,238,.07);box-shadow:0 0 18px rgba(34,211,238,.15)}
+.rank-num{font-family:'Exo 2',sans-serif;font-weight:900;font-size:15px;width:26px;color:var(--muted)}
+.rank-row.me .rank-num{color:var(--cyan)}
+.rank-ava{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;
+  background:rgba(139,92,246,.15);border:1.5px solid rgba(139,92,246,.4)}
+.rank-name{font-family:'Exo 2',sans-serif;font-weight:800;font-size:13.5px;flex:1}
+.rank-name small{display:block;font-family:'Inter',sans-serif;font-size:9.5px;color:var(--muted);font-weight:600;letter-spacing:.5px}
+.rank-xp{font-family:'Exo 2',sans-serif;font-weight:900;font-size:13px;color:var(--gold)}
+
+/* ── NAVIGATION BASSE ─────────────────────────── */
+.bottom-nav{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;
+  display:flex;gap:4px;background:rgba(10,15,40,.88);border:1px solid var(--border);border-radius:99px;
+  padding:6px;backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+.nav-btn{border:none;background:transparent;border-radius:99px;padding:9px 17px;cursor:pointer;
+  display:flex;align-items:center;gap:7px;font-family:'Exo 2',sans-serif;font-weight:800;font-size:11.5px;
+  letter-spacing:.6px;color:var(--muted);transition:.2s;text-transform:uppercase}
+.nav-btn .n-ico{font-size:15px}
+.nav-btn.active{background:linear-gradient(135deg,rgba(139,92,246,.35),rgba(34,211,238,.25));color:var(--text);
+  box-shadow:0 0 14px rgba(139,92,246,.3)}
+.nav-btn span.n-lbl{display:inline}
+
+/* ── TOAST ────────────────────────────────────── */
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(90px);z-index:60;
+  background:var(--card);border:1px solid rgba(34,211,238,.5);color:var(--text);padding:11px 22px;border-radius:99px;
+  font-family:'Exo 2',sans-serif;font-size:13px;font-weight:800;transition:.3s;opacity:0;white-space:nowrap;
+  box-shadow:0 0 24px rgba(34,211,238,.25)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ── RESPONSIVE ───────────────────────────────── */
+@media(max-width:860px){
+  .islands{grid-template-columns:1fr 1fr}
+  .daily-card{grid-column:1 / -1;order:-1}
+  .paths-svg{display:none}
+  .profil-grid{grid-template-columns:1fr}
+  .planet{width:120px;height:120px;top:20px;right:-30px}
+}
+@media(max-width:560px){
+  .mission-layout{grid-template-columns:1fr}
+  .timer-wrap{flex-direction:row;justify-content:center}
+  .answers{grid-template-columns:1fr}
+  .nav-btn{padding:9px 13px}
+  .nav-btn span.n-lbl{display:none}
+  .nav-btn.active span.n-lbl{display:inline}
+  .islands{grid-template-columns:1fr 1fr;gap:11px}
+  .hero-banner{margin-top:0}
+}
+
+/* ── V2 : sélecteur de classe, lecture audio, mode GS ───── */
+.classe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.classe-opt{padding:10px 4px;border-radius:11px;border:2px solid var(--border);background:rgba(255,255,255,.04);
+  font-family:'Exo 2',sans-serif;font-weight:800;font-size:12px;cursor:pointer;transition:.15s;color:var(--text)}
+.classe-opt:hover{border-color:var(--violet2)}
+.classe-opt.sel{border-color:var(--cyan);background:rgba(34,211,238,.12);box-shadow:0 0 14px rgba(34,211,238,.3)}
+
+.q-head-row{display:flex;align-items:flex-start;gap:10px}
+.q-head-row .q-text{flex:1}
+.btn-speak{flex-shrink:0;width:42px;height:42px;border-radius:12px;border:1.5px solid rgba(34,211,238,.4);
+  background:rgba(34,211,238,.1);font-size:19px;cursor:pointer;transition:.15s}
+.btn-speak:hover{background:rgba(34,211,238,.2);transform:scale(1.06)}
+
+/* Grande Section : tout plus gros, plus lisible */
+body.cls-gs .q-text{font-size:clamp(22px,4.5vw,30px)}
+body.cls-gs .ans-btn{font-size:24px;padding:18px}
+body.cls-gs .ans-letter{width:36px;height:36px;font-size:15px}
+body.cls-gs .q-visual svg{width:150px;height:150px}
+body.cls-gs .btn-speak{width:52px;height:52px;font-size:24px}
+
+</style>
 <style>
 /* Styles propres au dashboard */
 .dash-wrap{max-width:1060px;margin:0 auto;padding:18px 14px 60px;position:relative;z-index:1}

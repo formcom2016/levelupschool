@@ -180,10 +180,8 @@ function stateFromServer(el){
 }
 function apiSaveProgress(detail, xpGain){
   if(!isOnline() || !session) return Promise.resolve();
-  var compsLight = {};
-  Object.keys(state.comps).forEach(function(k){
-    compsLight[k] = state.comps[k].etoiles;
-  });
+  // URL courte : seulement les données essentielles (XP, pièces, missions)
+  // Les comps/badges sont sauvegardés séparément via apiSaveComps
   var url = CONFIG.APPS_URL
     + '?action=save'
     + '&id='       + encodeURIComponent(session.id)
@@ -191,18 +189,36 @@ function apiSaveProgress(detail, xpGain){
     + '&xp='       + encodeURIComponent(state.xp)
     + '&pieces='   + encodeURIComponent(state.pieces)
     + '&missions=' + encodeURIComponent(state.missions)
-    + '&comps='    + encodeURIComponent(JSON.stringify(compsLight))
-    + '&badges='   + encodeURIComponent(JSON.stringify(state.badges))
     + '&dailyDone='+ encodeURIComponent(state.dailyDone || '')
-    + '&detail='   + encodeURIComponent(detail || '')
     + '&xpGain='   + encodeURIComponent(xpGain || 0);
   return fetch(url)
     .then(function(r){ return r.json(); })
     .then(function(res){
-      if(res.status === 'ok') toast('✅ +' + (xpGain||0) + ' XP sauvegardés !');
-      else toast('⚠️ Erreur : ' + (res.message||'?'));
+      if(res.status === 'ok'){
+        toast('✅ +' + (xpGain||0) + ' XP sauvegardés !');
+        // Sauvegarder comps+badges dans un second appel séparé
+        apiSaveComps();
+      } else {
+        toast('⚠️ ' + (res.message||'Erreur sauvegarde'));
+      }
     })
-    .catch(function(e){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
+    .catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
+}
+
+function apiSaveComps(){
+  if(!isOnline() || !session) return;
+  var compsLight = {};
+  Object.keys(state.comps).forEach(function(k){
+    compsLight[k] = state.comps[k].etoiles;
+  });
+  var url = CONFIG.APPS_URL
+    + '?action=save'
+    + '&id='    + encodeURIComponent(session.id)
+    + '&pin='   + encodeURIComponent(session.pin)
+    + '&xp='    + encodeURIComponent(state.xp)
+    + '&comps=' + encodeURIComponent(JSON.stringify(compsLight))
+    + '&badges='+ encodeURIComponent(JSON.stringify(state.badges));
+  fetch(url).catch(function(){});
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────
@@ -767,9 +783,23 @@ function paintClassement(all){
       api({ action: 'login', id: session.id, pin: session.pin }).then(function(res){
         if(res.status === 'ok'){
           var fresh = stateFromServer(res.eleve);
-          // on garde le meilleur des deux (au cas où la sync avait échoué)
-          if(state && state.xp > fresh.xp){ apiSaveProgress('Resynchronisation', 0); }
-          else { state = fresh; refreshDay(); saveState(); }
+          // SOURCE DE VÉRITÉ UNIQUE = la feuille Google
+          // Si local > serveur = la synchro avait échoué → on renvoie au serveur
+          if(state && state.xp > fresh.xp){
+            // Remettre les XP locaux dans le state et sauvegarder sur le serveur
+            fresh.xp = state.xp;
+            fresh.pieces = Math.max(state.pieces, fresh.pieces);
+            fresh.missions = Math.max(state.missions, fresh.missions);
+            state = fresh;
+            refreshDay();
+            saveState();
+            apiSaveProgress('Resynchronisation boot', 0);
+          } else {
+            // Serveur = référence, on écrase le local
+            state = fresh;
+            refreshDay();
+            saveState();
+          }
           if($('screen-home').classList.contains('active')) renderHome();
           else { show('home'); }
         } else {

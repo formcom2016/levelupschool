@@ -444,7 +444,7 @@ body.cls-gs .btn-speak{width:52px;height:52px;font-size:24px}
         <p class="login-label">Ton code secret (PIN)</p>
         <input class="login-input" id="loginPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="4 chiffres" autocomplete="off">
         <button class="btn btn-gold btn-block" id="btnLoginOnline">🚀 Se connecter</button>
-        <p class="login-note">Ton code et ton PIN t'ont été donnés par tes parents<br>ou ton enseignant. Ta progression te suit partout !</p>
+        <p class="login-note">Ton code et ton PIN t'ont été donnés par tes parents<br>ou ton enseignant. Ta progression te suit partout !<br><span style="opacity:.5">v3.0</span></p>
       </div>
 
       <!-- Mode DÉMO : prénom + avatar + classe -->
@@ -1135,7 +1135,7 @@ var EDU_QUESTIONS = (function(){
 </script>
 <script>
 /* ═══════════════════════════════════════════════════════════
-   EDUVERSE — Logique du jeu · v2 multi-niveaux + backend
+   EDUVERSE — Logique du jeu · v3.0 SYNC
    Deux modes :
    · DÉMO  (APPS_URL vide)      → tout en local, classement fictif
    · EN LIGNE (APPS_URL rempli) → connexion code+PIN, classement réel,
@@ -1144,7 +1144,7 @@ var EDU_QUESTIONS = (function(){
 
 // ── CONFIGURATION ──────────────────────────────────────────
 var CONFIG = {
-  APPS_URL: 'https://script.google.com/macros/s/AKfycbw4f5ZORzkk75Fv_dnhL1MuB-2_77fHCzFNLOpfIUGoh04eW7ydOul59QKqRopQ3YZl/exec',             // ← coller ici l'URL /exec du script Google (phase en ligne)
+  APPS_URL: 'https://script.google.com/macros/s/AKfycbxOKt6IzzJC_D3euoku1t4T1qtp-5Un6q18FB72wP8QPHl-M37k6APY-h-_JcTKKhKB/exec',             // ← coller ici l'URL /exec du script Google (phase en ligne)
   QUESTIONS_PAR_MISSION: 10,
   XP_BONNE_REPONSE: 10,
   XP_BONUS_PARFAIT: 20,
@@ -1154,7 +1154,9 @@ var CONFIG = {
   XP_PAR_NIVEAU: 200,
   VIES_MAX: 5
 };
+var EDU_VERSION = 'v3.0';
 function isOnline(){ return !!CONFIG.APPS_URL; }
+try { console.log('EduVerse ' + EDU_VERSION); } catch(e){}
 
 // ── DONNÉES DE RÉFÉRENCE ───────────────────────────────────
 var AVATARS = ['🦊','🐱','🐼','🦁','🐸','🦄','🤖','👾','🧑‍🚀','🐯'];
@@ -1283,8 +1285,10 @@ function speak(text){
 function api(params){
   var base = CONFIG.APPS_URL || window.location.href.split('?')[0];
   var p = new URLSearchParams(params);
-  return fetch(base + '?' + p.toString())
-    .then(function(r){ return r.json(); });
+  p.set('_t', Date.now());   // anti-cache
+  return fetch(base + '?' + p.toString(), { cache: 'no-store' })
+    .then(function(r){ return r.text(); })
+    .then(function(txt){ return JSON.parse(txt); });
 }
 function stateFromServer(el){
   var classe = el.classe || 'ce1';
@@ -1297,20 +1301,70 @@ function stateFromServer(el){
   s.vies = CONFIG.VIES_MAX;
   s.missions = parseInt(el.missions, 10) || 0;
   s.dailyDone = el.dailyDone || '';
-  try { if(el.comps) s.comps = Object.assign(defaultComps(classe), JSON.parse(el.comps)); } catch(e){}
+  try {
+    if(el.comps){
+      var saved = JSON.parse(el.comps);
+      Object.keys(saved).forEach(function(k){
+        if(s.comps[k]){
+          // Format light : tableau d'étoiles directement
+          if(Array.isArray(saved[k])) s.comps[k].etoiles = saved[k];
+          // Format complet : objet avec etoiles et niveau
+          else if(saved[k].etoiles) s.comps[k] = saved[k];
+        }
+      });
+    }
+  } catch(e){}
   try { if(el.badges) s.badges = JSON.parse(el.badges); } catch(e){}
   try { if(el.history) s.history = JSON.parse(el.history); } catch(e){}
   return s;
 }
-function apiSaveProgress(detail, xpGain){
+function apiSaveProgress(detail, xpGain, silent){
   if(!isOnline() || !session) return Promise.resolve();
-  return api({
-    action: 'save', id: session.id, pin: session.pin,
-    xp: state.xp, pieces: state.pieces, missions: state.missions,
-    comps: JSON.stringify(state.comps), badges: JSON.stringify(state.badges),
-    history: JSON.stringify(state.history.slice(0, 12)),
-    dailyDone: state.dailyDone, detail: detail || '', xpGain: xpGain || 0
-  }).catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
+  var url = CONFIG.APPS_URL
+    + '?action=save'
+    + '&id='       + encodeURIComponent(session.id)
+    + '&pin='      + encodeURIComponent(session.pin)
+    + '&xp='       + encodeURIComponent(state.xp)
+    + '&pieces='   + encodeURIComponent(state.pieces)
+    + '&missions=' + encodeURIComponent(state.missions)
+    + '&dailyDone='+ encodeURIComponent(state.dailyDone || '')
+    + '&detail='   + encodeURIComponent(detail || '')
+    + '&xpGain='   + encodeURIComponent(xpGain || 0)
+    + '&_t='       + Date.now();   // anti-cache
+  return fetch(url, { cache: 'no-store' })
+    .then(function(r){ return r.text(); })
+    .then(function(txt){
+      var res;
+      try { res = JSON.parse(txt); } catch(e){
+        if(!silent) toast('⚠️ Réponse invalide : ' + txt.slice(0, 50));
+        return;
+      }
+      if(res.status === 'ok'){
+        if(!silent) toast('✅ Progression enregistrée (' + res.xp + ' XP au total)');
+        apiSaveComps();
+      } else {
+        if(!silent) toast('⚠️ ' + (res.message || 'Erreur sauvegarde'));
+      }
+      return res;
+    })
+    .catch(function(e){ if(!silent) toast('📡 Erreur réseau : ' + e.message); });
+}
+
+function apiSaveComps(){
+  if(!isOnline() || !session) return;
+  var compsLight = {};
+  Object.keys(state.comps).forEach(function(k){
+    compsLight[k] = state.comps[k].etoiles;
+  });
+  var url = CONFIG.APPS_URL
+    + '?action=save'
+    + '&id='    + encodeURIComponent(session.id)
+    + '&pin='   + encodeURIComponent(session.pin)
+    + '&xp='    + encodeURIComponent(state.xp)
+    + '&comps=' + encodeURIComponent(JSON.stringify(compsLight))
+    + '&badges='+ encodeURIComponent(JSON.stringify(state.badges))
+    + '&_t='    + Date.now();
+  fetch(url, { cache: 'no-store' }).catch(function(){});
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────
@@ -1862,6 +1916,13 @@ function paintClassement(all){
   }).join('') || '<div class="rank-row"><span class="rank-name">Le classement se remplit dès que les explorateurs jouent !</span></div>';
 }
 
+// ── SYNCHRONISATION AUTOMATIQUE ────────────────────────────
+// Toutes les 60 secondes, la progression part vers la feuille Google
+// (comme le setInterval de Form'Com) — en silencieux.
+setInterval(function(){
+  if(session && state && state.xp > 0) apiSaveProgress('', 0, true);
+}, 60000);
+
 // ── DÉMARRAGE ──────────────────────────────────────────────
 (function boot(){
   session = loadSession();
@@ -1875,9 +1936,23 @@ function paintClassement(all){
       api({ action: 'login', id: session.id, pin: session.pin }).then(function(res){
         if(res.status === 'ok'){
           var fresh = stateFromServer(res.eleve);
-          // on garde le meilleur des deux (au cas où la sync avait échoué)
-          if(state && state.xp > fresh.xp){ apiSaveProgress('Resynchronisation', 0); }
-          else { state = fresh; refreshDay(); saveState(); }
+          // SOURCE DE VÉRITÉ UNIQUE = la feuille Google
+          // Si local > serveur = la synchro avait échoué → on renvoie au serveur
+          if(state && state.xp > fresh.xp){
+            // Remettre les XP locaux dans le state et sauvegarder sur le serveur
+            fresh.xp = state.xp;
+            fresh.pieces = Math.max(state.pieces, fresh.pieces);
+            fresh.missions = Math.max(state.missions, fresh.missions);
+            state = fresh;
+            refreshDay();
+            saveState();
+            apiSaveProgress('Resynchronisation boot', 0);
+          } else {
+            // Serveur = référence, on écrase le local
+            state = fresh;
+            refreshDay();
+            saveState();
+          }
           if($('screen-home').classList.contains('active')) renderHome();
           else { show('home'); }
         } else {

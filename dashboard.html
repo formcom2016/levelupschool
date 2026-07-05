@@ -131,15 +131,6 @@ function toast(msg){
 }
 function api(params){
   var p = new URLSearchParams(params);
-  // dashboard et addEleve → POST, ping → GET
-  var postActions = ['dashboard', 'addEleve'];
-  if(postActions.indexOf(params.action) >= 0){
-    return fetch(APPS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(params)
-    }).then(function(r){ return r.json(); });
-  }
   return fetch(APPS_URL + '?' + p.toString())
     .then(function(r){ return r.json(); });
 }

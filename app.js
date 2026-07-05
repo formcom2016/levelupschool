@@ -184,21 +184,25 @@ function apiSaveProgress(detail, xpGain){
   Object.keys(state.comps).forEach(function(k){
     compsLight[k] = state.comps[k].etoiles;
   });
-  var base = CONFIG.APPS_URL;
-  var params = new URLSearchParams({
-    action: 'save', id: session.id, pin: session.pin,
-    xp: state.xp, pieces: state.pieces, missions: state.missions,
-    comps: JSON.stringify(compsLight),
-    badges: JSON.stringify(state.badges),
-    dailyDone: state.dailyDone || '',
-    detail: detail || '', xpGain: xpGain || 0
-  });
-  return fetch(base + '?' + params.toString())
+  var url = CONFIG.APPS_URL
+    + '?action=save'
+    + '&id='       + encodeURIComponent(session.id)
+    + '&pin='      + encodeURIComponent(session.pin)
+    + '&xp='       + encodeURIComponent(state.xp)
+    + '&pieces='   + encodeURIComponent(state.pieces)
+    + '&missions=' + encodeURIComponent(state.missions)
+    + '&comps='    + encodeURIComponent(JSON.stringify(compsLight))
+    + '&badges='   + encodeURIComponent(JSON.stringify(state.badges))
+    + '&dailyDone='+ encodeURIComponent(state.dailyDone || '')
+    + '&detail='   + encodeURIComponent(detail || '')
+    + '&xpGain='   + encodeURIComponent(xpGain || 0);
+  return fetch(url)
     .then(function(r){ return r.json(); })
     .then(function(res){
       if(res.status === 'ok') toast('✅ +' + (xpGain||0) + ' XP sauvegardés !');
+      else toast('⚠️ Erreur : ' + (res.message||'?'));
     })
-    .catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
+    .catch(function(e){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────

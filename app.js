@@ -144,18 +144,17 @@ function speak(text){
 }
 
 // ── API BACKEND (Apps Script) ──────────────────────────────
-function api(params){
-  return new Promise(function(resolve, reject){
-    var id = 'edu_' + Math.random().toString(36).slice(2);
-    var p = new URLSearchParams(params);
-    var s = document.createElement('script');
-    s.src = CONFIG.APPS_URL + '?' + p.toString();
-    var timer = setTimeout(function(){ cleanup(); reject(new Error('timeout')); }, 12000);
-    window.__eduCb = function(data){ cleanup(); resolve(data); };
-    s.onerror = function(){ cleanup(); reject(new Error('script error')); };
-    function cleanup(){ clearTimeout(timer); window.__eduCb = null; if(s.parentNode) s.parentNode.removeChild(s); }
-    document.head.appendChild(s);
-  });
+function api(params, usePost){
+  if(usePost){
+    return fetch(CONFIG.APPS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params)
+    }).then(function(r){ return r.json(); });
+  }
+  var p = new URLSearchParams(params);
+  return fetch(CONFIG.APPS_URL + '?' + p.toString())
+    .then(function(r){ return r.json(); });
 }
 function stateFromServer(el){
   var classe = el.classe || 'ce1';
@@ -181,7 +180,7 @@ function apiSaveProgress(detail, xpGain){
     comps: JSON.stringify(state.comps), badges: JSON.stringify(state.badges),
     history: JSON.stringify(state.history.slice(0, 12)),
     dailyDone: state.dailyDone, detail: detail || '', xpGain: xpGain || 0
-  }).catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
+  }, true).catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────

@@ -8,7 +8,7 @@
 
 // ── CONFIGURATION ──────────────────────────────────────────
 var CONFIG = {
-  APPS_URL: 'https://script.google.com/macros/s/AKfycbw4f5ZORzkk75Fv_dnhL1MuB-2_77fHCzFNLOpfIUGoh04eW7ydOul59QKqRopQ3YZl/exec',             // ← coller ici l'URL /exec du script Google (phase en ligne)
+  APPS_URL: 'https://script.google.com/macros/s/AKfycbxOKt6IzzJC_D3euoku1t4T1qtp-5Un6q18FB72wP8QPHl-M37k6APY-h-_JcTKKhKB/exec',             // ← coller ici l'URL /exec du script Google (phase en ligne)
   QUESTIONS_PAR_MISSION: 10,
   XP_BONNE_REPONSE: 10,
   XP_BONUS_PARFAIT: 20,
@@ -144,16 +144,10 @@ function speak(text){
 }
 
 // ── API BACKEND (Apps Script) ──────────────────────────────
-function api(params, usePost){
-  if(usePost){
-    return fetch(CONFIG.APPS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(params)
-    }).then(function(r){ return r.json(); });
-  }
+function api(params){
+  var base = CONFIG.APPS_URL || window.location.href.split('?')[0];
   var p = new URLSearchParams(params);
-  return fetch(CONFIG.APPS_URL + '?' + p.toString())
+  return fetch(base + '?' + p.toString())
     .then(function(r){ return r.json(); });
 }
 function stateFromServer(el){
@@ -180,7 +174,7 @@ function apiSaveProgress(detail, xpGain){
     comps: JSON.stringify(state.comps), badges: JSON.stringify(state.badges),
     history: JSON.stringify(state.history.slice(0, 12)),
     dailyDone: state.dailyDone, detail: detail || '', xpGain: xpGain || 0
-  }, true).catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
+  }).catch(function(){ toast('📡 Hors ligne — progression gardée sur cet appareil'); });
 }
 
 // ── NAVIGATION ─────────────────────────────────────────────

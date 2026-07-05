@@ -8,7 +8,7 @@
 
 // ── CONFIGURATION ──────────────────────────────────────────
 var CONFIG = {
-  APPS_URL: 'https://script.google.com/macros/s/AKfycbygeeu5t5RQ33NHqSSNaNOMzxV_WCcQFAkonn3o10jEjwvoCOqJ-vtkGCLvzApUvUs/exec',             // ← coller ici l'URL /exec du script Google (phase en ligne)
+  APPS_URL: 'https://script.google.com/macros/s/AKfycbw4f5ZORzkk75Fv_dnhL1MuB-2_77fHCzFNLOpfIUGoh04eW7ydOul59QKqRopQ3YZl/exec',             // ← coller ici l'URL /exec du script Google (phase en ligne)
   QUESTIONS_PAR_MISSION: 10,
   XP_BONNE_REPONSE: 10,
   XP_BONUS_PARFAIT: 20,

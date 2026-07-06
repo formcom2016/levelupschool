@@ -444,7 +444,7 @@ body.cls-gs .btn-speak{width:52px;height:52px;font-size:24px}
         <p class="login-label">Ton code secret (PIN)</p>
         <input class="login-input" id="loginPin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="4 chiffres" autocomplete="off">
         <button class="btn btn-gold btn-block" id="btnLoginOnline">🚀 Se connecter</button>
-        <p class="login-note">Ton code et ton PIN t'ont été donnés par tes parents<br>ou ton enseignant. Ta progression te suit partout !<br><span style="opacity:.5">v4.0</span></p>
+        <p class="login-note">Ton code et ton PIN t'ont été donnés par tes parents<br>ou ton enseignant. Ta progression te suit partout !<br><span style="opacity:.5">v5.0</span></p>
       </div>
 
       <!-- Mode DÉMO : prénom + avatar + classe -->
@@ -1199,7 +1199,7 @@ var EDU_BANKS = (function(){
             ['Comment s\u2019appelle cette lettre ?', 'mim', ['nun', 'lam', 'ba'], ar('م')],
             ['Comment s\u2019appelle cette lettre ?', 'lam', ['alif', 'mim', 'kaf'], ar('ل')],
             ['Comment s\u2019appelle cette lettre ?', 'nun', ['mim', 'ba', 'ta'], ar('ن')],
-            ['Comment s\u2019appelle cette lettre ?', 'sin', ['chin', 'ra', 'sad'], ar('س')],
+            ['Comment s\u2019appelle cette lettre ?', 'sin', ['shin', 'ra', 'sad'], ar('س')],
             ['Comment s\u2019appelle cette lettre ?', 'ra', ['za', 'dal', 'waw'], ar('ر')],
             ['Comment s\u2019appelle cette lettre ?', 'dal', ['ra', 'waw', 'lam'], ar('د')],
             ['Comment s\u2019appelle cette lettre ?', 'waw', ['ra', 'dal', 'ya'], ar('و')]
@@ -1213,7 +1213,7 @@ var EDU_BANKS = (function(){
             ['Comment s\u2019appelle cette lettre ?', 'ta (avec 2 points)', ['tha (3 points)', 'ba (1 point)', 'nun'], ar('ت')]
           ],
           3: [
-            ['Comment s\u2019appelle cette lettre ?', 'chin', ['sin', 'sad', 'tha'], ar('ش')],
+            ['Comment s\u2019appelle cette lettre ?', 'shin', ['sin', 'sad', 'tha'], ar('ش')],
             ['Comment s\u2019appelle cette lettre ?', 'qaf', ['fa', 'kaf', 'ghayn'], ar('ق')],
             ['Comment s\u2019appelle cette lettre ?', 'ayn', ['ghayn', 'ha', 'kha'], ar('ع')],
             ['Comment s\u2019appelle cette lettre ?', 'kha', ['ha', 'jim', 'ghayn'], ar('خ')],
@@ -1223,24 +1223,24 @@ var EDU_BANKS = (function(){
         },
         ar2: {
           1: [
-            ['Comment dit-on « bonjour / paix » en arabe ?', 'salam', ['choukran', 'na\u2019am', 'bayt'], null],
-            ['Comment dit-on « merci » en arabe ?', 'choukran', ['salam', 'la', 'ma\u2019'], null],
+            ['Comment dit-on « bonjour / paix » en arabe ?', 'salam', ['shukran', 'na\u2019am', 'bayt'], null],
+            ['Comment dit-on « merci » en arabe ?', 'shukran', ['salam', 'la', 'ma\u2019'], null],
             ['Comment dit-on « oui » en arabe ?', 'na\u2019am', ['la', 'salam', 'abi'], null],
-            ['Comment dit-on « non » en arabe ?', 'la', ['na\u2019am', 'choukran', 'yad'], null],
+            ['Comment dit-on « non » en arabe ?', 'la', ['na\u2019am', 'shukran', 'yad'], null],
             ['Comment dit-on « maman » en arabe ?', 'oummi', ['abi', 'akhi', 'bayt'], null],
             ['Comment dit-on « papa » en arabe ?', 'abi', ['oummi', 'kitab', 'salam'], null],
-            ['Comment dit-on « l\u2019eau » 💧 en arabe ?', 'ma\u2019', ['khoubz', 'bayt', 'qamar'], null],
-            ['Comment dit-on « le pain » 🍞 en arabe ?', 'khoubz', ['ma\u2019', 'kitab', 'chams'], null],
+            ['Comment dit-on « l\u2019eau » 💧 en arabe ?', 'ma\u2019', ['khubz', 'bayt', 'qamar'], null],
+            ['Comment dit-on « le pain » 🍞 en arabe ?', 'khubz', ['ma\u2019', 'kitab', 'shams'], null],
             ['Comment dit-on « le chat » 🐱 en arabe ?', 'qitt', ['kalb', 'qamar', 'bahr'], null],
             ['« kalb » 🐶 veut dire...', 'le chien', ['le chat', 'la maison', 'le pain'], null]
           ],
           2: [
             ['Comment dit-on « le livre » 📖 en arabe ?', 'kitab', ['qalam', 'bayt', 'bab'], null],
-            ['Comment dit-on « la maison » 🏠 en arabe ?', 'bayt', ['bab', 'madrassa', 'qamar'], null],
-            ['Comment dit-on « l\u2019école » 🏫 en arabe ?', 'madrassa', ['bayt', 'kitab', 'yawm'], null],
-            ['Comment dit-on « la porte » 🚪 en arabe ?', 'bab', ['bayt', 'yad', 'chams'], null],
+            ['Comment dit-on « la maison » 🏠 en arabe ?', 'bayt', ['bab', 'madrasa', 'qamar'], null],
+            ['Comment dit-on « l\u2019école » 🏫 en arabe ?', 'madrasa', ['bayt', 'kitab', 'yawm'], null],
+            ['Comment dit-on « la porte » 🚪 en arabe ?', 'bab', ['bayt', 'yad', 'shams'], null],
             ['Que veut dire « qamar » 🌙 ?', 'la lune', ['le soleil', 'la mer', 'l\u2019étoile'], null],
-            ['Que veut dire « chams » ☀️ ?', 'le soleil', ['la lune', 'la pluie', 'le vent'], null]
+            ['Que veut dire « shams » ☀️ ?', 'le soleil', ['la lune', 'la pluie', 'le vent'], null]
           ],
           3: [
             ['Que veut dire « bahr » 🌊 ?', 'la mer', ['la montagne', 'le désert', 'la rivière'], null],
@@ -1270,14 +1270,14 @@ var EDU_BANKS = (function(){
             ['Comment dit-on « 8 » en arabe ?', 'thamaniya', ['sab\u2019a', 'tis\u2019a', 'sitta'], null],
             ['Que veut dire « sitta » ?', '6', ['7', '5', '8'], null],
             ['Que veut dire « thamaniya » ?', '8', ['6', '9', '7'], null],
-            ['Comment dit-on « 10 » en arabe ?', 'achara', ['tis\u2019a', 'thamaniya', 'khamsa'], null]
+            ['Comment dit-on « 10 » en arabe ?', '\u2019ashara', ['tis\u2019a', 'thamaniya', 'khamsa'], null]
           ],
           3: [
-            ['Comment dit-on « 9 » en arabe ?', 'tis\u2019a', ['achara', 'thamaniya', 'sab\u2019a'], null],
-            ['Que veut dire « achara » ?', '10', ['9', '8', '11'], null],
+            ['Comment dit-on « 9 » en arabe ?', 'tis\u2019a', ['\u2019ashara', 'thamaniya', 'sab\u2019a'], null],
+            ['Que veut dire « \u2019ashara » ?', '10', ['9', '8', '11'], null],
             ['wahid + ithnan = ?', 'thalatha', ['arba\u2019a', 'ithnan', 'khamsa'], null],
             ['ithnan + thalatha = ?', 'khamsa', ['arba\u2019a', 'sitta', 'sab\u2019a'], null],
-            ['khamsa + khamsa = ?', 'achara', ['tis\u2019a', 'thamaniya', 'sitta'], null],
+            ['khamsa + khamsa = ?', '\u2019ashara', ['tis\u2019a', 'thamaniya', 'sitta'], null],
             ['arba\u2019a + wahid = ?', 'khamsa', ['sitta', 'thalatha', 'arba\u2019a'], null]
           ]
         }
@@ -1288,7 +1288,7 @@ var EDU_BANKS = (function(){
             ['Comment s\u2019appelle cette lettre ?', 'alif', ['ba', 'lam', 'waw'], ar('ا')],
             ['Comment s\u2019appelle cette lettre ?', 'ba', ['ta', 'tha', 'nun'], ar('ب')],
             ['Comment s\u2019appelle cette lettre ?', 'mim', ['nun', 'waw', 'ha'], ar('م')],
-            ['Comment s\u2019appelle cette lettre ?', 'sin', ['chin', 'sad', 'za'], ar('س')],
+            ['Comment s\u2019appelle cette lettre ?', 'sin', ['shin', 'sad', 'za'], ar('س')],
             ['Comment s\u2019appelle cette lettre ?', 'lam', ['kaf', 'alif', 'dal'], ar('ل')],
             ['Comment s\u2019appelle cette lettre ?', 'ra', ['za', 'waw', 'dal'], ar('ر')],
             ['Comment s\u2019appelle cette lettre ?', 'kaf', ['qaf', 'fa', 'lam'], ar('ك')],
@@ -1315,24 +1315,24 @@ var EDU_BANKS = (function(){
         },
         ar2: {
           1: [
-            ['Comment dit-on « bonjour / paix » en arabe ?', 'salam', ['choukran', 'afwan', 'marhaban'], null],
-            ['Que veut dire « choukran » ?', 'merci', ['bonjour', 'pardon', 'au revoir'], null],
-            ['Comment dit-on « l\u2019école » en arabe ?', 'madrassa', ['maktaba', 'bayt', 'masjid'], null],
+            ['Comment dit-on « bonjour / paix » en arabe ?', 'salam', ['shukran', 'afwan', 'marhaban'], null],
+            ['Que veut dire « shukran » ?', 'merci', ['bonjour', 'pardon', 'au revoir'], null],
+            ['Comment dit-on « l\u2019école » en arabe ?', 'madrasa', ['maktaba', 'bayt', 'masjid'], null],
             ['Que veut dire « kitab » ?', 'le livre', ['le stylo', 'le cahier', 'la table'], null],
             ['Comment dit-on « le stylo » en arabe ?', 'qalam', ['kitab', 'waraqa', 'bab'], null],
             ['Que veut dire « bayt » ?', 'la maison', ['la porte', 'l\u2019école', 'la rue'], null],
-            ['Comment dit-on « la mosquée » en arabe ?', 'masjid', ['madrassa', 'bayt', 'souq'], null],
+            ['Comment dit-on « la mosquée » en arabe ?', 'masjid', ['madrasa', 'bayt', 'suq'], null],
             ['Que veut dire « ma\u2019 » ?', 'l\u2019eau', ['le lait', 'le jus', 'le thé'], null],
             ['Que veut dire « marhaban » ?', 'bienvenue', ['au revoir', 'pardon', 'bonsoir'], null],
-            ['Comment dit-on « le marché » en arabe ?', 'souq', ['madina', 'bayt', 'masjid'], null]
+            ['Comment dit-on « le marché » en arabe ?', 'suq', ['madina', 'bayt', 'masjid'], null]
           ],
           2: [
-            ['Que veut dire « chams » ?', 'le soleil', ['la lune', 'l\u2019étoile', 'le ciel'], null],
-            ['Comment dit-on « l\u2019étoile » en arabe ?', 'najma', ['qamar', 'chams', 'sama\u2019'], null],
+            ['Que veut dire « shams » ?', 'le soleil', ['la lune', 'l\u2019étoile', 'le ciel'], null],
+            ['Comment dit-on « l\u2019étoile » en arabe ?', 'najma', ['qamar', 'shams', 'sama\u2019'], null],
             ['Que veut dire « sama\u2019 » ?', 'le ciel', ['la terre', 'la mer', 'le nuage'], null],
-            ['Comment dit-on « la famille » en arabe ?', 'ousra', ['oumm', 'akh', 'jadd'], null],
+            ['Comment dit-on « la famille » en arabe ?', 'usra', ['oumm', 'akh', 'jadd'], null],
             ['Que veut dire « akh » ?', 'le frère', ['la sœur', 'le père', 'l\u2019oncle'], null],
-            ['Comment dit-on « la sœur » en arabe ?', 'oukht', ['akh', 'oumm', 'bint'], null]
+            ['Comment dit-on « la sœur » en arabe ?', 'ukht', ['akh', 'oumm', 'bint'], null]
           ],
           3: [
             ['Que veut dire « madina » ?', 'la ville', ['le village', 'le pays', 'la rue'], null],
@@ -1348,16 +1348,16 @@ var EDU_BANKS = (function(){
             ['Comment dit-on « 3 » en arabe ?', 'thalatha', ['ithnan', 'arba\u2019a', 'sitta'], null],
             ['Que veut dire « khamsa » ?', '5', ['4', '6', '7'], null],
             ['Comment dit-on « 7 » en arabe ?', 'sab\u2019a', ['sitta', 'thamaniya', 'tis\u2019a'], null],
-            ['Que veut dire « achara » ?', '10', ['8', '9', '12'], null],
+            ['Que veut dire « \u2019ashara » ?', '10', ['8', '9', '12'], null],
             ['Comment dit-on « 8 » en arabe ?', 'thamaniya', ['sab\u2019a', 'tis\u2019a', 'sitta'], null],
             ['Que veut dire « sitta » ?', '6', ['5', '7', '8'], null],
-            ['Comment dit-on « 9 » en arabe ?', 'tis\u2019a', ['achara', 'thamaniya', 'khamsa'], null],
+            ['Comment dit-on « 9 » en arabe ?', 'tis\u2019a', ['\u2019ashara', 'thamaniya', 'khamsa'], null],
             ['Que veut dire « arba\u2019a » ?', '4', ['3', '5', '6'], null]
           ],
           2: [
             ['thalatha + arba\u2019a = ?', 'sab\u2019a', ['sitta', 'thamaniya', 'khamsa'], null],
             ['khamsa + thalatha = ?', 'thamaniya', ['sab\u2019a', 'tis\u2019a', 'sitta'], null],
-            ['achara \u2212 ithnan = ?', 'thamaniya', ['tis\u2019a', 'sab\u2019a', 'sitta'], null],
+            ['\u2019ashara \u2212 ithnan = ?', 'thamaniya', ['tis\u2019a', 'sab\u2019a', 'sitta'], null],
             ['Quel chiffre arabe est ceci : ٣ ?', '3', ['2', '4', '7'], null],
             ['Quel chiffre arabe est ceci : ٥ ?', '5', ['0', '6', '4'], null],
             ['Quel chiffre arabe est ceci : ٧ ?', '7', ['6', '8', '2'], null]
@@ -1366,9 +1366,9 @@ var EDU_BANKS = (function(){
             ['Quel chiffre arabe est ceci : ٩ ?', '9', ['8', '6', '4'], null],
             ['Comment écrit-on 10 en chiffres arabes ?', '١٠', ['٠١', '١١', '٩'], null],
             ['ithnan \u00d7 thalatha = ?', 'sitta', ['khamsa', 'sab\u2019a', 'arba\u2019a'], null],
-            ['Comment dit-on « 20 » en arabe ?', 'ichroun', ['achara', 'thalathoun', 'mi\u2019a'], null],
+            ['Comment dit-on « 20 » en arabe ?', '\u2019ishrun', ['\u2019ashara', 'thalathun', 'mi\u2019a'], null],
             ['Que veut dire « mi\u2019a » ?', '100', ['10', '20', '1000'], null],
-            ['Comment dit-on « 30 » en arabe ?', 'thalathoun', ['ichroun', 'thalatha', 'arba\u2019oun'], null]
+            ['Comment dit-on « 30 » en arabe ?', 'thalathun', ['\u2019ishrun', 'thalatha', 'arba\u2019un'], null]
           ]
         }
       },
@@ -1377,7 +1377,7 @@ var EDU_BANKS = (function(){
           1: [
             ['Comment s\u2019appelle cette lettre ?', 'ba', ['ta', 'tha', 'nun'], ar('ب')],
             ['Comment s\u2019appelle cette lettre ?', 'jim', ['ha', 'kha', 'ayn'], ar('ج')],
-            ['Comment s\u2019appelle cette lettre ?', 'sin', ['chin', 'sad', 'za'], ar('س')],
+            ['Comment s\u2019appelle cette lettre ?', 'sin', ['shin', 'sad', 'za'], ar('س')],
             ['Quelle lettre fait le son « k » ?', 'ك', ['ق', 'خ', 'ح'], null],
             ['Comment s\u2019appelle cette lettre ?', 'ayn', ['ghayn', 'hamza', 'ha'], ar('ع')],
             ['Comment s\u2019appelle cette lettre ?', 'qaf', ['kaf', 'fa', 'ghayn'], ar('ق')],
@@ -1389,11 +1389,11 @@ var EDU_BANKS = (function(){
             ['Lis ce mot :', 'qamar (la lune)', ['qalam (le stylo)', 'kamal', 'jabal'], ar('قمر')],
             ['Lis ce mot :', 'kitab (le livre)', ['kalb (le chien)', 'katib', 'kabir'], ar('كتاب')],
             ['Lis ce mot :', 'salam (la paix)', ['kalam', 'salim', 'alam'], ar('سلام')],
-            ['Lis ce mot :', 'chams (le soleil)', ['chay (le thé)', 'ism', 'samak'], ar('شمس')],
+            ['Lis ce mot :', 'shams (le soleil)', ['shay (le thé)', 'ism', 'samak'], ar('شمس')],
             ['Lis ce mot :', 'yad (la main)', ['walad', 'yawm', 'jadid'], ar('يد')]
           ],
           3: [
-            ['Lis ce mot :', 'madrassa (l\u2019école)', ['madina (la ville)', 'maktab', 'masjid'], ar('مدرسة')],
+            ['Lis ce mot :', 'madrasa (l\u2019école)', ['madina (la ville)', 'maktab', 'masjid'], ar('مدرسة')],
             ['Lis ce mot :', 'bahr (la mer)', ['barr', 'nahr (le fleuve)', 'matar'], ar('بحر')],
             ['Lis ce mot :', 'nour (la lumière)', ['nar (le feu)', 'nahr', 'noum'], ar('نور')],
             ['Lis ce mot :', 'ard (la terre)', ['arz', 'ain', 'oum'], ar('أرض')],
@@ -1404,8 +1404,8 @@ var EDU_BANKS = (function(){
         ar2: {
           1: [
             ['Que veut dire « marhaban » ?', 'bienvenue', ['merci', 'pardon', 'au revoir'], null],
-            ['Comment dit-on « comment ça va ? » ?', 'kayfa halouk ?', ['ma ismouk ?', 'ayna anta ?', 'kam omrouk ?'], null],
-            ['Que veut dire « ma ismouk ? » ?', 'quel est ton nom ?', ['où es-tu ?', 'quel âge as-tu ?', 'comment ça va ?'], null],
+            ['Comment dit-on « comment ça va ? » ?', 'kayfa haluk ?', ['ma ismuk ?', 'ayna anta ?', 'kam umruk ?'], null],
+            ['Que veut dire « ma ismuk ? » ?', 'quel est ton nom ?', ['où es-tu ?', 'quel âge as-tu ?', 'comment ça va ?'], null],
             ['Comment dit-on « je m\u2019appelle... » ?', 'ismi...', ['ana...', 'anta...', 'houwa...'], null],
             ['Que veut dire « ana » ?', 'je / moi', ['tu / toi', 'il', 'nous'], null],
             ['Que veut dire « anta » ?', 'tu (garçon)', ['je', 'elle', 'vous'], null],
@@ -1413,36 +1413,36 @@ var EDU_BANKS = (function(){
             ['Que veut dire « na\u2019am / la » ?', 'oui / non', ['bonjour / au revoir', 'grand / petit', 'ici / là-bas'], null]
           ],
           2: [
-            ['Que veut dire « ourid » ?', 'je veux', ['je peux', 'je vais', 'je sais'], null],
-            ['Comment dit-on « manger » en arabe ?', 'akala', ['chariba', 'nama', 'dhahaba'], null],
-            ['Que veut dire « chariba » ?', 'boire', ['manger', 'dormir', 'partir'], null],
+            ['Que veut dire « urid » ?', 'je veux', ['je peux', 'je vais', 'je sais'], null],
+            ['Comment dit-on « manger » en arabe ?', 'akala', ['shariba', 'nama', 'dhahaba'], null],
+            ['Que veut dire « shariba » ?', 'boire', ['manger', 'dormir', 'partir'], null],
             ['Que veut dire « dhahaba » ?', 'aller / partir', ['venir', 'rester', 'courir'], null],
             ['Comment dit-on « aujourd\u2019hui » ?', 'al-yawm', ['ghadan', 'ams', 'al-an'], null],
             ['Que veut dire « ghadan » ?', 'demain', ['hier', 'aujourd\u2019hui', 'maintenant'], null]
           ],
           3: [
             ['Que veut dire : « ana min faransa » ?', 'je viens de France', ['je vais en France', 'j\u2019aime la France', 'je parle français'], null],
-            ['Comment dit-on « j\u2019apprends l\u2019arabe » ?', 'ata\u2019allamou al-arabiya', ['atakallamou al-arabiya', 'ouhibbou al-arabiya', 'aktoubou al-arabiya'], null],
-            ['Que veut dire « atakallamou » ?', 'je parle', ['j\u2019écris', 'je lis', 'j\u2019écoute'], null],
-            ['Que veut dire « aqra\u2019ou » ?', 'je lis', ['j\u2019écris', 'je parle', 'je compte'], null],
-            ['Comment dit-on « la maison est grande » ?', 'al-baytou kabir', ['al-baytou saghir', 'al-baytou jamil', 'al-baytou jadid'], null],
-            ['Que veut dire « ouhibbou » ?', 'j\u2019aime', ['je déteste', 'je veux', 'je connais'], null]
+            ['Comment dit-on « j\u2019apprends l\u2019arabe » ?', 'ata\u2019allamu al-arabiya', ['atakallamu al-arabiya', 'uhibbu al-arabiya', 'aktubu al-arabiya'], null],
+            ['Que veut dire « atakallamu » ?', 'je parle', ['j\u2019écris', 'je lis', 'j\u2019écoute'], null],
+            ['Que veut dire « aqra\u2019u » ?', 'je lis', ['j\u2019écris', 'je parle', 'je compte'], null],
+            ['Comment dit-on « la maison est grande » ?', 'al-baytu kabir', ['al-baytu saghir', 'al-baytu jamil', 'al-baytu jadid'], null],
+            ['Que veut dire « uhibbu » ?', 'j\u2019aime', ['je déteste', 'je veux', 'je connais'], null]
           ]
         },
         ar3: {
           1: [
-            ['Que veut dire « ichroun » ?', '20', ['10', '12', '2'], null],
-            ['Comment dit-on « 100 » en arabe ?', 'mi\u2019a', ['alf', 'achara', 'mi\u2019atan'], null],
+            ['Que veut dire « \u2019ishrun » ?', '20', ['10', '12', '2'], null],
+            ['Comment dit-on « 100 » en arabe ?', 'mi\u2019a', ['alf', '\u2019ashara', 'mi\u2019atan'], null],
             ['Que veut dire « alf » ?', '1000', ['100', '10', '1'], null],
             ['Quel chiffre arabe est ceci : ٤ ?', '4', ['3', '5', '8'], null],
             ['Quel chiffre arabe est ceci : ٦ ?', '6', ['7', '2', '9'], null],
             ['Comment écrit-on 25 en chiffres arabes ?', '٢٥', ['٥٢', '٢٠', '١٥'], null],
-            ['thalathoun + ichroun = ?', 'khamsoun (50)', ['arba\u2019oun (40)', 'sittoun (60)', 'mi\u2019a (100)'], null],
-            ['Que veut dire « khamsoun » ?', '50', ['15', '5', '500'], null]
+            ['thalathun + \u2019ishrun = ?', 'khamsun (50)', ['arba\u2019un (40)', 'sittun (60)', 'mi\u2019a (100)'], null],
+            ['Que veut dire « khamsun » ?', '50', ['15', '5', '500'], null]
           ],
           2: [
-            ['Que veut dire « kam omrouk ? » ?', 'quel âge as-tu ?', ['comment t\u2019appelles-tu ?', 'où habites-tu ?', 'que fais-tu ?'], null],
-            ['« Omri arba\u2019a achar sana » veut dire :', 'j\u2019ai 14 ans', ['j\u2019ai 4 ans', 'j\u2019ai 40 ans', 'j\u2019ai 24 ans'], null],
+            ['Que veut dire « kam umruk ? » ?', 'quel âge as-tu ?', ['comment t\u2019appelles-tu ?', 'où habites-tu ?', 'que fais-tu ?'], null],
+            ['« Umri arba\u2019a \u2019ashar sana » veut dire :', 'j\u2019ai 14 ans', ['j\u2019ai 4 ans', 'j\u2019ai 40 ans', 'j\u2019ai 24 ans'], null],
             ['Comment dit-on « premier » en arabe ?', 'awwal', ['akhir', 'thani', 'wahid'], null],
             ['Que veut dire « nisf » ?', 'la moitié', ['le quart', 'le double', 'le tiers'], null],
             ['Que veut dire « thani » ?', 'deuxième', ['premier', 'dernier', 'douze'], null],
@@ -1452,7 +1452,7 @@ var EDU_BANKS = (function(){
             ['Lis ce nombre :', '15', ['51', '105', '155'], ar('١٥')],
             ['Lis ce nombre :', '42', ['24', '402', '420'], ar('٤٢')],
             ['Lis ce nombre :', '107', ['170', '17', '701'], ar('١٠٧')],
-            ['« achara \u00d7 achara » = ?', 'mi\u2019a (100)', ['ichroun (20)', 'alf (1000)', 'khamsoun (50)'], null],
+            ['« \u2019ashara \u00d7 \u2019ashara » = ?', 'mi\u2019a (100)', ['\u2019ishrun (20)', 'alf (1000)', 'khamsun (50)'], null],
             ['Que veut dire « ayna ? » ?', 'où ?', ['quand ?', 'pourquoi ?', 'combien ?'], null],
             ['Que veut dire « mata ? » ?', 'quand ?', ['où ?', 'qui ?', 'comment ?'], null]
           ]
@@ -1545,7 +1545,7 @@ var EDU_BANKS = (function(){
           1: [
             ['Qu\u2019ont découvert les hommes préhistoriques pour se chauffer ?', 'le feu', ['la télévision', 'le chauffage', 'les gants'], null],
             ['Quelle invention ronde a permis de faire des chariots ?', 'la roue', ['le ballon', 'la pièce', 'l\u2019assiette'], null],
-            ['Quelle machine vole dans le ciel ?', 'l\u2019avion', ['la voiture', 'le bateau', 'le vélo'], null],
+            ['Quelle mashine vole dans le ciel ?', 'l\u2019avion', ['la voiture', 'le bateau', 'le vélo'], null],
             ['Quelle invention éclaire nos maisons ?', 'l\u2019ampoule', ['la bougie magique', 'la lune', 'le miroir'], null],
             ['Quel véhicule roule sur des rails ?', 'le train', ['l\u2019avion', 'le bateau', 'la trottinette'], null],
             ['Que regardaient les hommes préhistoriques la nuit ?', 'les étoiles', ['la télévision', 'leur téléphone', 'des films'], null],
@@ -1561,7 +1561,7 @@ var EDU_BANKS = (function(){
             ['Avec quoi prend-on des photos ?', 'un appareil photo', ['un miroir', 'une loupe', 'un pinceau'], null]
           ],
           3: [
-            ['Quelle machine calcule très vite ?', 'l\u2019ordinateur', ['le grille-pain', 'la montre à aiguilles', 'le tambour'], null],
+            ['Quelle mashine calcule très vite ?', 'l\u2019ordinateur', ['le grille-pain', 'la montre à aiguilles', 'le tambour'], null],
             ['Quel engin est allé sur la Lune ?', 'une fusée', ['un avion', 'un hélicoptère', 'une montgolfière'], null],
             ['Le train le plus rapide de France s\u2019appelle...', 'le TGV', ['le tracteur', 'le métro', 'la locomotive à vapeur'], null],
             ['Avant l\u2019écriture, comment transmettait-on les histoires ?', 'en les racontant', ['par SMS', 'par des livres', 'par la radio'], null],
@@ -2053,37 +2053,37 @@ var EDU_BANKS = (function(){
       petits: {
         is1: {
           1: [
-            ['Qui est le premier homme créé par Allah ?', 'Adam', ['Nouh', 'Ibrahim', 'Moussa'], null],
-            ['Quel prophète a construit une grande arche (un bateau) ?', 'Nouh', ['Adam', 'Youssouf', 'Issa'], null],
-            ['Qu\u2019a mis Nouh dans son arche ?', 'des animaux de chaque espèce', ['des jouets', 'des voitures', 'des livres'], null],
-            ['Quel est le dernier prophète ?', 'Mohammed ﷺ', ['Issa', 'Moussa', 'Ibrahim'], null],
-            ['Dans quelle ville est né le prophète Mohammed ﷺ ?', 'La Mecque', ['Médine', 'Jérusalem', 'Le Caire'], null],
-            ['Quel prophète a été avalé par un très grand poisson ?', 'Younous', ['Nouh', 'Adam', 'Dawoud'], null],
-            ['Qui est la maman du prophète Issa ?', 'Maryam', ['Khadija', 'Assia', 'Hawwa'], null],
-            ['Quel prophète comprenait le langage des animaux ?', 'Souleyman', ['Adam', 'Nouh', 'Younous'], null]
+            ['Qui est le premier homme créé par Allah ?', 'Adam', ['Nuh', 'Ibrahim', 'Musa'], null],
+            ['Quel prophète a construit une grande arche (un bateau) ?', 'Nuh', ['Adam', 'Yusuf', '\u2019Isa'], null],
+            ['Qu\u2019a mis Nuh dans son arche ?', 'des animaux de chaque espèce', ['des jouets', 'des voitures', 'des livres'], null],
+            ['Quel est le dernier prophète ?', 'Muhammad ﷺ', ['\u2019Isa', 'Musa', 'Ibrahim'], null],
+            ['Dans quelle ville est né le prophète Muhammad ﷺ ?', 'La Mecque', ['Médine', 'Jérusalem', 'Le Caire'], null],
+            ['Quel prophète a été avalé par un très grand poisson ?', 'Yunus', ['Nuh', 'Adam', 'Dawud'], null],
+            ['Qui est la maman du prophète \u2019Isa ?', 'Maryam', ['Khadija', 'Asiya', 'Hawwa'], null],
+            ['Quel prophète comprenait le langage des animaux ?', 'Sulayman', ['Adam', 'Nuh', 'Yunus'], null]
           ],
           2: [
-            ['Quel prophète a reconstruit la Kaaba avec son fils ?', 'Ibrahim', ['Moussa', 'Nouh', 'Issa'], null],
-            ['Comment s\u2019appelle le fils qui a aidé Ibrahim ?', 'Ismaïl', ['Ishaq', 'Youssouf', 'Yahya'], null],
-            ['Quel prophète avait un bâton extraordinaire ?', 'Moussa', ['Adam', 'Nouh', 'Souleyman'], null],
-            ['Que s\u2019est-il passé quand Moussa a frappé la mer ?', 'la mer s\u2019est ouverte', ['il a plu', 'la mer a gelé', 'rien'], null],
-            ['Quel prophète a été jeté dans un puits par ses frères ?', 'Youssouf', ['Younous', 'Yahya', 'Zakariya'], null],
-            ['Youssouf était connu pour...', 'sa grande beauté et sa bonté', ['sa force', 'sa richesse', 'sa rapidité'], null]
+            ['Quel prophète a reconstruit la Kaaba avec son fils ?', 'Ibrahim', ['Musa', 'Nuh', '\u2019Isa'], null],
+            ['Comment s\u2019appelle le fils qui a aidé Ibrahim ?', 'Isma\u2019il', ['Ishaq', 'Yusuf', 'Yahya'], null],
+            ['Quel prophète avait un bâton extraordinaire ?', 'Musa', ['Adam', 'Nuh', 'Sulayman'], null],
+            ['Que s\u2019est-il passé quand Musa a frappé la mer ?', 'la mer s\u2019est ouverte', ['il a plu', 'la mer a gelé', 'rien'], null],
+            ['Quel prophète a été jeté dans un puits par ses frères ?', 'Yusuf', ['Yunus', 'Yahya', 'Zakariya'], null],
+            ['Yusuf était connu pour...', 'sa grande beauté et sa bonté', ['sa force', 'sa richesse', 'sa rapidité'], null]
           ],
           3: [
-            ['Quel roi-prophète chantait de très beaux chants à Allah ?', 'Dawoud', ['Souleyman', 'Moussa', 'Haroun'], null],
-            ['Qui était le frère de Moussa, prophète lui aussi ?', 'Haroun', ['Ismaïl', 'Ishaq', 'Yahya'], null],
-            ['Le prophète Ayyoub est connu pour...', 'sa grande patience', ['sa force', 'ses voyages', 'ses chevaux'], null],
+            ['Quel roi-prophète chantait de très beaux chants à Allah ?', 'Dawud', ['Sulayman', 'Musa', 'Harun'], null],
+            ['Qui était le frère de Musa, prophète lui aussi ?', 'Harun', ['Isma\u2019il', 'Ishaq', 'Yahya'], null],
+            ['Le prophète Ayyub est connu pour...', 'sa grande patience', ['sa force', 'ses voyages', 'ses chevaux'], null],
             ['Quel animal a protégé le Prophète ﷺ dans la grotte ?', 'une araignée (avec sa toile)', ['un lion', 'un aigle', 'un serpent'], null],
-            ['Le métier du prophète Mohammed ﷺ jeune était...', 'berger puis commerçant', ['pêcheur', 'forgeron', 'soldat'], null],
-            ['Comment s\u2019appelait la première épouse du Prophète ﷺ ?', 'Khadija', ['Aïcha', 'Fatima', 'Maryam'], null]
+            ['Le métier du prophète Muhammad ﷺ jeune était...', 'berger puis commerçant', ['pêcheur', 'forgeron', 'soldat'], null],
+            ['Comment s\u2019appelait la première épouse du Prophète ﷺ ?', 'Khadija', ['\u2019Aisha', 'Fatima', 'Maryam'], null]
           ]
         },
         is2: {
           1: [
             ['Combien y a-t-il de piliers de l\u2019islam ?', '5', ['3', '4', '7'], null],
             ['Combien de prières fait-on chaque jour ?', '5', ['3', '7', '10'], null],
-            ['Quel est le mois du jeûne ?', 'Ramadan', ['Chawwal', 'Rajab', 'Mouharram'], null],
+            ['Quel est le mois du jeûne ?', 'Ramadan', ['Shawwal', 'Rajab', 'Muharram'], null],
             ['Pendant le Ramadan, on ne mange pas...', 'du lever au coucher du soleil', ['toute la journée et la nuit', 'le soir', 'le week-end'], null],
             ['Vers quoi se tourne-t-on pour prier ?', 'la Kaaba', ['le soleil', 'la lune', 'la mer'], null],
             ['Dans quelle ville se trouve la Kaaba ?', 'La Mecque', ['Médine', 'Jérusalem', 'Istanbul'], null],
@@ -2092,16 +2092,16 @@ var EDU_BANKS = (function(){
           ],
           2: [
             ['Comment s\u2019appelle le partage avec les pauvres ?', 'la zakat', ['le hajj', 'le jeûne', 'la salat'], null],
-            ['Comment s\u2019appelle la prière en arabe ?', 'la salat', ['la zakat', 'le sawm', 'la chahada'], null],
+            ['Comment s\u2019appelle la prière en arabe ?', 'la salat', ['la zakat', 'le sawm', 'la shahada'], null],
             ['Comment s\u2019appelle le jeûne en arabe ?', 'le sawm (siyam)', ['la salat', 'le hajj', 'la zakat'], null],
-            ['Quelle fête vient après le Ramadan ?', 'l\u2019Aïd el-Fitr', ['l\u2019Aïd el-Kebir', 'le Mawlid', 'l\u2019Achoura'], null],
+            ['Quelle fête vient après le Ramadan ?', 'l\u2019Eid al-Fitr', ['l\u2019Eid al-Adha', 'le Mawlid', 'l\u2019Ashura'], null],
             ['Que dit-on avant de commencer à manger ?', 'Bismillah', ['Alhamdoulillah', 'Salam', 'Amine'], null],
             ['Que dit-on après avoir fini de manger ?', 'Alhamdoulillah', ['Bismillah', 'Inchallah', 'Sobhanallah'], null]
           ],
           3: [
-            ['La première prière du matin s\u2019appelle...', 'Fajr', ['Isha', 'Maghrib', 'Dhohr'], null],
+            ['La première prière du matin s\u2019appelle...', 'Fajr', ['Isha', 'Maghrib', 'Dhuhr'], null],
             ['La prière du coucher du soleil s\u2019appelle...', 'Maghrib', ['Fajr', 'Asr', 'Isha'], null],
-            ['Comment s\u2019appelle le petit lavage avant la prière ?', 'les ablutions (woudou)', ['la douche', 'le ghousl seulement', 'le tayammoum seulement'], null],
+            ['Comment s\u2019appelle le petit lavage avant la prière ?', 'les ablutions (wudu)', ['la douche', 'le ghousl seulement', 'le tayammoum seulement'], null],
             ['Quel jour a lieu la grande prière en commun ?', 'le vendredi', ['le dimanche', 'le samedi', 'le lundi'], null],
             ['Où les musulmans prient-ils ensemble ?', 'à la mosquée', ['à l\u2019école', 'au stade', 'au marché'], null],
             ['Comment s\u2019appelle l\u2019appel à la prière ?', 'l\u2019adhan', ['la sourate', 'le takbir seulement', 'le dhikr'], null]
@@ -2140,28 +2140,28 @@ var EDU_BANKS = (function(){
         is1: {
           1: [
             ['Combien de prophètes sont cités dans le Coran ?', '25', ['10', '99', '124'], null],
-            ['Quel prophète a reçu la Torah ?', 'Moussa', ['Issa', 'Dawoud', 'Ibrahim'], null],
-            ['Quel prophète a reçu l\u2019Évangile (Injil) ?', 'Issa', ['Moussa', 'Mohammed ﷺ', 'Dawoud'], null],
-            ['Quel prophète a reçu les Psaumes (Zabour) ?', 'Dawoud', ['Souleyman', 'Moussa', 'Haroun'], null],
-            ['À quel âge Mohammed ﷺ a-t-il reçu la première révélation ?', '40 ans', ['25 ans', '63 ans', '30 ans'], null],
-            ['Dans quelle grotte le Prophète ﷺ méditait-il ?', 'Hira', ['Thawr', 'Ouhoud', 'Safa'], null],
-            ['Qui fut la première épouse du Prophète ﷺ ?', 'Khadija', ['Aïcha', 'Fatima', 'Hafsa'], null],
+            ['Quel prophète a reçu la Torah ?', 'Musa', ['\u2019Isa', 'Dawud', 'Ibrahim'], null],
+            ['Quel prophète a reçu l\u2019Évangile (Injil) ?', '\u2019Isa', ['Musa', 'Muhammad ﷺ', 'Dawud'], null],
+            ['Quel prophète a reçu les Psaumes (Zabour) ?', 'Dawud', ['Sulayman', 'Musa', 'Harun'], null],
+            ['À quel âge Muhammad ﷺ a-t-il reçu la première révélation ?', '40 ans', ['25 ans', '63 ans', '30 ans'], null],
+            ['Dans quelle grotte le Prophète ﷺ méditait-il ?', 'Hira', ['Thawr', 'Uhud', 'Safa'], null],
+            ['Qui fut la première épouse du Prophète ﷺ ?', 'Khadija', ['\u2019Aisha', 'Fatima', 'Hafsa'], null],
             ['Comment s\u2019appelle le voyage de La Mecque à Médine ?', 'la Hijra', ['le Hajj', 'l\u2019Isra', 'la Omra'], null]
           ],
           2: [
             ['En quelle année a eu lieu la Hijra ?', '622', ['570', '632', '610'], null],
-            ['Quel prophète est resté dans le ventre du poisson ?', 'Younous', ['Youssouf', 'Yahya', 'Ayyoub'], null],
-            ['Quel prophète est célèbre pour sa patience ?', 'Ayyoub', ['Adam', 'Loth', 'Chouayb'], null],
-            ['Quel roi-prophète commandait le vent et les djinns ?', 'Souleyman', ['Dawoud', 'Moussa', 'Ibrahim'], null],
-            ['Qui a élevé le Prophète ﷺ après ses grands-parents ?', 'son oncle Abou Talib', ['Abou Bakr', 'Omar', 'Hamza'], null],
+            ['Quel prophète est resté dans le ventre du poisson ?', 'Yunus', ['Yusuf', 'Yahya', 'Ayyub'], null],
+            ['Quel prophète est célèbre pour sa patience ?', 'Ayyub', ['Adam', 'Loth', 'Chouayb'], null],
+            ['Quel roi-prophète commandait le vent et les djinns ?', 'Sulayman', ['Dawud', 'Musa', 'Ibrahim'], null],
+            ['Qui a élevé le Prophète ﷺ après ses grands-parents ?', 'son oncle Abu Talib', ['Abu Bakr', 'Umar', 'Hamza'], null],
             ['Le surnom du Prophète ﷺ avant l\u2019islam était...', 'Al-Amine (le digne de confiance)', ['Al-Farouk', 'As-Siddiq', 'Al-Fatih'], null]
           ],
           3: [
-            ['Quel prophète a été sauvé du feu de son peuple ?', 'Ibrahim', ['Moussa', 'Loth', 'Nouh'], null],
-            ['Qui était le père de Youssouf, prophète lui aussi ?', 'Yaqoub', ['Ishaq', 'Ibrahim', 'Ismaïl'], null],
-            ['Quel prophète a interprété les rêves du roi d\u2019Égypte ?', 'Youssouf', ['Moussa', 'Haroun', 'Chouayb'], null],
-            ['Qui a annoncé à Maryam la naissance de Issa ?', 'l\u2019ange Jibril', ['Mikaïl', 'Israfil', 'un prophète'], null],
-            ['Quel prophète était le fils de Zakariya ?', 'Yahya', ['Issa', 'Younous', 'Ismaïl'], null],
+            ['Quel prophète a été sauvé du feu de son peuple ?', 'Ibrahim', ['Musa', 'Loth', 'Nuh'], null],
+            ['Qui était le père de Yusuf, prophète lui aussi ?', 'Ya\u2019qub', ['Ishaq', 'Ibrahim', 'Isma\u2019il'], null],
+            ['Quel prophète a interprété les rêves du roi d\u2019Égypte ?', 'Yusuf', ['Musa', 'Harun', 'Chouayb'], null],
+            ['Qui a annoncé à Maryam la naissance de \u2019Isa ?', 'l\u2019ange Jibril', ['Mikaïl', 'Israfil', 'un prophète'], null],
+            ['Quel prophète était le fils de Zakariya ?', 'Yahya', ['\u2019Isa', 'Yunus', 'Isma\u2019il'], null],
             ['La mère de Maryam l\u2019avait consacrée au service de...', 'la maison sainte (le temple)', ['la mer', 'la montagne', 'la ville'], null]
           ]
         },
@@ -2172,12 +2172,12 @@ var EDU_BANKS = (function(){
             ['Que veut dire « Al-Fatiha » ?', 'l\u2019ouverture', ['la vache', 'la lumière', 'les hommes'], null],
             ['En quelle langue le Coran a-t-il été révélé ?', 'en arabe', ['en hébreu', 'en araméen', 'en persan'], null],
             ['Quel ange a transmis le Coran au Prophète ﷺ ?', 'Jibril', ['Mikaïl', 'Israfil', 'Malik'], null],
-            ['Pendant quel mois la révélation a-t-elle commencé ?', 'Ramadan', ['Chaabane', 'Rajab', 'Mouharram'], null],
+            ['Pendant quel mois la révélation a-t-elle commencé ?', 'Ramadan', ['Sha\u2019ban', 'Rajab', 'Muharram'], null],
             ['Quelle est la plus longue sourate ?', 'Al-Baqara', ['Al-Fatiha', 'Ya-Sin', 'Al-Kahf'], null],
             ['Combien de temps a duré la révélation du Coran ?', 'environ 23 ans', ['1 an', '10 ans', '40 ans'], null]
           ],
           2: [
-            ['Quelle nuit vaut mieux que mille mois ?', 'Laylat al-Qadr', ['la nuit du vendredi', 'la nuit de l\u2019Aïd', 'la nuit du Mawlid'], null],
+            ['Quelle nuit vaut mieux que mille mois ?', 'Laylat al-Qadr', ['la nuit du vendredi', 'la nuit de l\u2019Eid', 'la nuit du Mawlid'], null],
             ['Quelle sourate lit-on à chaque unité de prière ?', 'Al-Fatiha', ['Al-Ikhlas', 'An-Nas', 'Al-Falaq'], null],
             ['Quelle sourate parle de l\u2019unicité d\u2019Allah en 4 versets ?', 'Al-Ikhlas', ['Al-Fatiha', 'Al-Kawthar', 'Al-Asr'], null],
             ['Comment s\u2019appelle un verset du Coran ?', 'une aya', ['une sourate', 'un hadith', 'un juz'], null],
@@ -2189,19 +2189,19 @@ var EDU_BANKS = (function(){
             ['Quel verset célèbre parle du Trône d\u2019Allah ?', 'Ayat al-Koursi', ['Ayat an-Nour', 'le premier verset', 'Ayat as-Sajda'], null],
             ['Dans quelle sourate se trouve Ayat al-Koursi ?', 'Al-Baqara', ['Al-Fatiha', 'Ya-Sin', 'Ar-Rahman'], null],
             ['Quelle sourate est recommandée le vendredi ?', 'Al-Kahf', ['Al-Baqara', 'Maryam', 'Al-Fil'], null],
-            ['Quelle sourate porte le nom de la mère de Issa ?', 'Maryam', ['Fatima', 'Khadija', 'Assia'], null],
-            ['Sous quel calife le Coran a-t-il été unifié en un livre ?', 'Othman', ['Abou Bakr seul', 'Omar seul', 'Ali'], null]
+            ['Quelle sourate porte le nom de la mère de \u2019Isa ?', 'Maryam', ['Fatima', 'Khadija', 'Asiya'], null],
+            ['Sous quel calife le Coran a-t-il été unifié en un livre ?', 'Uthman', ['Abu Bakr seul', 'Umar seul', 'Ali'], null]
           ]
         },
         is3: {
           1: [
-            ['Cite les 5 prières dans l\u2019ordre :', 'Fajr, Dhohr, Asr, Maghrib, Isha', ['Isha, Fajr, Asr, Dhohr, Maghrib', 'Dhohr, Fajr, Maghrib, Asr, Isha', 'Fajr, Asr, Dhohr, Isha, Maghrib'], null],
+            ['Cite les 5 prières dans l\u2019ordre :', 'Fajr, Dhuhr, Asr, Maghrib, Isha', ['Isha, Fajr, Asr, Dhuhr, Maghrib', 'Dhuhr, Fajr, Maghrib, Asr, Isha', 'Fajr, Asr, Dhuhr, Isha, Maghrib'], null],
             ['Quelle prière a lieu à l\u2019aube ?', 'Fajr', ['Isha', 'Asr', 'Maghrib'], null],
             ['Quelle prière a lieu juste après le coucher du soleil ?', 'Maghrib', ['Isha', 'Asr', 'Fajr'], null],
-            ['Quel jour a lieu la prière du joumou\u2019a ?', 'le vendredi', ['le samedi', 'le dimanche', 'le jeudi'], null],
+            ['Quel jour a lieu la prière du jumu\u2019a ?', 'le vendredi', ['le samedi', 'le dimanche', 'le jeudi'], null],
             ['Comment s\u2019appelle la direction de la prière ?', 'la qibla', ['le mihrab', 'le minbar', 'le minaret'], null],
-            ['Combien y a-t-il de fêtes de l\u2019Aïd par an ?', '2', ['1', '3', '4'], null],
-            ['Comment s\u2019appelle la fête du sacrifice ?', 'l\u2019Aïd el-Adha (el-Kebir)', ['l\u2019Aïd el-Fitr', 'le Mawlid', 'l\u2019Achoura'], null],
+            ['Combien y a-t-il de fêtes de l\u2019Eid par an ?', '2', ['1', '3', '4'], null],
+            ['Comment s\u2019appelle la fête du sacrifice ?', 'l\u2019Eid al-Adha', ['l\u2019Eid al-Fitr', 'le Mawlid', 'l\u2019Ashura'], null],
             ['Que fait-on avant chaque prière ?', 'les ablutions', ['un repas', 'une sieste', 'du sport'], null]
           ],
           2: [
@@ -2213,11 +2213,11 @@ var EDU_BANKS = (function(){
             ['Combien de tours fait-on autour de la Kaaba ?', '7', ['5', '3', '10'], null]
           ],
           3: [
-            ['Quel mois vient juste avant le Ramadan ?', 'Chaabane', ['Chawwal', 'Rajab', 'Mouharram'], null],
-            ['Quel calendrier suit les mois islamiques ?', 'le calendrier lunaire (hégirien)', ['le calendrier solaire', 'le calendrier chinois', 'le calendrier julien'], null],
+            ['Quel mois vient juste avant le Ramadan ?', 'Sha\u2019ban', ['Shawwal', 'Rajab', 'Muharram'], null],
+            ['Quel calendrier suit les mois islamiques ?', 'le calendrier lunaire (hégirien)', ['le calendrier solaire', 'le calendrier shinois', 'le calendrier julien'], null],
             ['Combien de jours environ dure un mois lunaire ?', '29 ou 30', ['31', '28 toujours', '27'], null],
-            ['Quelle colline monte-t-on avec Safa pendant le pèlerinage ?', 'Marwa', ['Arafat', 'Mina', 'Ouhoud'], null],
-            ['Où les pèlerins se rassemblent-ils le 9 Dhoul-Hijja ?', 'à Arafat', ['à Mina', 'à Mouzdalifa', 'à Badr'], null],
+            ['Quelle colline monte-t-on avec Safa pendant le pèlerinage ?', 'Marwa', ['Arafat', 'Mina', 'Uhud'], null],
+            ['Où les pèlerins se rassemblent-ils le 9 Dhoul-Hijja ?', 'à Arafat', ['à Mina', 'à Muzdalifa', 'à Badr'], null],
             ['Quelle eau célèbre coule près de la Kaaba ?', 'Zamzam', ['Kawthar', 'Salsabil', 'Tasnim'], null]
           ]
         }
@@ -2226,28 +2226,28 @@ var EDU_BANKS = (function(){
         is1: {
           1: [
             ['Combien de messagers « doués de résolution » (Oulou al-Azm) ?', '5', ['3', '7', '10'], null],
-            ['Qui sont les Oulou al-Azm ?', 'Nouh, Ibrahim, Moussa, Issa, Mohammed ﷺ', ['Adam, Nouh, Loth, Issa, Mohammed ﷺ', 'Ibrahim, Ismaïl, Ishaq, Yaqoub, Youssouf', 'Moussa, Haroun, Dawoud, Souleyman, Issa'], null],
-            ['Quel prophète est surnommé « Khalil Allah » ?', 'Ibrahim', ['Moussa', 'Mohammed ﷺ', 'Issa'], null],
-            ['Quel prophète est surnommé « Kalim Allah » ?', 'Moussa', ['Ibrahim', 'Issa', 'Adam'], null],
+            ['Qui sont les Oulou al-Azm ?', 'Nuh, Ibrahim, Musa, \u2019Isa, Muhammad ﷺ', ['Adam, Nuh, Loth, \u2019Isa, Muhammad ﷺ', 'Ibrahim, Isma\u2019il, Ishaq, Ya\u2019qub, Yusuf', 'Musa, Harun, Dawud, Sulayman, \u2019Isa'], null],
+            ['Quel prophète est surnommé « Khalil Allah » ?', 'Ibrahim', ['Musa', 'Muhammad ﷺ', '\u2019Isa'], null],
+            ['Quel prophète est surnommé « Kalim Allah » ?', 'Musa', ['Ibrahim', '\u2019Isa', 'Adam'], null],
             ['En quelle année est né le Prophète ﷺ (année de l\u2019Éléphant) ?', 'vers 570', ['610', '622', '632'], null],
             ['En quelle année le Prophète ﷺ est-il décédé ?', '632', ['622', '640', '610'], null],
-            ['Quelle bataille eut lieu en l\u2019an 2 de l\u2019Hégire ?', 'Badr', ['Ouhoud', 'Le Fossé', 'Hounayn'], null],
-            ['Qui accompagnait le Prophète ﷺ pendant la Hijra ?', 'Abou Bakr', ['Omar', 'Ali', 'Othman'], null]
+            ['Quelle bataille eut lieu en l\u2019an 2 de l\u2019Hégire ?', 'Badr', ['Uhud', 'Le Fossé', 'Hunayn'], null],
+            ['Qui accompagnait le Prophète ﷺ pendant la Hijra ?', 'Abu Bakr', ['Umar', 'Ali', 'Uthman'], null]
           ],
           2: [
-            ['Dans quelle grotte se sont-ils cachés pendant la Hijra ?', 'Thawr', ['Hira', 'Ouhoud', 'Nour'], null],
+            ['Dans quelle grotte se sont-ils cachés pendant la Hijra ?', 'Thawr', ['Hira', 'Uhud', 'Nour'], null],
             ['Quel voyage nocturne mena le Prophète ﷺ à Jérusalem ?', 'al-Isra', ['la Hijra', 'le Hajj', 'la Omra'], null],
             ['Comment s\u2019appelle l\u2019ascension aux cieux ?', 'al-Miraj', ['al-Isra', 'al-Qadr', 'al-Fath'], null],
             ['Combien de prières furent prescrites lors du Miraj ?', '5 (après réduction de 50)', ['3', '7', '10 directement'], null],
-            ['Quelle année est appelée « l\u2019année de la tristesse » ?', 'celle des décès de Khadija et Abou Talib', ['l\u2019année de Badr', 'l\u2019année de la conquête', 'l\u2019année de l\u2019Éléphant'], null],
-            ['Quel jeune compagnon dormit dans le lit du Prophète ﷺ la nuit de la Hijra ?', 'Ali', ['Omar', 'Zayd', 'Ibn Abbas'], null]
+            ['Quelle année est appelée « l\u2019année de la tristesse » ?', 'celle des décès de Khadija et Abu Talib', ['l\u2019année de Badr', 'l\u2019année de la conquête', 'l\u2019année de l\u2019Éléphant'], null],
+            ['Quel jeune compagnon dormit dans le lit du Prophète ﷺ la nuit de la Hijra ?', 'Ali', ['Umar', 'Zayd', 'Ibn Abbas'], null]
           ],
           3: [
-            ['Quel traité fut signé avec les Mecquois en l\u2019an 6 ?', 'Houdaybiya', ['Aqaba', 'Médine', 'Taïf'], null],
+            ['Quel traité fut signé avec les Mecquois en l\u2019an 6 ?', 'Hudaybiya', ['Aqaba', 'Médine', 'Taïf'], null],
             ['En quelle année la Mecque fut-elle ouverte pacifiquement ?', 'an 8 de l\u2019Hégire (630)', ['an 2', 'an 10', 'an 5'], null],
             ['Comment s\u2019appelle le dernier sermon du Prophète ﷺ ?', 'le sermon de l\u2019adieu (Arafat)', ['le sermon du vendredi', 'le sermon de Badr', 'le sermon de Médine'], null],
-            ['Qui fut le premier muezzin de l\u2019islam ?', 'Bilal', ['Abou Bakr', 'Salman', 'Ammar'], null],
-            ['Quel prophète gouvernait hommes, djinns et vent ?', 'Souleyman', ['Dawoud', 'Idris', 'Dhoul-Qarnayn'], null],
+            ['Qui fut le premier muezzin de l\u2019islam ?', 'Bilal', ['Abu Bakr', 'Salman', 'Ammar'], null],
+            ['Quel prophète gouvernait hommes, djinns et vent ?', 'Sulayman', ['Dawud', 'Idris', 'Dhoul-Qarnayn'], null],
             ['Vers quel pays les premiers musulmans ont-ils émigré ?', 'l\u2019Abyssinie (Éthiopie)', ['la Perse', 'Byzance', 'le Yémen'], null]
           ]
         },
@@ -2258,7 +2258,7 @@ var EDU_BANKS = (function(){
             ['Quelle est la plus longue sourate ?', 'Al-Baqara', ['An-Nisa', 'Al-Imran', 'Al-Maïda'], null],
             ['Quelle est la plus courte sourate ?', 'Al-Kawthar', ['Al-Asr', 'Al-Ikhlas', 'An-Nasr'], null],
             ['Où se trouve Ayat al-Koursi ?', 'Al-Baqara, verset 255', ['Al-Fatiha', 'Ya-Sin', 'Al-Imran, verset 100'], null],
-            ['Quels furent les premiers versets révélés ?', 'Al-Alaq (« Lis ! »)', ['Al-Fatiha', 'Al-Mouddathir', 'Al-Qalam'], null],
+            ['Quels furent les premiers versets révélés ?', 'Al-Alaq (« Lis ! »)', ['Al-Fatiha', 'Al-Muddaththir', 'Al-Qalam'], null],
             ['Quel mot signifie « récitation » ?', 'Qur\u2019an', ['Kitab', 'Furqan', 'Dhikr'], null],
             ['Quelle sourate ne commence pas par la basmala ?', 'At-Tawba', ['Al-Fatiha', 'An-Nas', 'Al-Ikhlas'], null]
           ],
@@ -2271,32 +2271,32 @@ var EDU_BANKS = (function(){
             ['Combien de versets compte Al-Fatiha ?', '7', ['5', '6', '10'], null]
           ],
           3: [
-            ['Sous quel calife les copies officielles furent-elles diffusées ?', 'Othman', ['Abou Bakr', 'Omar', 'Ali'], null],
-            ['Qui fut le principal scribe de la révélation ?', 'Zayd ibn Thabit', ['Bilal', 'Abou Hourayra', 'Ibn Omar'], null],
+            ['Sous quel calife les copies officielles furent-elles diffusées ?', 'Uthman', ['Abu Bakr', 'Umar', 'Ali'], null],
+            ['Qui fut le principal scribe de la révélation ?', 'Zayd ibn Thabit', ['Bilal', 'Abu Hurayra', 'Ibn Umar'], null],
             ['Comment s\u2019appelle la science de la bonne récitation ?', 'le tajwid', ['le tafsir', 'le fiqh', 'la sira'], null],
             ['Comment s\u2019appelle l\u2019explication du Coran ?', 'le tafsir', ['le tajwid', 'le hadith', 'la fatwa'], null],
-            ['Quelle sourate raconte l\u2019histoire des gens de la caverne ?', 'Al-Kahf', ['Maryam', 'Al-Qasas', 'Nouh'], null],
+            ['Quelle sourate raconte l\u2019histoire des gens de la caverne ?', 'Al-Kahf', ['Maryam', 'Al-Qasas', 'Nuh'], null],
             ['« Iqra » (Lis !) fut révélé dans la grotte de...', 'Hira', ['Thawr', 'Arafat', 'Mina'], null]
           ]
         },
         is3: {
           1: [
-            ['Qui fut le premier calife après le Prophète ﷺ ?', 'Abou Bakr', ['Omar', 'Othman', 'Ali'], null],
-            ['Qui fut le deuxième calife ?', 'Omar', ['Abou Bakr', 'Ali', 'Othman'], null],
+            ['Qui fut le premier calife après le Prophète ﷺ ?', 'Abu Bakr', ['Umar', 'Uthman', 'Ali'], null],
+            ['Qui fut le deuxième calife ?', 'Umar', ['Abu Bakr', 'Ali', 'Uthman'], null],
             ['Combien y eut-il de califes « bien guidés » ?', '4', ['2', '5', '12'], null],
-            ['Quel calife était surnommé « Al-Farouk » ?', 'Omar', ['Abou Bakr', 'Othman', 'Ali'], null],
-            ['Quel calife était surnommé « As-Siddiq » ?', 'Abou Bakr', ['Omar', 'Ali', 'Othman'], null],
+            ['Quel calife était surnommé « Al-Farouk » ?', 'Umar', ['Abu Bakr', 'Uthman', 'Ali'], null],
+            ['Quel calife était surnommé « As-Siddiq » ?', 'Abu Bakr', ['Umar', 'Ali', 'Uthman'], null],
             ['Quelle ville accueillit le Prophète ﷺ après la Hijra ?', 'Médine', ['La Mecque', 'Damas', 'Bagdad'], null],
             ['Quel calendrier commence à la Hijra ?', 'le calendrier hégirien', ['le grégorien', 'le julien', 'le persan'], null],
             ['La science des règles pratiques (prière, jeûne...) s\u2019appelle...', 'le fiqh', ['la sira', 'le tajwid', 'la aqida'], null]
           ],
           2: [
             ['Quelle science étudie les paroles du Prophète ﷺ ?', 'la science du hadith', ['le tajwid', 'la grammaire', 'le calcul'], null],
-            ['Quels sont les deux recueils de hadiths les plus authentiques ?', 'Boukhari et Mouslim', ['Tirmidhi et Nasa\u2019i', 'Abou Dawoud et Ibn Maja', 'Malik et Ahmad'], null],
+            ['Quels sont les deux recueils de hadiths les plus authentiques ?', 'Bukhari et Muslim', ['Tirmidhi et Nasa\u2019i', 'Abou Dawud et Ibn Maja', 'Malik et Ahmad'], null],
             ['Comment s\u2019appelle la biographie du Prophète ﷺ ?', 'la Sîra', ['le Tafsir', 'le Fiqh', 'la Aqida'], null],
             ['Combien de grandes écoles juridiques sunnites ?', '4', ['2', '5', '7'], null],
             ['Quelle dynastie a construit la mosquée de Cordoue ?', 'les Omeyyades', ['les Abbassides', 'les Ottomans', 'les Fatimides'], null],
-            ['La science des fondements du droit s\u2019appelle...', 'ousoul al-fiqh', ['le tajwid', 'la sira', 'le kalam'], null]
+            ['La science des fondements du droit s\u2019appelle...', 'usul al-fiqh', ['le tajwid', 'la sira', 'le kalam'], null]
           ],
           3: [
             ['Quelle ville abritait la « Maison de la Sagesse » ?', 'Bagdad', ['Le Caire', 'Damas', 'Cordoue'], null],
@@ -2304,7 +2304,7 @@ var EDU_BANKS = (function(){
             ['Quel médecin a écrit le « Canon de la médecine » ?', 'Avicenne (Ibn Sina)', ['Averroès', 'Razi', 'Ibn Nafis'], null],
             ['De quel nom vient le mot « algorithme » ?', 'd\u2019Al-Khwarizmi', ['d\u2019Al-Jabr', 'd\u2019Al-Kindi', 'd\u2019Al-Farabi'], null],
             ['Quel voyageur musulman a parcouru le monde au XIVe siècle ?', 'Ibn Battuta', ['Ibn Khaldoun', 'Al-Idrissi', 'Sinbad'], null],
-            ['Qui a fondé la sociologie moderne avec sa « Mouqaddima » ?', 'Ibn Khaldoun', ['Ibn Battuta', 'Al-Ghazali', 'Al-Farabi'], null]
+            ['Qui a fondé la sociologie moderne avec sa « Muqaddima » ?', 'Ibn Khaldoun', ['Ibn Battuta', 'Al-Ghazali', 'Al-Farabi'], null]
           ]
         }
       }
@@ -2450,6 +2450,526 @@ var EDU_BANKS = (function(){
     buildTournoi: buildTournoi,
     weekKey: weekKey
   };
+})();
+
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   EDUVERSE — Phase 7 · Extension des mondes Arabe & Sciences religieuses
+   À charger APRÈS banks.js (mute EDU_BANKS.SUBJECTS)
+
+   ARABE (méthode Nouraniya → Tomes de Médine) :
+     ar4 Formes des lettres · ar5 Voyelles (harakat) · ar6 Lecture
+   SCIENCES RELIGIEUSES :
+     is4 Juz\u2019 Amma (mémorisation progressive, ordre An-Nas → An-Naba)
+     is5 Tawhid (Al-Usul ath-Thalatha · Kitab at-Tawhid)
+     is3 Fiqh enrichi (purification & prière selon le Coran et la Sunna)
+   ═══════════════════════════════════════════════════════════ */
+
+(function(){
+  var S = EDU_BANKS.SUBJECTS;
+
+  function ar(t, size){
+    return '<div style="font-size:' + (size || 64) + 'px;line-height:1.35;text-align:center;font-family:serif" dir="rtl">' + t + '</div>';
+  }
+  // RNG seedé FIXE : les pools générés sont IDENTIQUES sur tous les appareils
+  // (indispensable pour que le tournoi hebdomadaire soit équitable)
+  var _seed = 20260101;
+  function _rng(){
+    _seed |= 0; _seed = _seed + 0x6D2B79F5 | 0;
+    var t = Math.imul(_seed ^ _seed >>> 15, 1 | _seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+  function shuffle(a){
+    a = a.slice();
+    for(var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(_rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function others(pool, good, n){
+    return shuffle(pool.filter(function(x){ return x !== good; })).slice(0, n || 3);
+  }
+
+  /* ═════════════ ARABE · NOURANIYA ═════════════ */
+
+  // [glyphe, nom, son latin, connectrice?]
+  var LETTRES = [
+    ['ا','alif','a',false], ['ب','ba','b',true], ['ت','ta','t',true], ['ث','tha','th',true],
+    ['ج','jim','j',true], ['ح','ha','h',true], ['خ','kha','kh',true], ['د','dal','d',false],
+    ['ذ','dhal','dh',false], ['ر','ra','r',false], ['ز','zay','z',false], ['س','sin','s',true],
+    ['ش','shin','sh',true], ['ص','sad','s',true], ['ض','dad','d',true], ['ط','ta (emphatique)','t',true],
+    ['ظ','dha (emphatique)','dh',true], ['ع','\u2019ayn','\u2019',true], ['غ','ghayn','gh',true],
+    ['ف','fa','f',true], ['ق','qaf','q',true], ['ك','kaf','k',true], ['ل','lam','l',true],
+    ['م','mim','m',true], ['ن','nun','n',true], ['ه','ha (douce)','h',true], ['و','waw','w',false], ['ي','ya','y',true]
+  ];
+  var NOMS = LETTRES.map(function(l){ return l[1]; });
+  var TATWEEL = '\u0640';
+  var FATHA = '\u064E', DAMMA = '\u064F', KASRA = '\u0650', SUKUN = '\u0652';
+  var TANWIN_F = '\u064B', TANWIN_D = '\u064C', TANWIN_K = '\u064D';
+
+  function formeQ(l, forme){
+    var glyphe, lieu;
+    if(forme === 'init'){ glyphe = l[0] + TATWEEL; lieu = 'au DÉBUT d\u2019un mot'; }
+    else if(forme === 'fin'){ glyphe = TATWEEL + l[0]; lieu = 'à la FIN d\u2019un mot'; }
+    else { glyphe = TATWEEL + l[0] + TATWEEL; lieu = 'au MILIEU d\u2019un mot'; }
+    return ['Quelle lettre est écrite ici (forme ' + lieu + ') ?', l[1], others(NOMS, l[1]), ar(glyphe)];
+  }
+  var CONNECT = LETTRES.filter(function(l){ return l[3]; });
+  var FACILES = CONNECT.filter(function(l){ return ['ba','ta','jim','sin','fa','qaf','kaf','lam','mim','nun','ya','ha (douce)'].indexOf(l[1]) >= 0; });
+
+  function poolsFormes(nInit, nFin, nMil){
+    var t1 = [], t2 = [], t3 = [];
+    shuffle(FACILES).slice(0, nInit).forEach(function(l){ t1.push(formeQ(l, 'init')); });
+    shuffle(FACILES).slice(0, nFin).forEach(function(l){ t2.push(formeQ(l, 'fin')); });
+    shuffle(CONNECT).slice(0, nMil).forEach(function(l){ t3.push(formeQ(l, 'mil')); });
+    t3.push(['Quelles lettres ne s\u2019attachent JAMAIS à la lettre suivante ?',
+      'alif, dal, dhal, ra, zay, waw ( ا د ذ ر ز و )',
+      ['ba, ta, tha ( ب ت ث )', 'toutes les lettres s\u2019attachent', 'mim, nun, lam ( م ن ل )'], null]);
+    t3.push(['Combien de formes peut prendre une lettre arabe selon sa place ?',
+      'jusqu\u2019à 4 (isolée, début, milieu, fin)', ['toujours 1 seule', '2 seulement', '10'], null]);
+    return { 1: t1, 2: t2, 3: t3 };
+  }
+
+  function harakaQ(l, h){
+    var nomH = h === FATHA ? 'fatha' : h === DAMMA ? 'damma' : 'kasra';
+    var voy = h === FATHA ? 'a' : h === DAMMA ? 'u' : 'i';
+    var syl = l[2] + voy;
+    var autres = [];
+    [FATHA, DAMMA, KASRA].forEach(function(hh){
+      var v = hh === FATHA ? 'a' : hh === DAMMA ? 'u' : 'i';
+      if(l[2] + v !== syl) autres.push(l[2] + v);
+    });
+    return { lecture: ['Comment se lit cette syllabe ?', syl, autres.concat([others(LETTRES.map(function(x){ return x[2]; }), l[2], 1)[0] + voy]), ar(l[0] + h)],
+             nom:     ['Quelle voyelle (haraka) porte cette lettre ?', nomH, ['fatha','damma','kasra','sukun'].filter(function(x){ return x !== nomH; }), ar(l[0] + h)] };
+  }
+  function poolsHarakat(band){
+    var base = band === 'petits' ? FACILES : LETTRES;
+    var t1 = [], t2 = [], t3 = [];
+    // t1 : reconnaître le nom des voyelles
+    shuffle(base).slice(0, 9).forEach(function(l, i){
+      t1.push(harakaQ(l, [FATHA, DAMMA, KASRA][i % 3]).nom);
+    });
+    // t2 : lire les syllabes
+    shuffle(base).slice(0, 10).forEach(function(l, i){
+      t2.push(harakaQ(l, [FATHA, DAMMA, KASRA][(i + 1) % 3]).lecture);
+    });
+    // t3 : sukun / tanwin / madd selon la tranche
+    if(band === 'petits'){
+      shuffle(FACILES).slice(0, 6).forEach(function(l, i){
+        t3.push(harakaQ(l, [FATHA, DAMMA, KASRA][i % 3]).lecture);
+      });
+    } else {
+      shuffle(base).slice(0, 3).forEach(function(l){
+        t3.push(['Comment se lit cette lettre avec un soukoun (lettre « fermée ») ?',
+          l[2] + ' (sans voyelle)', [l[2] + 'a', l[2] + 'u', l[2] + 'i'], ar(l[0] + SUKUN)]);
+      });
+      shuffle(base).slice(0, 3).forEach(function(l, i){
+        var tn = [[TANWIN_F, 'an'], [TANWIN_D, 'un'], [TANWIN_K, 'in']][i % 3];
+        t3.push(['Comment se lit cette lettre avec le tanwin ?',
+          l[2] + tn[1], [l[2] + 'a', l[2] + ['un','in','an'][i % 3], l[2]], ar(l[0] + tn[0])]);
+      });
+      if(band === 'grands'){
+        shuffle(CONNECT).slice(0, 3).forEach(function(l){
+          t3.push(['Comment se lit cette syllabe (avec prolongation « madd ») ?',
+            l[2] + '\u0101 (a long)', [l[2] + 'a (bref)', l[2] + 'u', 'a' + l[2]], ar(l[0] + FATHA + '\u0627')]);
+        });
+      }
+    }
+    return { 1: t1, 2: t2, 3: t3 };
+  }
+
+  // Mots entièrement vocalisés (lecture Nouraniya) : [arabe, lecture, sens]
+  var MOTS_LECTURE = [
+    ['\u0642\u064E\u0644\u064E\u0645', 'qalam', 'un stylo'],
+    ['\u0643\u064E\u062A\u064E\u0628\u064E', 'kataba', 'il a écrit'],
+    ['\u062F\u064E\u0631\u064E\u0633\u064E', 'darasa', 'il a étudié'],
+    ['\u062E\u064E\u0631\u064E\u062C\u064E', 'kharaja', 'il est sorti'],
+    ['\u062C\u064E\u0644\u064E\u0633\u064E', 'jalasa', 'il s\u2019est assis'],
+    ['\u0630\u064E\u0647\u064E\u0628\u064E', 'dhahaba', 'il est parti'],
+    ['\u0633\u064E\u0645\u0650\u0639\u064E', 'sami\u2019a', 'il a entendu'],
+    ['\u0634\u064E\u0631\u0650\u0628\u064E', 'shariba', 'il a bu'],
+    ['\u0639\u064E\u0644\u0650\u0645\u064E', '\u2019alima', 'il a su'],
+    ['\u0641\u064E\u062A\u064E\u062D\u064E', 'fataha', 'il a ouvert'],
+    ['\u0646\u064E\u0635\u064E\u0631\u064E', 'nasara', 'il a secouru'],
+    ['\u062D\u064E\u0645\u0650\u062F\u064E', 'hamida', 'il a loué']
+  ];
+  // Tome de Médine 1 : démonstratifs & phrases
+  var MEDINE = [
+    ['Que veut dire « h\u0101dh\u0101 » ( هذا ) ?', 'ceci / voici (masculin)', ['ceci (féminin)', 'cela (loin)', 'qui ?'], null],
+    ['Que veut dire « h\u0101dhihi » ( هذه ) ?', 'ceci / voici (féminin)', ['ceci (masculin)', 'cela', 'quoi ?'], null],
+    ['Que veut dire « dh\u0101lika » ( ذلك ) ?', 'cela (éloigné, masculin)', ['ceci (proche)', 'ici', 'là-bas ?'], null],
+    ['Comment demande-t-on « qu\u2019est-ce que c\u2019est ? » ?', 'm\u0101 h\u0101dh\u0101 ?', ['man h\u0101dh\u0101 ?', 'ayna h\u0101dh\u0101 ?', 'kam h\u0101dh\u0101 ?'], null],
+    ['Comment demande-t-on « qui est-ce ? » (une personne) ?', 'man h\u0101dh\u0101 ?', ['m\u0101 h\u0101dh\u0101 ?', 'kayfa h\u0101dh\u0101 ?', 'lim\u0101dh\u0101 ?'], null],
+    ['« H\u0101dh\u0101 kit\u0101bun » veut dire :', 'ceci est un livre', ['ceci est une porte', 'où est le livre ?', 'le livre est grand'], null],
+    ['« H\u0101dhihi madrasatun » veut dire :', 'ceci est une école', ['ceci est une maison', 'l\u2019école est loin', 'où est l\u2019école ?'], null],
+    ['Que veut dire « huwa » / « hiya » ?', 'il / elle', ['je / tu', 'nous / vous', 'ceci / cela'], null],
+    ['« Al-kit\u0101bu \u2019al\u0101 al-maktabi » : que veut dire « \u2019al\u0101 » ?', 'sur', ['sous', 'dans', 'derrière'], null],
+    ['« Al-qalamu f\u012B al-bayti » : que veut dire « f\u012B » ?', 'dans', ['sur', 'devant', 'avec'], null],
+    ['Comment dit-on « oui » / « non » en réponse à « a-h\u0101dh\u0101... ? » ?', 'na\u2019am / l\u0101', ['huwa / hiya', 'm\u0101 / man', 'fi / \u2019al\u0101'], null],
+    ['« Man h\u0101dh\u0101 ? — H\u0101dh\u0101 t\u0101libun » : « t\u0101libun » veut dire :', 'un étudiant', ['un professeur', 'un médecin', 'un livre'], null]
+  ];
+  function poolsLecture(band){
+    var t1 = [], t2 = [], t3 = [];
+    var mots = shuffle(MOTS_LECTURE);
+    if(band === 'petits'){
+      mots.slice(0, 8).forEach(function(m){
+        t1.push(['Lis ce mot (toutes les voyelles sont écrites) :', m[1],
+          others(MOTS_LECTURE.map(function(x){ return x[1]; }), m[1]), ar(m[0], 56)]);
+      });
+      mots.slice(0, 6).forEach(function(m){
+        t2.push(['« ' + m[1] + ' » — que veut dire ce mot ?', m[2],
+          others(MOTS_LECTURE.map(function(x){ return x[2]; }), m[2]), ar(m[0], 50)]);
+      });
+      shuffle(MOTS_LECTURE).slice(0, 6).forEach(function(m){
+        t3.push(['Lis ce mot :', m[1], others(MOTS_LECTURE.map(function(x){ return x[1]; }), m[1]), ar(m[0], 56)]);
+      });
+    } else if(band === 'moyens'){
+      mots.slice(0, 8).forEach(function(m){
+        t1.push(['Lis ce mot vocalisé :', m[1], others(MOTS_LECTURE.map(function(x){ return x[1]; }), m[1]), ar(m[0], 54)]);
+      });
+      mots.slice(0, 6).forEach(function(m){
+        t2.push(['Lis puis traduis : que veut dire ce mot ?', m[2], others(MOTS_LECTURE.map(function(x){ return x[2]; }), m[2]), ar(m[0], 50)]);
+      });
+      t3 = MEDINE.slice(0, 6);
+    } else {
+      t1 = shuffle(MEDINE).slice(0, 8);
+      mots.slice(0, 6).forEach(function(m){
+        t2.push(['Lis ce verbe au passé :', m[1] + ' (' + m[2] + ')',
+          others(MOTS_LECTURE.map(function(x){ return x[1] + ' (' + x[2] + ')'; }), m[1] + ' (' + m[2] + ')'), ar(m[0], 52)]);
+      });
+      t3 = [
+        ['« H\u0101dh\u0101 baytun kab\u012Brun » veut dire :', 'ceci est une grande maison', ['cette maison est petite', 'où est la grande maison ?', 'la maison est nouvelle'], null],
+        ['« Al-baytu kab\u012Brun » : pourquoi « al- » devant bayt ?', 'c\u2019est l\u2019article défini (« la maison »)', ['c\u2019est le pluriel', 'c\u2019est le féminin', 'c\u2019est une préposition'], null],
+        ['Le « -un » à la fin de « kit\u0101bun » s\u2019appelle :', 'le tanwin (damma double)', ['le sukun', 'la shadda', 'le madd'], null],
+        ['« A-h\u0101dhihi s\u0101\u2019atun ? — Na\u2019am » : de quoi parle-t-on ?', 'd\u2019une montre / horloge (s\u0101\u2019a)', ['d\u2019une voiture', 'd\u2019une école', 'd\u2019un stylo'], null],
+        ['Que veut dire « ayna » ( أين ) ?', 'où ?', ['qui ?', 'comment ?', 'pourquoi ?'], null],
+        ['« Al-mudarrisu f\u012B al-fasli » veut dire :', 'le professeur est dans la classe', ['l\u2019élève est dans la maison', 'le professeur est grand', 'où est la classe ?'], null]
+      ];
+    }
+    return { 1: t1, 2: t2, 3: t3 };
+  }
+
+  // Injection ARABE
+  ['petits', 'moyens', 'grands'].forEach(function(band){
+    S.arabe.comps[band].push(
+      { key: 'ar4', nom: 'Formes des lettres', ico: '🧩' },
+      { key: 'ar5', nom: 'Voyelles (harakat)', ico: '🎵' },
+      { key: 'ar6', nom: band === 'grands' ? 'Lecture & Médine' : 'Lecture', ico: '📖' }
+    );
+    S.arabe.pools[band].ar4 = poolsFormes(band === 'petits' ? 8 : 10, 6, 6);
+    S.arabe.pools[band].ar5 = poolsHarakat(band);
+    S.arabe.pools[band].ar6 = poolsLecture(band);
+  });
+
+  /* ═════════════ JUZ\u2019 AMMA (is4) ═════════════ */
+  // [n°, nom, sens, versets (Hafs), thème]
+  var JUZ = [
+    [114, 'An-Nas', 'Les hommes', 6, 'chercher protection auprès d\u2019Allah contre le waswas'],
+    [113, 'Al-Falaq', 'L\u2019aube naissante', 5, 'chercher protection contre les maux'],
+    [112, 'Al-Ikhlas', 'Le monothéisme pur', 4, 'Allah est Un, l\u2019unicité'],
+    [111, 'Al-Masad', 'Les fibres', 5, 'Abu Lahab et sa fin'],
+    [110, 'An-Nasr', 'Le secours', 3, 'la victoire et les gens entrant en islam'],
+    [109, 'Al-Kafirun', 'Les mécréants', 6, 'le désaveu de l\u2019adoration d\u2019autre qu\u2019Allah'],
+    [108, 'Al-Kawthar', 'L\u2019abondance', 3, 'le fleuve Al-Kawthar offert au Prophète ﷺ'],
+    [107, 'Al-Ma\u2019un', 'L\u2019ustensile', 7, 'celui qui traite la religion de mensonge'],
+    [106, 'Quraysh', 'Quraysh', 4, 'les bienfaits d\u2019Allah sur la tribu de Quraysh'],
+    [105, 'Al-Fil', 'L\u2019éléphant', 5, 'l\u2019armée de l\u2019éléphant détruite'],
+    [104, 'Al-Humaza', 'Les calomniateurs', 9, 'le calomniateur amasseur de biens'],
+    [103, 'Al-\u2019Asr', 'Le temps', 3, 'l\u2019homme est en perdition sauf...'],
+    [102, 'At-Takathur', 'La course aux richesses', 8, 'la rivalité dans l\u2019accumulation'],
+    [101, 'Al-Qari\u2019a', 'Le fracas', 11, 'le Jour dernier et la balance'],
+    [100, 'Al-\u2019Adiyat', 'Les coursiers', 11, 'les chevaux et l\u2019ingratitude de l\u2019homme'],
+    [99, 'Az-Zalzala', 'La secousse', 8, 'la terre secouée, le poids d\u2019un atome'],
+    [98, 'Al-Bayyina', 'La preuve', 8, 'la preuve évidente'],
+    [97, 'Al-Qadr', 'La destinée', 5, 'la nuit d\u2019Al-Qadr, meilleure que mille mois'],
+    [96, 'Al-\u2019Alaq', 'L\u2019adhérence', 19, 'les premiers versets révélés : « Lis ! »'],
+    [95, 'At-Tin', 'Le figuier', 8, 'le serment par le figuier et l\u2019olivier'],
+    [94, 'Ash-Sharh', 'L\u2019ouverture', 8, 'l\u2019ouverture de la poitrine du Prophète ﷺ'],
+    [93, 'Ad-Duha', 'Le jour montant', 11, 'ton Seigneur ne t\u2019a pas abandonné'],
+    [92, 'Al-Layl', 'La nuit', 21, 'la nuit qui enveloppe, les deux voies'],
+    [91, 'Ash-Shams', 'Le soleil', 15, 'le peuple de Thamud et la chamelle'],
+    [90, 'Al-Balad', 'La cité', 20, 'le serment par La Mecque'],
+    [89, 'Al-Fajr', 'L\u2019aube', 30, '\u2019Ad, Thamud, Pharaon, et l\u2019âme apaisée'],
+    [88, 'Al-Ghashiya', 'L\u2019enveloppante', 26, 'le Jour dernier, le Paradis et l\u2019Enfer'],
+    [87, 'Al-A\u2019la', 'Le Très-Haut', 19, 'glorifie le nom de ton Seigneur le Très-Haut'],
+    [86, 'At-Tariq', 'L\u2019astre nocturne', 17, 'l\u2019astre perçant, chaque âme a un gardien'],
+    [85, 'Al-Buruj', 'Les constellations', 22, 'les gens du fossé (Ashab al-Ukhdud)'],
+    [84, 'Al-Inshiqaq', 'La déchirure', 25, 'le ciel qui se déchire'],
+    [83, 'Al-Mutaffifin', 'Les fraudeurs', 36, 'ceux qui fraudent dans la pesée'],
+    [82, 'Al-Infitar', 'La rupture', 19, 'le ciel qui se rompt, les anges scribes'],
+    [81, 'At-Takwir', 'L\u2019obscurcissement', 29, 'le soleil obscurci au Jour dernier'],
+    [80, '\u2019Abasa', 'Il s\u2019est renfrogné', 42, 'l\u2019aveugle \u2019Abdullah ibn Umm Maktum'],
+    [79, 'An-Nazi\u2019at', 'Les anges qui arrachent', 46, 'les anges et l\u2019histoire de Musa et Pharaon'],
+    [78, 'An-Naba', 'La grande nouvelle', 40, 'la grande nouvelle de la résurrection']
+  ];
+  var DEBUTS = [
+    ['Qul a\u2019udhu bi-rabbi-n-n\u0101s...', 'An-Nas'],
+    ['Qul a\u2019udhu bi-rabbi-l-falaq...', 'Al-Falaq'],
+    ['Qul huwa All\u0101hu ahad...', 'Al-Ikhlas'],
+    ['Tabbat yad\u0101 Ab\u012B Lahab...', 'Al-Masad'],
+    ['Idh\u0101 j\u0101\u2019a nasru-Ll\u0101hi wa-l-fath...', 'An-Nasr'],
+    ['Qul y\u0101 ayyuh\u0101-l-k\u0101fir\u016Bn...', 'Al-Kafirun'],
+    ['Inn\u0101 a\u2019tayn\u0101ka-l-kawthar...', 'Al-Kawthar'],
+    ['Ara\u2019ayta-lladh\u012B yukadhdhibu bi-d-d\u012Bn...', 'Al-Ma\u2019un'],
+    ['Li-\u012Bl\u0101fi Quraysh...', 'Quraysh'],
+    ['Alam tara kayfa fa\u2019ala rabbuka bi-ash\u0101bi-l-f\u012Bl...', 'Al-Fil'],
+    ['Wa-l-\u2019asr, inna-l-ins\u0101na laf\u012B khusr...', 'Al-\u2019Asr'],
+    ['Alh\u0101kumu-t-tak\u0101thur...', 'At-Takathur'],
+    ['Idh\u0101 zulzilati-l-ardu zilz\u0101lah\u0101...', 'Az-Zalzala'],
+    ['Inn\u0101 anzaln\u0101hu f\u012B laylati-l-qadr...', 'Al-Qadr'],
+    ['Iqra\u2019 bi-smi rabbika-lladh\u012B khalaq...', 'Al-\u2019Alaq'],
+    ['Wa-t-t\u012Bni wa-z-zayt\u016Bn...', 'At-Tin'],
+    ['Alam nashrah laka sadrak...', 'Ash-Sharh'],
+    ['Wa-d-duh\u0101, wa-l-layli idh\u0101 saj\u0101...', 'Ad-Duha'],
+    ['Wa-sh-shamsi wa-duh\u0101h\u0101...', 'Ash-Shams'],
+    ['Sabbihi-sma rabbika-l-a\u2019l\u0101...', 'Al-A\u2019la'],
+    ['Hal at\u0101ka had\u012Bthu-l-gh\u0101shiya...', 'Al-Ghashiya'],
+    ['\u2019Amma yatas\u0101\u2019al\u016Bn...', 'An-Naba']
+  ];
+  var TOUS_NOMS = JUZ.map(function(s){ return s[1]; });
+
+  function juzSlice(a, b){ return JUZ.filter(function(s){ return s[0] <= a && s[0] >= b; }); }
+  function juzPool(slice, opts){
+    var pool = [];
+    slice.forEach(function(s){
+      pool.push(['Que veut dire le nom de la sourate « ' + s[1] + ' » ?', s[2],
+        others(JUZ.map(function(x){ return x[2]; }), s[2]), null]);
+      pool.push(['Quelle sourate s\u2019appelle « ' + s[2] + ' » ?', s[1], others(TOUS_NOMS, s[1]), null]);
+      if(opts.versets) pool.push(['Combien de versets compte la sourate ' + s[1] + ' ?', String(s[3]),
+        shuffle([s[3] + 1, s[3] - 1, s[3] + 2].filter(function(x){ return x > 0 && x !== s[3]; })).map(String), null]);
+      if(opts.theme) pool.push(['De quoi parle la sourate ' + s[1] + ' ?', s[4],
+        others(JUZ.map(function(x){ return x[4]; }), s[4]), null]);
+      if(opts.ordre){
+        var idx = JUZ.indexOf(s);
+        if(idx > 0){
+          var apres = JUZ[idx - 1][1];
+          pool.push(['Dans l\u2019ordre de mémorisation (An-Nas → An-Naba), quelle sourate apprend-on juste AVANT ' + s[1] + ' ?',
+            apres, others(TOUS_NOMS, apres), null]);
+        }
+      }
+    });
+    if(opts.debuts){
+      DEBUTS.forEach(function(d){
+        if(slice.some(function(s){ return s[1] === d[1]; })){
+          pool.push(['Quelle sourate commence par : « ' + d[0] + ' » ?', d[1], others(TOUS_NOMS, d[1]), null]);
+        }
+      });
+    }
+    return shuffle(pool);
+  }
+
+  var JUZ_POOLS = {
+    petits: {
+      1: juzPool(juzSlice(114, 110), { debuts: true }).slice(0, 12)
+         .concat([['Quelle sourate lit-on dans CHAQUE unité de prière ?', 'Al-Fatiha', ['Al-Ikhlas', 'An-Nas', 'Al-Kawthar'], null]]),
+      2: juzPool(juzSlice(109, 105), { debuts: true, theme: true }).slice(0, 10),
+      3: juzPool(juzSlice(114, 105), { versets: true, ordre: true }).slice(0, 10)
+    },
+    moyens: {
+      1: juzPool(juzSlice(114, 105), { debuts: true, ordre: true }).slice(0, 14),
+      2: juzPool(juzSlice(104, 95), { debuts: true, theme: true }).slice(0, 12),
+      3: juzPool(juzSlice(94, 87), { debuts: true, theme: true, versets: true }).slice(0, 12)
+    },
+    grands: {
+      1: juzPool(juzSlice(114, 95), { debuts: true, versets: true }).slice(0, 14),
+      2: juzPool(juzSlice(94, 87), { debuts: true, theme: true, versets: true, ordre: true }).slice(0, 12),
+      3: juzPool(juzSlice(86, 78), { theme: true, versets: true, debuts: true }).slice(0, 12)
+    }
+  };
+
+  /* ═════════════ TAWHID (is5) · Usul ath-Thalatha & Kitab at-Tawhid ═════════════ */
+  var TAWHID = {
+    petits: {
+      1: [
+        ['Qui t\u2019a créé ?', 'Allah', ['les anges', 'personne', 'la nature'], null],
+        ['Combien y a-t-il de dieux ?', 'Un seul : Allah', ['deux', 'trois', 'beaucoup'], null],
+        ['Qui fait descendre la pluie et fait pousser les plantes ?', 'Allah', ['les nuages tout seuls', 'les hommes', 'le soleil'], null],
+        ['À qui adresse-t-on nos invocations (du\u2019a) ?', 'à Allah seul', ['aux anges', 'aux étoiles', 'à n\u2019importe qui'], null],
+        ['Allah voit-il et entend-il tout ?', 'oui, toujours', ['seulement le jour', 'seulement à la mosquée', 'non'], null],
+        ['Où est Allah ?', 'au-dessus des cieux, établi sur Son Trône', ['partout avec Son essence', 'on ne peut pas le savoir', 'dans les statues'], null],
+        ['Pourquoi Allah nous a-t-Il créés ?', 'pour L\u2019adorer Lui seul', ['pour jouer seulement', 'pour dormir', 'sans raison'], null],
+        ['Combien y a-t-il de piliers de la foi (iman) ?', '6', ['5', '4', '7'], null]
+      ],
+      2: [
+        ['De quoi sont créés les anges ?', 'de lumière', ['de feu', 'd\u2019argile', 'd\u2019eau'], null],
+        ['Quel ange apporte la révélation aux prophètes ?', 'Jibril', ['Mika\u2019il', 'Israfil', 'Malik'], null],
+        ['Que font les anges Kiraman Katibin ?', 'ils écrivent nos actes', ['ils apportent la pluie', 'ils gardent le Paradis', 'ils dorment'], null],
+        ['Cite un livre révélé par Allah :', 'le Coran', ['le dictionnaire', 'un livre d\u2019école', 'un roman'], null],
+        ['Croire au Jour dernier, c\u2019est croire...', 'au jour du jugement après la mort', ['au dernier jour de l\u2019école', 'au dernier jour de l\u2019année', 'à rien'], null],
+        ['Le destin (qadar) signifie :', 'Allah sait et a écrit toute chose', ['tout arrive par hasard', 'on décide de tout', 'personne ne sait rien'], null],
+        ['Qui connaît l\u2019invisible (al-ghayb) ?', 'Allah seul', ['les devins', 'les savants', 'tout le monde'], null],
+        ['Le premier pilier de la foi est de croire...', 'en Allah', ['aux anges', 'aux livres', 'au destin'], null]
+      ],
+      3: [
+        ['Qui est ton Seigneur ?', 'Allah, qui m\u2019a créé et me donne tout', ['le soleil', 'les anges', 'je ne sais pas'], null],
+        ['Quelle est ta religion ?', 'l\u2019islam', ['je ne sais pas', 'aucune', 'toutes'], null],
+        ['Qui est ton prophète ?', 'Muhammad ﷺ', ['Musa', '\u2019Isa', 'Ibrahim'], null],
+        ['Que veut dire « L\u0101 il\u0101ha illa-Ll\u0101h » ?', 'nul ne mérite d\u2019être adoré sauf Allah', ['il n\u2019y a pas de créateur', 'Allah est grand', 'louange à Allah'], null],
+        ['Que veut dire « Muhammadun ras\u016Blu-Ll\u0101h » ?', 'Muhammad est le Messager d\u2019Allah', ['Muhammad est un ange', 'Muhammad est notre roi', 'Muhammad est vivant parmi nous'], null],
+        ['La preuve que nous sommes créés pour adorer Allah est dans la sourate :', 'Adh-Dhariyat (51:56)', ['Al-Fil', 'Quraysh', 'Al-Masad'], null]
+      ]
+    },
+    moyens: {
+      1: [
+        ['Quels sont les trois fondements (al-usul ath-thalatha) que tout musulman doit connaître ?',
+          'connaître son Seigneur, sa religion et son prophète ﷺ', ['connaître son pays, sa langue, sa famille', 'la prière, le jeûne, la zakat', 'le Coran, la Sunna, le fiqh'], null],
+        ['Dans la tombe, quelles sont les trois questions posées ?', 'Qui est ton Seigneur ? Quelle est ta religion ? Qui est ton prophète ?',
+          ['Où es-tu né ? Que possédais-tu ? Qui étaient tes amis ?', 'Combien de prières ? Combien de jeûnes ? Combien d\u2019aumônes ?', 'aucune question n\u2019est posée'], null],
+        ['Par quoi connaît-on son Seigneur ?', 'par Ses signes : la nuit, le jour, le soleil, la lune, et Ses créatures', ['par les rêves seulement', 'par les statues', 'on ne peut pas Le connaître'], null],
+        ['Qu\u2019est-ce que l\u2019adoration (al-\u2019ib\u0101da) ?', 'tout ce qu\u2019Allah aime et agrée, paroles et actes', ['seulement la prière', 'seulement le jeûne', 'les traditions des ancêtres'], null],
+        ['Le du\u2019a (invocation) est-il une adoration ?', 'oui, on n\u2019invoque donc qu\u2019Allah', ['non, c\u2019est juste des paroles', 'oui, on peut invoquer qui on veut', 'seulement le vendredi'], null],
+        ['Cite des adorations du cœur :', 'la confiance (tawakkul), la crainte, l\u2019espoir, l\u2019amour d\u2019Allah', ['manger et boire', 'courir et jouer', 'lire et écrire'], null],
+        ['La preuve « Je n\u2019ai créé les djinns et les hommes que pour qu\u2019ils M\u2019adorent » se trouve dans :', 'sourate Adh-Dhariyat, verset 56', ['sourate Al-Baqara, verset 255', 'sourate Al-Fatiha', 'sourate An-Nas'], null],
+        ['Quel est le premier devoir du serviteur ?', 'le tawhid : adorer Allah seul', ['gagner de l\u2019argent', 'apprendre à lire', 'construire une maison'], null]
+      ],
+      2: [
+        ['Quelles sont les trois catégories du tawhid ?', 'ar-rububiyya, al-uluhiyya, al-asma wa-s-sifat',
+          ['la prière, le jeûne, le hajj', 'le Coran, la Sunna, l\u2019ijma\u2019', 'l\u2019islam, l\u2019iman, l\u2019ihsan'], null],
+        ['Le tawhid ar-rububiyya, c\u2019est reconnaître qu\u2019Allah seul...', 'crée, pourvoit et gère toute chose', ['mérite la prière', 'a de beaux noms', 'a envoyé des messagers'], null],
+        ['Le tawhid al-uluhiyya, c\u2019est...', 'Lui vouer toute l\u2019adoration, à Lui seul', ['croire qu\u2019Il est le Créateur', 'connaître Ses noms', 'aimer les prophètes'], null],
+        ['Le tawhid al-asma wa-s-sifat, c\u2019est...', 'croire en Ses noms et attributs tels qu\u2019Il les a révélés', ['inventer des noms à Allah', 'comparer Allah aux créatures', 'nier Ses attributs'], null],
+        ['Qu\u2019est-ce que le shirk ?', 'associer autre qu\u2019Allah dans l\u2019adoration', ['oublier une prière', 'manger sans bismillah', 'se tromper en récitant'], null],
+        ['Quel est le plus grave des péchés ?', 'le shirk (associer à Allah)', ['le mensonge', 'la colère', 'la paresse'], null],
+        ['Invoquer un mort ou un absent pour obtenir de l\u2019aide, c\u2019est...', 'du shirk majeur', ['une bonne action', 'permis le vendredi', 'un simple oubli'], null],
+        ['Les mécréants de Quraysh reconnaissaient-ils qu\u2019Allah est le Créateur ?', 'oui, mais ils adoraient d\u2019autres que Lui', ['non, jamais', 'oui, et ils L\u2019adoraient seul', 'ils ne connaissaient pas Allah'], null]
+      ],
+      3: [
+        ['Dans le hadith de Jibril, quels sont les trois degrés de la religion ?', 'al-islam, al-iman, al-ihsan',
+          ['la prière, le jeûne, la zakat', 'le Coran, la Sunna, le fiqh', 'la science, l\u2019action, la patience'], null],
+        ['Qu\u2019est-ce que l\u2019ihsan ?', 'adorer Allah comme si tu Le voyais, car si tu ne Le vois pas, Lui te voit',
+          ['faire beaucoup de sport', 'donner tout son argent', 'réciter très vite'], null],
+        ['Dans le hadith de Jibril, qui posait les questions ?', 'l\u2019ange Jibril, apparu sous forme humaine', ['Abu Bakr', 'un bédouin inconnu resté anonyme', 'Umar'], null],
+        ['L\u2019islam est bâti sur combien de piliers ?', '5', ['6', '4', '7'], null],
+        ['L\u2019iman comporte combien de piliers ?', '6', ['5', '4', '3'], null],
+        ['Le 6e pilier de l\u2019iman est de croire...', 'au destin (al-qadar), bon ou mauvais', ['aux savants', 'aux rêves', 'aux anges seulement'], null]
+      ]
+    },
+    grands: {
+      1: [
+        ['Dans l\u2019introduction des Usul ath-Thalatha, quelles sont les 4 questions tirées de sourate Al-\u2019Asr ?',
+          'la science, l\u2019œuvre, l\u2019appel (da\u2019wa) et la patience', ['la prière, le jeûne, la zakat, le hajj', 'le Coran, la Sunna, l\u2019ijma\u2019, le qiyas', 'la naissance, la vie, la mort, la résurrection'], null],
+        ['Quelle est la preuve des 4 questions ?', 'la sourate Al-\u2019Asr', ['Ayat al-Kursi', 'la sourate Al-Fatiha', 'le hadith de Jibril'], null],
+        ['« Rabb » (Seigneur) signifie :', 'Celui qui crée, possède et gère toute chose', ['un roi humain', 'un ange supérieur', 'un prophète'], null],
+        ['Par quoi Allah se fait-Il connaître (d\u2019après l\u2019épître) ?', 'par Ses signes (la nuit, le jour, le soleil, la lune) et Ses créatures (les 7 cieux, les 7 terres)',
+          ['par les images', 'par les statues', 'uniquement par les rêves'], null],
+        ['La preuve « Ne vous prosternez ni devant le soleil ni devant la lune... » est dans :', 'sourate Fussilat (41:37)', ['sourate Ya-Sin', 'sourate Al-Mulk', 'sourate Al-Fil'], null],
+        ['Quelle est la religion agréée par Allah ?', 'l\u2019islam : se soumettre à Allah par le tawhid', ['toutes les religions se valent', 'celle de ses parents quelle qu\u2019elle soit', 'aucune'], null],
+        ['Le Prophète ﷺ a prêché le tawhid à La Mecque pendant :', 'environ 10 ans avant les autres obligations', ['1 an', '23 ans', '3 mois'], null],
+        ['Le premier commandement dans le Coran (ordre) concerne :', 'l\u2019adoration d\u2019Allah seul (Al-Baqara 21)', ['le commerce', 'le mariage', 'la nourriture'], null]
+      ],
+      2: [
+        ['La shahada « L\u0101 il\u0101ha illa-Ll\u0101h » contient une négation et une affirmation :',
+          'négation de toute divinité adorée en dehors d\u2019Allah, affirmation de l\u2019adoration pour Allah seul',
+          ['négation du Créateur, affirmation des anges', 'négation des prophètes, affirmation des livres', 'aucune des deux'], null],
+        ['Combien de conditions compte « L\u0101 il\u0101ha illa-Ll\u0101h » ?', '7', ['3', '5', '10'], null],
+        ['Cite des conditions de la shahada :', 'la science, la certitude, la sincérité, la véracité, l\u2019amour, la soumission, l\u2019acceptation',
+          ['la richesse, la force, la santé', 'le voyage, le commerce, le mariage', 'la nationalité, la langue, l\u2019âge'], null],
+        ['D\u2019après Kitab at-Tawhid, quel est le mérite du tawhid ?', 'celui qui meurt sans rien associer à Allah entre au Paradis',
+          ['il rend riche en ce monde', 'il dispense de la prière', 'il n\u2019a pas de mérite particulier'], null],
+        ['Le riya (faire une adoration pour être vu) est :', 'du shirk mineur', ['du shirk majeur', 'permis', 'une qualité'], null],
+        ['Porter une amulette (tamima) en croyant qu\u2019elle protège par elle-même est :', 'du shirk', ['une sunna', 'une simple décoration', 'obligatoire'], null],
+        ['Jurer par autre qu\u2019Allah (par la Kaaba, par ses parents...) est :', 'interdit — « quiconque jure, qu\u2019il jure par Allah ou se taise »',
+          ['recommandé', 'permis sans limite', 'obligatoire pour être cru'], null],
+        ['Demander la pluie aux étoiles (croire qu\u2019elles la donnent) relève :', 'du shirk, car Allah seul fait descendre la pluie',
+          ['de la science', 'de la météo', 'd\u2019une sunna'], null]
+      ],
+      3: [
+        ['Quelle est la règle des salafs sur les noms et attributs d\u2019Allah ?',
+          'les affirmer sans déformation (tahrif), sans négation (ta\u2019til), sans « comment » (takyif), sans comparaison (tamthil)',
+          ['les interpréter tous métaphoriquement', 'les nier par prudence', 'les comparer aux créatures'], null],
+        ['« Ar-Rahman s\u2019est établi (istawa) sur le Trône » (20:5) : la position des salafs est :',
+          'l\u2019istiwa est connu, le comment est inconnu, y croire est obligatoire',
+          ['c\u2019est une simple image sans réalité', 'Allah est partout avec Son essence', 'ce verset est abrogé'], null],
+        ['Que signifie « As-Sami\u2019, Al-Basir » ?', 'Celui qui entend tout, Celui qui voit tout', ['le Généreux, le Doux', 'le Créateur, le Pourvoyeur', 'le Premier, le Dernier'], null],
+        ['D\u2019après le hadith authentique, Allah a...', '99 noms : qui les dénombre (les comprend et agit) entre au Paradis',
+          ['100 noms cachés', '50 noms', 'un nombre inconnu de noms révélés'], null],
+        ['Le hadith « Notre Seigneur descend au dernier tiers de la nuit... » : on y croit...',
+          'tel qu\u2019il est rapporté, d\u2019une descente qui convient à Sa majesté, sans comparaison',
+          ['en le rejetant', 'en disant qu\u2019il s\u2019agit d\u2019un ange seulement, sans preuve', 'en le comparant à la descente des créatures'], null],
+        ['« Al-\u2019Alim » signifie :', 'l\u2019Omniscient : rien n\u2019échappe à Sa science', ['le Puissant', 'le Miséricordieux', 'le Juste'], null]
+      ]
+    }
+  };
+
+  /* ═════════════ FIQH enrichi (ajouts dans is3) ═════════════ */
+  var FIQH_ADD = {
+    petits: {
+      2: [
+        ['Dans le wudu, que lave-t-on après le visage ?', 'les bras jusqu\u2019aux coudes', ['les pieds d\u2019abord', 'les oreilles seulement', 'rien'], null],
+        ['Que fait-on sur la tête pendant le wudu ?', 'on l\u2019essuie avec les mains mouillées', ['on la lave entièrement', 'rien', 'on la sèche'], null],
+        ['Utiliser le siwak (bâton pour les dents) est...', 'une sunna que le Prophète ﷺ aimait beaucoup', ['interdit', 'obligatoire 10 fois par jour', 'réservé aux adultes'], null]
+      ],
+      3: [
+        ['Combien de rak\u2019at compte la prière du Fajr ?', '2', ['3', '4', '5'], null],
+        ['Combien de rak\u2019at compte la prière du Maghrib ?', '3', ['2', '4', '5'], null],
+        ['Par quoi commence-t-on la prière ?', 'par « All\u0101hu akbar » (takbir)', ['par le salam', 'par s\u2019asseoir', 'par le taslim'], null]
+      ]
+    },
+    moyens: {
+      1: [
+        ['Quelles sont les 4 obligations du wudu citées dans le verset (Al-Ma\u2019ida 6) ?',
+          'laver le visage, les bras jusqu\u2019aux coudes, essuyer la tête, laver les pieds jusqu\u2019aux chevilles',
+          ['laver seulement les mains et le visage', 'se doucher entièrement', 'essuyer les chaussures uniquement'], null],
+        ['Combien de rak\u2019at : Fajr, Dhuhr, \u2019Asr, Maghrib, \u2019Isha ?', '2, 4, 4, 3, 4', ['4, 4, 4, 4, 4', '2, 2, 2, 2, 2', '2, 4, 4, 4, 3'], null]
+      ],
+      2: [
+        ['Qu\u2019est-ce qui annule le wudu ?', 'ce qui sort des deux voies, le sommeil profond, toucher ses parties intimes',
+          ['manger du pain', 'parler', 'marcher'], null],
+        ['Le ghusl (grand lavage) devient obligatoire notamment...', 'après l\u2019état de janaba', ['chaque matin', 'avant chaque repas', 'jamais'], null],
+        ['Parmi les conditions de la prière :', 'la purification, l\u2019heure entrée, la direction de la qibla, couvrir sa \u2019awra, l\u2019intention',
+          ['porter du blanc, être en groupe', 'avoir mangé, avoir dormi', 'être à la mosquée obligatoirement'], null]
+      ],
+      3: [
+        ['Parmi les piliers de la prière :', 'le takbir d\u2019ouverture, Al-Fatiha, le ruku\u2019, le sujud, le tashahhud final, le taslim',
+          ['lever les mains, dire amine, fermer les yeux', 's\u2019asseoir en tailleur, réciter vite', 'porter un tapis, un chapelet'], null],
+        ['Si on n\u2019a pas d\u2019eau (ou qu\u2019elle nuit), on fait :', 'le tayammum avec de la terre propre', ['on ne prie pas', 'on attend le lendemain', 'on prie sans purification'], null],
+        ['La prière en groupe à la mosquée pour les hommes est :', 'fortement voulue — 27 fois supérieure à la prière seul',
+          ['égale à la prière seul', 'déconseillée', 'réservée au vendredi'], null]
+      ]
+    },
+    grands: {
+      1: [
+        ['L\u2019essuyage sur les khuffayn (chaussons) est permis pendant :', '1 jour et 1 nuit (résident), 3 jours et 3 nuits (voyageur)',
+          ['1 semaine pour tous', 'ce n\u2019est pas permis', 'un mois en hiver'], null],
+        ['Le sujud as-sahw (prosternation de l\u2019oubli) se fait quand :', 'on a oublié, ajouté ou douté dans la prière',
+          ['on est fatigué', 'on veut plus de récompense chaque prière', 'on arrive en retard'], null]
+      ],
+      2: [
+        ['Le voyageur raccourcit les prières de 4 rak\u2019at à :', '2 rak\u2019at', ['1 rak\u2019a', '3 rak\u2019at', 'il ne raccourcit pas'], null],
+        ['La sutra devant celui qui prie sert à :', 'délimiter son espace de prière et empêcher qu\u2019on passe devant lui',
+          ['décorer', 'poser le Coran', 's\u2019appuyer'], null],
+        ['Il est interdit de prier (prière surérogatoire sans cause) :', 'au lever du soleil, à son zénith et à son coucher',
+          ['le vendredi matin', 'après le Fajr en toute circonstance même les rattrapages', 'la nuit'], null]
+      ],
+      3: [
+        ['Les conditions de validité du wudu incluent :', 'l\u2019intention, l\u2019eau pure, faire suivre les membres sans long délai',
+          ['le réciter à voix haute', 'être à la mosquée', 'utiliser de l\u2019eau chaude'], null],
+        ['La prière du witr est :', 'une sunna fortement recommandée, en nombre impair, après \u2019Isha',
+          ['une obligation comme les 5 prières', 'interdite', 'réservée au Ramadan'], null],
+        ['Le hadith « La clé de la prière est la purification... » indique que :', 'sans purification, la prière n\u2019est pas valide',
+          ['la purification est facultative', 'seul le vendredi l\u2019exige', 'il concerne le hajj'], null]
+      ]
+    }
+  };
+
+  // Injection RELIGION
+  ['petits', 'moyens', 'grands'].forEach(function(band){
+    S.religion.comps[band].push(
+      { key: 'is4', nom: 'Juz\u2019 Amma', ico: '📗' },
+      { key: 'is5', nom: 'Tawhid', ico: '☝️' }
+    );
+    S.religion.pools[band].is4 = JUZ_POOLS[band];
+    S.religion.pools[band].is5 = TAWHID[band];
+    // Enrichissement Fiqh
+    var add = FIQH_ADD[band];
+    Object.keys(add).forEach(function(tier){
+      S.religion.pools[band].is3[tier] = S.religion.pools[band].is3[tier].concat(add[tier]);
+    });
+  });
+
 })();
 
 </script>
@@ -2831,7 +3351,7 @@ var CONFIG = {
   XP_PAR_NIVEAU: 200,
   VIES_MAX: 5
 };
-var EDU_VERSION = 'v4.0';
+var EDU_VERSION = 'v5.0';
 function isOnline(){ return !!CONFIG.APPS_URL; }
 try { console.log('EduVerse ' + EDU_VERSION); } catch(e){}
 

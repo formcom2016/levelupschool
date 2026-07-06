@@ -484,6 +484,7 @@ body.cls-gs .btn-speak{width:52px;height:52px;font-size:24px}
       </div>
       <div class="stat-pill stat-coins"><span class="ico">🪙</span><span id="homeCoins">0</span><span class="lbl">pièces</span></div>
       <div class="stat-pill stat-lives"><span class="ico">❤️</span><span id="homeLives">5/5</span><span class="lbl">vies</span></div>
+      <div class="stat-pill stat-coins"><span class="ico">🔥</span><span id="homeStreak">0</span><span class="lbl">jours</span></div>
       <button class="btn-recharge" id="btnRecharge" style="display:none">⚡ Recharger</button>
     </div>
 
@@ -598,7 +599,7 @@ body.cls-gs .btn-speak{width:52px;height:52px;font-size:24px}
         </div>
       </div>
       <div class="panel">
-        <div class="panel-title">Compétences · Mathématiques</div>
+        <div class="panel-title">Passeport de compétences · Tous les mondes</div>
         <div id="skillsList"></div>
       </div>
       <div class="panel">
@@ -619,6 +620,10 @@ body.cls-gs .btn-speak{width:52px;height:52px;font-size:24px}
         <div class="screen-title">🏆 Classement des explorateurs</div>
         <div class="screen-sub">Tous niveaux confondus · Le classement récompense le travail (XP) !</div>
       </div>
+    </div>
+    <div class="panel" id="tournoiPanel" style="margin-bottom:16px;display:none">
+      <div class="panel-title" id="tournoiTitle">🏆 Tournoi de la semaine</div>
+      <div id="tournoiList"></div>
     </div>
     <div class="podium" id="podium"></div>
     <div class="rank-list" id="rankList"></div>
@@ -1152,289 +1157,1204 @@ var EDU_QUESTIONS = (function(){
 </script>
 <script>
 /* ═══════════════════════════════════════════════════════════
-   EDUVERSE — Banques de questions · Matières culturelles
-   Arabe (débutants francophones) · Coran & Prophètes ·
-   Sciences · Histoire
-   3 tranches : petit (GS/CE1) · moyen (CM2/6e) · grand (4e/2nde)
-   Format : { q, a (bonne réponse), w [3 mauvaises] }
+   EDUVERSE — Banques de questions v4
+   Mondes : Arabe (débutants) · Histoire · Sciences · Sciences religieuses
+   3 tranches : petits (GS-CE1) · moyens (CM2-6e) · grands (4e-2nde)
+   Format compact : [question, bonneRéponse, [3 mauvaises], visuel?]
    ═══════════════════════════════════════════════════════════ */
 
 var EDU_BANKS = (function(){
 
-  var ARABE = {
-    petit: [
-      { q: 'Comment dit-on « bonjour, que la paix soit sur toi » en arabe ?', a: 'Salam alaykoum', w: ['Choukran', 'Na\u2019am', 'Bismillah'] },
-      { q: 'Comment dit-on « merci » en arabe ?', a: 'Choukran', w: ['Salam', 'La', 'Bayt'] },
-      { q: 'Comment dit-on « oui » en arabe ?', a: 'Na\u2019am', w: ['La', 'Choukran', 'Ma\u2019'] },
-      { q: '« La » veut dire…', a: 'non', w: ['oui', 'merci', 'bonjour'] },
-      { q: 'Comment dit-on « chat » 🐱 en arabe ?', a: 'Qitta', w: ['Kalb', 'Bayt', 'Qamar'] },
-      { q: '« Kalb » 🐶 veut dire…', a: 'chien', w: ['chat', 'maison', 'pain'] },
-      { q: 'Comment dit-on « maman » en arabe ?', a: 'Oummi', w: ['Abi', 'Akhi', 'Djaddi'] },
-      { q: '« Abi » veut dire…', a: 'papa', w: ['maman', 'frère', 'école'] },
-      { q: 'Comment dit-on « eau » 💧 en arabe ?', a: 'Ma\u2019', w: ['Khoubz', 'Halib', 'Chams'] },
-      { q: '« Khoubz » 🍞 veut dire…', a: 'pain', w: ['eau', 'lait', 'pomme'] },
-      { q: 'Comment dit-on « un » (1) en arabe ?', a: 'Wahid', w: ['Ithnan', 'Thalatha', 'Arba\u2019a'] },
-      { q: '« Ithnan » veut dire…', a: 'deux', w: ['un', 'trois', 'quatre'] },
-      { q: 'Comment dit-on « trois » en arabe ?', a: 'Thalatha', w: ['Wahid', 'Ithnan', 'Khamsa'] },
-      { q: '« Ahmar » 🔴 veut dire…', a: 'rouge', w: ['bleu', 'vert', 'jaune'] },
-      { q: 'Comment dit-on « bleu » 🔵 en arabe ?', a: 'Azraq', w: ['Ahmar', 'Akhdar', 'Asfar'] },
-      { q: '« Bayt » 🏠 veut dire…', a: 'maison', w: ['école', 'porte', 'livre'] },
-      { q: 'Comment dit-on « livre » 📖 en arabe ?', a: 'Kitab', w: ['Qalam', 'Bab', 'Madrasa'] },
-      { q: '« Madrasa » 🏫 veut dire…', a: 'école', w: ['maison', 'mosquée', 'jardin'] },
-      { q: '« Halib » 🥛 veut dire…', a: 'lait', w: ['eau', 'jus', 'pain'] },
-      { q: 'Comment dit-on « soleil » ☀️ en arabe ?', a: 'Chams', w: ['Qamar', 'Nadjma', 'Bahr'] }
-    ],
-    moyen: [
-      { q: 'Que veut dire « Kayfa halouka ? »', a: 'Comment vas-tu ?', w: ['Quel âge as-tu ?', 'Où habites-tu ?', 'Comment t\u2019appelles-tu ?'] },
-      { q: 'Comment dit-on « je m\u2019appelle… » en arabe ?', a: 'Ismi…', w: ['Ana…', 'Anta…', 'Houwa…'] },
-      { q: '« Sabah al-khayr » veut dire…', a: 'bonjour (le matin)', w: ['bonne nuit', 'bon appétit', 'au revoir'] },
-      { q: '« Ana jaw\u2019an » veut dire…', a: 'j\u2019ai faim', w: ['j\u2019ai soif', 'je suis fatigué', 'je suis content'] },
-      { q: 'Quelle est cette lettre : ا', a: 'Alif', w: ['Ba', 'Mim', 'Sin'] },
-      { q: 'Quelle est cette lettre : ب', a: 'Ba', w: ['Ta', 'Alif', 'Nun'] },
-      { q: 'Quelle est cette lettre : م', a: 'Mim', w: ['Waw', 'Lam', 'Ha'] },
-      { q: 'Quelle est cette lettre : س', a: 'Sin', w: ['Chin', 'Sad', 'Za'] },
-      { q: 'Combien y a-t-il de lettres dans l\u2019alphabet arabe ?', a: '28', w: ['26', '30', '24'] },
-      { q: '« Chams » ☀️ veut dire…', a: 'soleil', w: ['lune', 'étoile', 'ciel'] },
-      { q: 'Comment dit-on « lune » 🌙 en arabe ?', a: 'Qamar', w: ['Chams', 'Nadjma', 'Layl'] },
-      { q: '« Bahr » 🌊 veut dire…', a: 'mer', w: ['rivière', 'montagne', 'désert'] },
-      { q: 'Comment dit-on « grand » en arabe ?', a: 'Kabir', w: ['Saghir', 'Tawil', 'Djamil'] },
-      { q: '« Saghir » veut dire…', a: 'petit', w: ['grand', 'long', 'beau'] },
-      { q: '« Qalam » ✏️ veut dire…', a: 'stylo, crayon', w: ['cahier', 'livre', 'table'] },
-      { q: 'Comment dit-on « porte » 🚪 en arabe ?', a: 'Bab', w: ['Bayt', 'Choubbak', 'Koursi'] },
-      { q: '« Yad » ✋ veut dire…', a: 'main', w: ['pied', 'tête', 'œil'] },
-      { q: 'Dans quel sens lit-on l\u2019arabe ?', a: 'de droite à gauche', w: ['de gauche à droite', 'de haut en bas', 'de bas en haut'] },
-      { q: 'Comment dit-on « merci beaucoup » ?', a: 'Choukran djazilan', w: ['Salam alaykoum', 'Na\u2019am choukran', 'Afwan kabir'] },
-      { q: '« Afwan » veut dire…', a: 'de rien / pardon', w: ['merci', 'bonjour', 's\u2019il te plaît'] }
-    ],
-    grand: [
-      { q: 'Que signifie : كتاب ?', a: 'livre', w: ['stylo', 'école', 'porte'] },
-      { q: 'Que signifie : ماء ?', a: 'eau', w: ['lait', 'pain', 'mer'] },
-      { q: 'Comment écrit-on « salam » (paix) ?', a: 'سلام', w: ['كلام', 'قلم', 'علم'] },
-      { q: 'Que signifie : مدرسة ?', a: 'école', w: ['maison', 'mosquée', 'ville'] },
-      { q: 'الحمد لله se prononce…', a: 'Alhamdoulillah', w: ['Bismillah', 'SoubhanAllah', 'Allahou akbar'] },
-      { q: 'Que signifie : قمر ?', a: 'lune', w: ['soleil', 'étoile', 'nuit'] },
-      { q: 'Combien de formes peut prendre une lettre arabe selon sa place ?', a: 'jusqu\u2019à 4', w: ['toujours 1', '2 maximum', 'jusqu\u2019à 6'] },
-      { q: 'Dans quel sens lit-on l\u2019arabe ?', a: 'de droite à gauche', w: ['de gauche à droite', 'de haut en bas', 'ça dépend des mots'] },
-      { q: 'Que signifie : أنا ?', a: 'je, moi', w: ['tu, toi', 'il, lui', 'nous'] },
-      { q: 'Que signifie : نعم ?', a: 'oui', w: ['non', 'peut-être', 'merci'] },
-      { q: 'Que signifie : باب ?', a: 'porte', w: ['fenêtre', 'maison', 'chaise'] },
-      { q: 'Que signifie : شمس ?', a: 'soleil', w: ['lune', 'mer', 'ciel'] },
-      { q: 'La lettre ش se prononce…', a: 'ch', w: ['s', 'kh', 'j'] },
-      { q: 'La lettre خ se prononce…', a: 'kh', w: ['ch', 'h aspiré', 'r roulé'] },
-      { q: 'Que signifie : بيت ?', a: 'maison', w: ['école', 'porte', 'ville'] },
-      { q: 'Quel est le pluriel de « kitab » (livre) ?', a: 'koutoub', w: ['kitaban', 'katib', 'kitabat'] },
-      { q: '« Ourid an… » veut dire…', a: 'je veux…', w: ['je peux…', 'je dois…', 'je sais…'] },
-      { q: 'Que signifie : مسجد ?', a: 'mosquée', w: ['école', 'marché', 'maison'] },
-      { q: 'La voyelle courte « fatha » se prononce…', a: 'a', w: ['i', 'ou', 'é'] },
-      { q: 'Que signifie : يوم ?', a: 'jour', w: ['nuit', 'semaine', 'mois'] }
-    ]
-  };
-
-  var ISLAM = {
-    petit: [
-      { q: 'Combien y a-t-il de piliers en islam ?', a: '5', w: ['3', '4', '7'] },
-      { q: 'Comment s\u2019appelle le livre sacré des musulmans ?', a: 'Le Coran', w: ['La Sounna', 'Le Sahih', 'Le Mouss-haf bleu'] },
-      { q: 'Que dit-on avant de manger ?', a: 'Bismillah', w: ['Choukran', 'Salam', 'Amine'] },
-      { q: 'Que dit-on après avoir éternué ?', a: 'Alhamdoulillah', w: ['Bismillah', 'Salam', 'Na\u2019am'] },
-      { q: 'Combien de prières y a-t-il par jour ?', a: '5', w: ['3', '4', '6'] },
-      { q: 'Quel prophète a construit une grande arche (un bateau) ?', a: 'Nouh (Noé)', w: ['Moussa', 'Ibrahim', 'Younous'] },
-      { q: 'Quel prophète comprenait le langage des oiseaux et des fourmis ?', a: 'Soulayman (Salomon)', w: ['Daoud', 'Issa', 'Adam'] },
-      { q: 'Vers quoi les musulmans se tournent-ils pour prier ?', a: 'La Kaaba', w: ['Le soleil', 'La lune', 'La mer'] },
-      { q: 'Quel est le mois du jeûne ?', a: 'Ramadan', w: ['Chawwal', 'Radjab', 'Mouharram'] },
-      { q: 'Comment salue-t-on en islam ?', a: 'As-salamou alaykoum', w: ['Bismillah', 'Alhamdoulillah', 'Amine'] },
-      { q: 'Quel prophète a été avalé par un très grand poisson ?', a: 'Younous (Jonas)', w: ['Nouh', 'Moussa', 'Youssouf'] },
-      { q: 'Qui est le dernier prophète ?', a: 'Mohammed ﷺ', w: ['Issa', 'Moussa', 'Ibrahim'] },
-      { q: 'Comment s\u2019appelle la fête après le Ramadan ?', a: 'L\u2019Aïd el-Fitr', w: ['L\u2019Aïd el-Adha', 'Le Mawlid', 'La Hijra'] },
-      { q: 'Où se trouve la Kaaba ?', a: 'À La Mecque', w: ['À Médine', 'À Jérusalem', 'Au Caire'] },
-      { q: 'Qui appelle à la prière ?', a: 'Le muezzin', w: ['L\u2019imam', 'Le roi', 'Le maître'] },
-      { q: 'Quel est le premier prophète et premier homme ?', a: 'Adam', w: ['Nouh', 'Ibrahim', 'Mohammed ﷺ'] },
-      { q: 'Que dit-on quand quelqu\u2019un nous offre un cadeau ?', a: 'Choukran / BarakAllahou fik', w: ['La', 'Bismillah', 'Sabah al-khayr'] },
-      { q: 'Le jour de prière en commun à la mosquée, c\u2019est…', a: 'le vendredi', w: ['le samedi', 'le dimanche', 'le lundi'] }
-    ],
-    moyen: [
-      { q: 'Combien de sourates y a-t-il dans le Coran ?', a: '114', w: ['100', '120', '99'] },
-      { q: 'Quelle est la première sourate du Coran ?', a: 'Al-Fatiha', w: ['Al-Baqara', 'Al-Ikhlas', 'An-Nas'] },
-      { q: 'Quel ange a transmis le Coran au Prophète ﷺ ?', a: 'Jibril (Gabriel)', w: ['Mikail', 'Israfil', 'Malik'] },
-      { q: 'Dans quelle grotte la première révélation a-t-elle eu lieu ?', a: 'Hira', w: ['Thawr', 'Ouhoud', 'Safa'] },
-      { q: 'Quel prophète a vu la mer se fendre devant lui ?', a: 'Moussa (Moïse)', w: ['Nouh', 'Issa', 'Younous'] },
-      { q: 'Quel prophète a reconstruit la Kaaba avec son fils Ismaïl ?', a: 'Ibrahim (Abraham)', w: ['Adam', 'Nouh', 'Daoud'] },
-      { q: 'Comment s\u2019appelle l\u2019émigration du Prophète ﷺ vers Médine ?', a: 'La Hijra (Hégire)', w: ['La Omra', 'Le Hajj', 'L\u2019Isra'] },
-      { q: 'Qui fut le premier calife après le Prophète ﷺ ?', a: 'Abou Bakr', w: ['Omar', 'Othman', 'Ali'] },
-      { q: 'Quel est le 5e pilier de l\u2019islam ?', a: 'Le pèlerinage (Hajj)', w: ['La prière', 'Le jeûne', 'La zakat'] },
-      { q: 'La zakat, c\u2019est…', a: 'l\u2019aumône obligatoire', w: ['le jeûne', 'la prière de nuit', 'le pèlerinage'] },
-      { q: 'Qui était la première épouse du Prophète ﷺ ?', a: 'Khadija', w: ['Aïcha', 'Fatima', 'Hafsa'] },
-      { q: 'Quelle prière se fait à l\u2019aube ?', a: 'Al-Fajr', w: ['Ad-Dohr', 'Al-Asr', 'Al-Icha'] },
-      { q: 'Quel prophète avait un bâton qui se transformait en serpent ?', a: 'Moussa', w: ['Haroun', 'Daoud', 'Soulayman'] },
-      { q: 'Quel prophète est né sans père, par miracle ?', a: 'Issa (Jésus)', w: ['Yahya', 'Ismaïl', 'Is-haq'] },
-      { q: 'Quel prophète était réputé pour sa grande beauté ?', a: 'Youssouf (Joseph)', w: ['Daoud', 'Adam', 'Idris'] },
-      { q: 'Comment s\u2019appelle le voyage nocturne du Prophète ﷺ ?', a: 'Al-Isra wal-Mi\u2019raj', w: ['La Hijra', 'Le Hajj', 'La Omra'] },
-      { q: 'Quelle fête a lieu pendant le pèlerinage ?', a: 'L\u2019Aïd el-Adha', w: ['L\u2019Aïd el-Fitr', 'Le Mawlid', 'Achoura'] },
-      { q: 'Combien d\u2019années a duré la révélation du Coran ?', a: '23 ans', w: ['10 ans', '40 ans', '63 ans'] },
-      { q: 'Quel compagnon était le muezzin du Prophète ﷺ ?', a: 'Bilal', w: ['Abou Bakr', 'Khalid', 'Salman'] },
-      { q: 'Dans quelle ville le Prophète ﷺ est-il né ?', a: 'La Mecque', w: ['Médine', 'Taïf', 'Jérusalem'] }
-    ],
-    grand: [
-      { q: 'En quelle année a eu lieu l\u2019Hégire ?', a: '622', w: ['610', '632', '570'] },
-      { q: 'Quelle grande bataille eut lieu en l\u2019an 2 de l\u2019Hégire ?', a: 'Badr', w: ['Ouhoud', 'Khandaq', 'Hounayn'] },
-      { q: 'Quelle est la plus longue sourate du Coran ?', a: 'Al-Baqara', w: ['Al-Fatiha', 'Ya-Sin', 'An-Nisa'] },
-      { q: 'Quelle sourate ne commence pas par la Basmala ?', a: 'At-Tawba', w: ['Al-Kahf', 'Maryam', 'Al-Ikhlas'] },
-      { q: 'Sous quel calife le Coran a-t-il été réuni en un exemplaire officiel unique ?', a: 'Othman', w: ['Abou Bakr', 'Omar', 'Ali'] },
-      { q: 'Quel prophète a interprété les rêves du roi d\u2019Égypte ?', a: 'Youssouf', w: ['Moussa', 'Haroun', 'Yaqoub'] },
-      { q: 'Comment s\u2019appelle le sermon du vendredi ?', a: 'La khoutba', w: ['La qibla', 'Le tarawih', 'Le dhikr'] },
-      { q: 'Quel oncle du Prophète ﷺ est tombé à la bataille de Ouhoud ?', a: 'Hamza', w: ['Abbas', 'Abou Talib', 'Abou Lahab'] },
-      { q: 'Quels sont les deux Aïd de l\u2019islam ?', a: 'Al-Fitr et Al-Adha', w: ['Al-Fitr et le Mawlid', 'Al-Adha et Achoura', 'Le Mawlid et Achoura'] },
-      { q: 'Quelle nuit du Ramadan vaut mieux que mille mois ?', a: 'Laylat al-Qadr', w: ['Laylat al-Isra', 'La nuit du doute', 'La 15e nuit'] },
-      { q: 'Dans quelle ville le Prophète ﷺ est-il enterré ?', a: 'Médine', w: ['La Mecque', 'Jérusalem', 'Taïf'] },
-      { q: 'L\u2019année de naissance du Prophète ﷺ est appelée…', a: 'l\u2019année de l\u2019Éléphant (~570)', w: ['l\u2019année du Fath (~630)', 'l\u2019année de la Tristesse', 'l\u2019an 1 de l\u2019Hégire'] },
-      { q: 'Quelle sourate porte le nom d\u2019une femme ?', a: 'Maryam', w: ['Khadija', 'Aïcha', 'Fatima'] },
-      { q: 'Le petit pèlerinage s\u2019appelle…', a: 'la Omra', w: ['le Hajj', 'la Hijra', 'l\u2019Itikaf'] },
-      { q: 'Combien y a-t-il environ de versets dans le Coran ?', a: 'environ 6 236', w: ['environ 3 000', 'environ 10 000', 'exactement 5 000'] },
-      { q: 'Quelle sourate est surnommée « le cœur du Coran » ?', a: 'Ya-Sin', w: ['Al-Fatiha', 'Al-Kahf', 'Al-Moulk'] },
-      { q: 'Qui fut le deuxième calife, célèbre pour sa justice ?', a: 'Omar ibn al-Khattab', w: ['Abou Bakr', 'Othman', 'Ali'] },
-      { q: 'La conquête pacifique de La Mecque (Fath Makka) eut lieu en…', a: 'l\u2019an 8 de l\u2019Hégire', w: ['l\u2019an 2 de l\u2019Hégire', 'l\u2019an 15 de l\u2019Hégire', 'avant l\u2019Hégire'] },
-      { q: 'Quelle sourate est récitée dans chaque unité de prière ?', a: 'Al-Fatiha', w: ['Al-Ikhlas', 'An-Nas', 'Al-Falaq'] },
-      { q: 'Combien de noms d\u2019Allah sont traditionnellement cités ?', a: '99', w: ['66', '100', '114'] }
-    ]
-  };
-
-  var SCIENCES = {
-    petit: [
-      { q: 'Combien de pattes a une araignée ?', a: '8', w: ['6', '4', '10'] },
-      { q: 'Que boit une plante pour grandir ?', a: 'De l\u2019eau', w: ['Du lait', 'Du jus', 'De la soupe'] },
-      { q: 'Quel animal pond des œufs ?', a: 'La poule', w: ['Le chat', 'Le chien', 'La vache'] },
-      { q: 'Combien de sens avons-nous ?', a: '5', w: ['3', '4', '7'] },
-      { q: 'Avec quoi voit-on ?', a: 'Les yeux', w: ['Les oreilles', 'Le nez', 'Les mains'] },
-      { q: 'Que fait un aimant ?', a: 'Il attire le fer', w: ['Il attire le bois', 'Il chauffe', 'Il éclaire'] },
-      { q: 'L\u2019eau qui gèle devient…', a: 'de la glace', w: ['de la vapeur', 'du sable', 'du sel'] },
-      { q: 'De quel côté le soleil se lève-t-il ?', a: 'À l\u2019est', w: ['À l\u2019ouest', 'Au nord', 'Au sud'] },
-      { q: 'Quel animal vit dans l\u2019eau ?', a: 'Le poisson', w: ['Le chat', 'L\u2019oiseau', 'Le lapin'] },
-      { q: 'Combien de pattes a un insecte ?', a: '6', w: ['8', '4', '2'] },
-      { q: 'Que mange une vache ?', a: 'De l\u2019herbe', w: ['De la viande', 'Du poisson', 'Des insectes'] },
-      { q: 'Que voit-on dans le ciel la nuit ?', a: 'La lune et les étoiles', w: ['Le soleil', 'L\u2019arc-en-ciel', 'Les nuages blancs'] },
-      { q: 'Quelle saison vient après l\u2019hiver ?', a: 'Le printemps', w: ['L\u2019été', 'L\u2019automne', 'Noël'] },
-      { q: 'Comment s\u2019appelle le bébé de la poule ?', a: 'Le poussin', w: ['Le chaton', 'Le veau', 'L\u2019agneau'] },
-      { q: 'Avec quoi entend-on ?', a: 'Les oreilles', w: ['Les yeux', 'La bouche', 'Les pieds'] },
-      { q: 'De quelle couleur est le sang ?', a: 'Rouge', w: ['Bleu', 'Vert', 'Jaune'] },
-      { q: 'Quel animal a une trompe ?', a: 'L\u2019éléphant', w: ['Le lion', 'La girafe', 'Le singe'] },
-      { q: 'Que faut-il aux plantes pour pousser ?', a: 'De l\u2019eau et du soleil', w: ['Du bruit', 'De la nuit', 'Du vent seulement'] }
-    ],
-    moyen: [
-      { q: 'Combien de planètes compte le système solaire ?', a: '8', w: ['9', '7', '10'] },
-      { q: 'Quelle planète est la plus proche du Soleil ?', a: 'Mercure', w: ['Vénus', 'Mars', 'La Terre'] },
-      { q: 'À quelle température l\u2019eau bout-elle ?', a: '100 °C', w: ['50 °C', '0 °C', '200 °C'] },
-      { q: 'Combien d\u2019os environ dans le corps humain adulte ?', a: '206', w: ['100', '350', '500'] },
-      { q: 'Quel organe pompe le sang ?', a: 'Le cœur', w: ['Le foie', 'Les poumons', 'Le cerveau'] },
-      { q: 'Quel gaz est indispensable à notre respiration ?', a: 'L\u2019oxygène', w: ['Le CO2', 'L\u2019hélium', 'L\u2019azote pur'] },
-      { q: 'La Terre tourne autour du Soleil en…', a: '1 an', w: ['1 jour', '1 mois', '10 ans'] },
-      { q: 'Quel est l\u2019état de l\u2019eau à −5 °C ?', a: 'Solide (glace)', w: ['Liquide', 'Gazeux', 'Ça dépend'] },
-      { q: 'Que produit une plante grâce à la photosynthèse ?', a: 'De l\u2019oxygène', w: ['Du CO2', 'De l\u2019eau', 'Du sel'] },
-      { q: 'Quelle est la plus grande planète du système solaire ?', a: 'Jupiter', w: ['Saturne', 'La Terre', 'Neptune'] },
-      { q: 'Combien de dents a un adulte ?', a: '32', w: ['20', '28', '40'] },
-      { q: 'Quel instrument mesure la température ?', a: 'Le thermomètre', w: ['Le baromètre', 'La boussole', 'Le chronomètre'] },
-      { q: 'Pour que l\u2019ampoule s\u2019allume, le circuit électrique doit être…', a: 'fermé', w: ['ouvert', 'mouillé', 'chaud'] },
-      { q: 'Quel animal est un mammifère marin ?', a: 'Le dauphin', w: ['Le requin', 'La sardine', 'La pieuvre'] },
-      { q: 'Quel organe nous permet de respirer ?', a: 'Les poumons', w: ['Le cœur', 'L\u2019estomac', 'Les reins'] },
-      { q: 'La lumière du Soleil met environ… pour arriver sur Terre', a: '8 minutes', w: ['1 seconde', '1 heure', '1 jour'] },
-      { q: 'Comment s\u2019appelle la transformation de l\u2019eau en vapeur ?', a: 'L\u2019évaporation', w: ['La fusion', 'La condensation', 'La solidification'] },
-      { q: 'Quelle planète est surnommée « la planète rouge » ?', a: 'Mars', w: ['Vénus', 'Jupiter', 'Mercure'] }
-    ],
-    grand: [
-      { q: 'Quelle est l\u2019unité de mesure de la force ?', a: 'Le newton', w: ['Le joule', 'Le watt', 'Le volt'] },
-      { q: 'H₂O est la formule chimique de…', a: 'l\u2019eau', w: ['l\u2019oxygène', 'le sel', 'le sucre'] },
-      { q: 'Combien de chromosomes possède une cellule humaine ?', a: '46', w: ['23', '44', '48'] },
-      { q: 'Quelle particule porte une charge négative ?', a: 'L\u2019électron', w: ['Le proton', 'Le neutron', 'Le photon'] },
-      { q: 'Où se trouve l\u2019ADN dans la cellule ?', a: 'Dans le noyau', w: ['Dans la membrane', 'Hors de la cellule', 'Dans le sang uniquement'] },
-      { q: 'CO₂ est la formule du…', a: 'dioxyde de carbone', w: ['monoxyde de carbone', 'dioxygène', 'méthane'] },
-      { q: 'Quelle est la principale source d\u2019énergie de la Terre ?', a: 'Le Soleil', w: ['Le pétrole', 'Le vent', 'Les volcans'] },
-      { q: 'Un atome est composé de…', a: 'protons, neutrons et électrons', w: ['cellules et noyaux', 'molécules d\u2019eau', 'photons et ondes'] },
-      { q: 'La photosynthèse a besoin de lumière, d\u2019eau et de…', a: 'CO₂', w: ['O₂', 'azote', 'sel minéral uniquement'] },
-      { q: 'Qui a énoncé la loi de la gravitation universelle ?', a: 'Newton', w: ['Einstein', 'Galilée', 'Darwin'] },
-      { q: 'Combien de litres de sang environ chez un adulte ?', a: '5', w: ['2', '10', '15'] },
-      { q: 'Quelle est l\u2019unité de l\u2019énergie ?', a: 'Le joule', w: ['Le newton', 'Le pascal', 'L\u2019ampère'] },
-      { q: 'Un pH neutre vaut…', a: '7', w: ['0', '14', '10'] },
-      { q: 'Quels organes filtrent le sang ?', a: 'Les reins', w: ['Les poumons', 'Le cœur', 'Les intestins'] },
-      { q: 'Dans quelle galaxie vivons-nous ?', a: 'La Voie lactée', w: ['Andromède', 'Le Grand Nuage', 'Orion'] },
-      { q: 'Quelle est la vitesse de la lumière (environ) ?', a: '300 000 km/s', w: ['300 km/s', '3 000 km/s', '3 millions km/s'] },
-      { q: 'Quel savant a développé la théorie de la relativité ?', a: 'Einstein', w: ['Newton', 'Curie', 'Pasteur'] },
-      { q: 'Quel gaz compose majoritairement l\u2019atmosphère terrestre ?', a: 'L\u2019azote', w: ['L\u2019oxygène', 'Le CO₂', 'L\u2019hydrogène'] }
-    ]
-  };
-
-  var HISTOIRE = {
-    petit: [
-      { q: 'Qui vivait dans les châteaux forts ?', a: 'Les chevaliers et les seigneurs', w: ['Les astronautes', 'Les pirates', 'Les dinosaures'] },
-      { q: 'Où vivaient souvent les hommes préhistoriques ?', a: 'Dans des grottes', w: ['Dans des immeubles', 'Dans des châteaux', 'Dans des bateaux'] },
-      { q: 'Que peignaient les hommes préhistoriques sur les murs ?', a: 'Des animaux', w: ['Des voitures', 'Des avions', 'Des robots'] },
-      { q: 'Dans quel pays trouve-t-on les grandes pyramides ?', a: 'En Égypte', w: ['En France', 'En Chine', 'En Espagne'] },
-      { q: 'Sur quoi naviguaient les pirates ?', a: 'Des bateaux', w: ['Des avions', 'Des trains', 'Des fusées'] },
-      { q: 'Que portait un chevalier pour se protéger ?', a: 'Une armure', w: ['Un pyjama', 'Un maillot', 'Une cape magique'] },
-      { q: 'Les dinosaures existent-ils encore aujourd\u2019hui ?', a: 'Non', w: ['Oui, en Afrique', 'Oui, cachés', 'Seulement les petits'] },
-      { q: 'Qui habite dans un palais ?', a: 'Un roi ou une reine', w: ['Un poisson', 'Un boulanger', 'Un pirate'] },
-      { q: 'Avant les voitures, comment se déplaçait-on ?', a: 'À cheval', w: ['En fusée', 'En métro', 'En trottinette électrique'] },
-      { q: 'Dans quelle ville se trouve la tour Eiffel ?', a: 'Paris', w: ['Londres', 'Marseille', 'New York'] },
-      { q: 'Qu\u2019y a-t-il autour d\u2019un château fort pour le protéger ?', a: 'Des remparts', w: ['Des toboggans', 'Des barrières de jardin', 'Des filets'] },
-      { q: 'Comment s\u2019appelait la France au temps des Gaulois ?', a: 'La Gaule', w: ['LaRoma', 'La Francia', 'La Bretagne'] },
-      { q: 'Avec quoi écrivait-on avant les stylos ?', a: 'Une plume et de l\u2019encre', w: ['Un clavier', 'Un feutre', 'Un pinceau laser'] },
-      { q: 'Qui a construit les châteaux de sable les plus anciens… euh non, les pyramides ?', a: 'Les Égyptiens', w: ['Les Romains', 'Les pirates', 'Les chevaliers'] },
-      { q: 'Le roi de la jungle des histoires, c\u2019est…', a: 'le lion', w: ['le lapin', 'la souris', 'le poisson rouge'] },
-      { q: 'Comment s\u2019appelle une très vieille histoire vraie ?', a: 'L\u2019Histoire', w: ['Un dessin animé', 'Un jeu vidéo', 'Une chanson'] }
-    ],
-    moyen: [
-      { q: 'Quel peuple a construit les pyramides ?', a: 'Les Égyptiens', w: ['Les Romains', 'Les Grecs', 'Les Vikings'] },
-      { q: 'Quel peuple a inventé la démocratie ?', a: 'Les Grecs', w: ['Les Romains', 'Les Égyptiens', 'Les Gaulois'] },
-      { q: 'Vercingétorix était le chef des…', a: 'Gaulois', w: ['Romains', 'Vikings', 'Francs'] },
-      { q: 'En quelle année Christophe Colomb arrive-t-il en Amérique ?', a: '1492', w: ['1515', '1789', '1066'] },
-      { q: 'Qui était surnommé le Roi-Soleil ?', a: 'Louis XIV', w: ['Louis XVI', 'Napoléon', 'François Ier'] },
-      { q: 'En quelle année a commencé la Révolution française ?', a: '1789', w: ['1492', '1515', '1815'] },
-      { q: 'Charlemagne a été couronné empereur en l\u2019an…', a: '800', w: ['1000', '500', '1200'] },
-      { q: 'Jules César était un général…', a: 'romain', w: ['grec', 'gaulois', 'égyptien'] },
-      { q: 'Qui a été jugée et brûlée à Rouen en 1431 ?', a: 'Jeanne d\u2019Arc', w: ['Marie-Antoinette', 'Aliénor d\u2019Aquitaine', 'Catherine de Médicis'] },
-      { q: 'Les hiéroglyphes sont l\u2019écriture des…', a: 'Égyptiens', w: ['Romains', 'Chinois', 'Mayas'] },
-      { q: 'Quelle immense muraille se trouve en Chine ?', a: 'La Grande Muraille', w: ['Le mur d\u2019Hadrien', 'Les remparts de Carcassonne', 'Le mur de Berlin'] },
-      { q: 'Pour quel roi le château de Versailles a-t-il été agrandi ?', a: 'Louis XIV', w: ['Louis XI', 'Henri IV', 'Charlemagne'] },
-      { q: 'Qu\u2019a inventé Gutenberg vers 1450 ?', a: 'L\u2019imprimerie', w: ['La boussole', 'Le téléphone', 'La machine à vapeur'] },
-      { q: '1515, c\u2019est la victoire de François Ier à…', a: 'Marignan', w: ['Austerlitz', 'Waterloo', 'Bouvines'] },
-      { q: 'L\u2019homme de Cro-Magnon vivait à quelle époque ?', a: 'La préhistoire', w: ['Le Moyen Âge', 'L\u2019Antiquité', 'La Renaissance'] },
-      { q: 'Quelle mer les Romains appelaient-ils « Mare Nostrum » ?', a: 'La Méditerranée', w: ['L\u2019Atlantique', 'La mer Noire', 'La Manche'] },
-      { q: 'Comment s\u2019appelaient les guerriers scandinaves navigateurs ?', a: 'Les Vikings', w: ['Les Huns', 'Les Celtes', 'Les Mongols'] },
-      { q: 'Quel monument romain servait aux combats de gladiateurs ?', a: 'Le Colisée', w: ['Le Parthénon', 'Le Louvre', 'L\u2019Alhambra'] }
-    ],
-    grand: [
-      { q: 'La Première Guerre mondiale a duré de…', a: '1914 à 1918', w: ['1939 à 1945', '1900 à 1905', '1920 à 1925'] },
-      { q: 'La Seconde Guerre mondiale a duré de…', a: '1939 à 1945', w: ['1914 à 1918', '1930 à 1935', '1945 à 1950'] },
-      { q: 'En quelle année le mur de Berlin est-il tombé ?', a: '1989', w: ['1961', '1975', '1991'] },
-      { q: 'Qui a lancé l\u2019appel du 18 juin 1940 ?', a: 'De Gaulle', w: ['Pétain', 'Churchill', 'Clemenceau'] },
-      { q: 'Quelle ville abritait la « Maison de la Sagesse », grand centre de savoir ?', a: 'Bagdad', w: ['Le Caire', 'Cordoue', 'Damas'] },
-      { q: 'La prise de la Bastille a eu lieu le…', a: '14 juillet 1789', w: ['14 juillet 1790', '4 août 1789', '21 janvier 1793'] },
-      { q: 'Napoléon a été sacré empereur en…', a: '1804', w: ['1789', '1815', '1799'] },
-      { q: 'Qu\u2019appelle-t-on « Al-Andalus » ?', a: 'L\u2019Espagne musulmane', w: ['Le Maroc ancien', 'L\u2019Égypte antique', 'La Sicile normande'] },
-      { q: 'En quelle année le premier homme a-t-il marché sur la Lune ?', a: '1969', w: ['1959', '1975', '1981'] },
-      { q: 'L\u2019esclavage a été définitivement aboli en France en…', a: '1848', w: ['1789', '1815', '1905'] },
-      { q: 'Quelle était la capitale de l\u2019Empire byzantin ?', a: 'Constantinople', w: ['Rome', 'Athènes', 'Alexandrie'] },
-      { q: 'Ibn Khaldoun, grand savant du XIVe siècle, était…', a: 'un historien', w: ['un navigateur', 'un peintre', 'un roi'] },
-      { q: 'En 732, Charles Martel a arrêté à Poitiers l\u2019armée des…', a: 'Omeyyades', w: ['Vikings', 'Huns', 'Wisigoths'] },
-      { q: 'L\u2019ONU a été créée en…', a: '1945', w: ['1918', '1939', '1958'] },
-      { q: 'Quel savant est considéré comme le père de l\u2019algèbre ?', a: 'Al-Khwarizmi', w: ['Pythagore', 'Euclide', 'Descartes'] },
-      { q: 'Quel empire dirigeait Soliman le Magnifique ?', a: 'L\u2019Empire ottoman', w: ['L\u2019Empire romain', 'L\u2019Empire perse', 'L\u2019Empire mongol'] },
-      { q: 'La guerre froide opposait principalement…', a: 'les États-Unis et l\u2019URSS', w: ['la France et l\u2019Angleterre', 'la Chine et le Japon', 'l\u2019Allemagne et l\u2019Italie'] },
-      { q: 'Quelle dynastie a fondé Bagdad en 762 ?', a: 'Les Abbassides', w: ['Les Omeyyades', 'Les Fatimides', 'Les Ottomans'] }
-    ]
-  };
-
-  var SUBJECTS = {
-    arabe:    { nom: 'Arabe',              ico: '🗣️', bank: ARABE },
-    islam:    { nom: 'Coran & Prophètes',  ico: '🕌', bank: ISLAM },
-    sciences: { nom: 'Sciences',           ico: '🔬', bank: SCIENCES },
-    histoire: { nom: 'Histoire',           ico: '🏛️', bank: HISTOIRE }
-  };
-
-  function tierFor(classe){
-    if(classe === 'gs' || classe === 'ce1') return 'petit';
-    if(classe === 'cm2' || classe === 'sixieme') return 'moyen';
-    return 'grand';
+  function ar(t){ // affichage grand d'un mot/lettre arabe
+    return '<div style="font-size:64px;line-height:1.3;text-align:center;font-family:serif" dir="rtl">' + t + '</div>';
   }
 
-  function shuffle(arr){
+  // ═════════════ ARABE (francophones débutants) ═════════════
+  var ARABE = {
+    label: 'Arabe', ico: '🕌',
+    comps: {
+      petits: [
+        { key: 'ar1', nom: 'Les lettres', ico: '🔤' },
+        { key: 'ar2', nom: 'Les mots', ico: '💬' },
+        { key: 'ar3', nom: 'Les nombres', ico: '🔢' }
+      ],
+      moyens: [
+        { key: 'ar1', nom: 'Les lettres', ico: '🔤' },
+        { key: 'ar2', nom: 'Vocabulaire', ico: '💬' },
+        { key: 'ar3', nom: 'Les nombres', ico: '🔢' }
+      ],
+      grands: [
+        { key: 'ar1', nom: 'Lettres & lecture', ico: '🔤' },
+        { key: 'ar2', nom: 'Vocabulaire', ico: '💬' },
+        { key: 'ar3', nom: 'Nombres & phrases', ico: '🔢' }
+      ]
+    },
+    pools: {
+      petits: {
+        ar1: {
+          1: [
+            ['Comment s\u2019appelle cette lettre ?', 'alif', ['ba', 'mim', 'nun'], ar('ا')],
+            ['Comment s\u2019appelle cette lettre ?', 'ba', ['ta', 'alif', 'lam'], ar('ب')],
+            ['Comment s\u2019appelle cette lettre ?', 'ta', ['ba', 'sin', 'ra'], ar('ت')],
+            ['Comment s\u2019appelle cette lettre ?', 'mim', ['nun', 'lam', 'ba'], ar('م')],
+            ['Comment s\u2019appelle cette lettre ?', 'lam', ['alif', 'mim', 'kaf'], ar('ل')],
+            ['Comment s\u2019appelle cette lettre ?', 'nun', ['mim', 'ba', 'ta'], ar('ن')],
+            ['Comment s\u2019appelle cette lettre ?', 'sin', ['chin', 'ra', 'sad'], ar('س')],
+            ['Comment s\u2019appelle cette lettre ?', 'ra', ['za', 'dal', 'waw'], ar('ر')],
+            ['Comment s\u2019appelle cette lettre ?', 'dal', ['ra', 'waw', 'lam'], ar('د')],
+            ['Comment s\u2019appelle cette lettre ?', 'waw', ['ra', 'dal', 'ya'], ar('و')]
+          ],
+          2: [
+            ['Comment s\u2019appelle cette lettre ?', 'kaf', ['lam', 'qaf', 'fa'], ar('ك')],
+            ['Comment s\u2019appelle cette lettre ?', 'ha', ['kha', 'jim', 'ayn'], ar('ه')],
+            ['Comment s\u2019appelle cette lettre ?', 'ya', ['waw', 'ba', 'nun'], ar('ي')],
+            ['Comment s\u2019appelle cette lettre ?', 'jim', ['ha', 'kha', 'ayn'], ar('ج')],
+            ['Comment s\u2019appelle cette lettre ?', 'fa', ['qaf', 'kaf', 'ba'], ar('ف')],
+            ['Comment s\u2019appelle cette lettre ?', 'ta (avec 2 points)', ['tha (3 points)', 'ba (1 point)', 'nun'], ar('ت')]
+          ],
+          3: [
+            ['Comment s\u2019appelle cette lettre ?', 'chin', ['sin', 'sad', 'tha'], ar('ش')],
+            ['Comment s\u2019appelle cette lettre ?', 'qaf', ['fa', 'kaf', 'ghayn'], ar('ق')],
+            ['Comment s\u2019appelle cette lettre ?', 'ayn', ['ghayn', 'ha', 'kha'], ar('ع')],
+            ['Comment s\u2019appelle cette lettre ?', 'kha', ['ha', 'jim', 'ghayn'], ar('خ')],
+            ['Comment s\u2019appelle cette lettre ?', 'sad', ['sin', 'dad', 'ta'], ar('ص')],
+            ['Comment s\u2019appelle cette lettre ?', 'tha', ['ta', 'ba', 'dha'], ar('ث')]
+          ]
+        },
+        ar2: {
+          1: [
+            ['Comment dit-on « bonjour / paix » en arabe ?', 'salam', ['choukran', 'na\u2019am', 'bayt'], null],
+            ['Comment dit-on « merci » en arabe ?', 'choukran', ['salam', 'la', 'ma\u2019'], null],
+            ['Comment dit-on « oui » en arabe ?', 'na\u2019am', ['la', 'salam', 'abi'], null],
+            ['Comment dit-on « non » en arabe ?', 'la', ['na\u2019am', 'choukran', 'yad'], null],
+            ['Comment dit-on « maman » en arabe ?', 'oummi', ['abi', 'akhi', 'bayt'], null],
+            ['Comment dit-on « papa » en arabe ?', 'abi', ['oummi', 'kitab', 'salam'], null],
+            ['Comment dit-on « l\u2019eau » 💧 en arabe ?', 'ma\u2019', ['khoubz', 'bayt', 'qamar'], null],
+            ['Comment dit-on « le pain » 🍞 en arabe ?', 'khoubz', ['ma\u2019', 'kitab', 'chams'], null],
+            ['Comment dit-on « le chat » 🐱 en arabe ?', 'qitt', ['kalb', 'qamar', 'bahr'], null],
+            ['« kalb » 🐶 veut dire...', 'le chien', ['le chat', 'la maison', 'le pain'], null]
+          ],
+          2: [
+            ['Comment dit-on « le livre » 📖 en arabe ?', 'kitab', ['qalam', 'bayt', 'bab'], null],
+            ['Comment dit-on « la maison » 🏠 en arabe ?', 'bayt', ['bab', 'madrassa', 'qamar'], null],
+            ['Comment dit-on « l\u2019école » 🏫 en arabe ?', 'madrassa', ['bayt', 'kitab', 'yawm'], null],
+            ['Comment dit-on « la porte » 🚪 en arabe ?', 'bab', ['bayt', 'yad', 'chams'], null],
+            ['Que veut dire « qamar » 🌙 ?', 'la lune', ['le soleil', 'la mer', 'l\u2019étoile'], null],
+            ['Que veut dire « chams » ☀️ ?', 'le soleil', ['la lune', 'la pluie', 'le vent'], null]
+          ],
+          3: [
+            ['Que veut dire « bahr » 🌊 ?', 'la mer', ['la montagne', 'le désert', 'la rivière'], null],
+            ['Comment dit-on « la main » ✋ en arabe ?', 'yad', ['ra\u2019s', 'qalb', 'rijl'], null],
+            ['Que veut dire « ra\u2019s » ?', 'la tête', ['la main', 'le pied', 'le cœur'], null],
+            ['Comment dit-on « le cœur » ❤️ en arabe ?', 'qalb', ['yad', 'ayn', 'ra\u2019s'], null],
+            ['Que veut dire « yawm » ?', 'le jour', ['la nuit', 'le matin', 'la semaine'], null],
+            ['Comment dit-on « le stylo » ✏️ en arabe ?', 'qalam', ['kitab', 'waraqa', 'bab'], null]
+          ]
+        },
+        ar3: {
+          1: [
+            ['Comment dit-on « 1 » en arabe ?', 'wahid', ['ithnan', 'thalatha', 'sitta'], null],
+            ['Comment dit-on « 2 » en arabe ?', 'ithnan', ['wahid', 'arba\u2019a', 'khamsa'], null],
+            ['Comment dit-on « 3 » en arabe ?', 'thalatha', ['ithnan', 'sab\u2019a', 'wahid'], null],
+            ['Comment dit-on « 4 » en arabe ?', 'arba\u2019a', ['khamsa', 'thalatha', 'sitta'], null],
+            ['Comment dit-on « 5 » en arabe ?', 'khamsa', ['arba\u2019a', 'sitta', 'tis\u2019a'], null],
+            ['Que veut dire « wahid » ?', '1', ['2', '5', '10'], null],
+            ['Que veut dire « thalatha » ?', '3', ['4', '2', '8'], null],
+            ['Que veut dire « khamsa » ?', '5', ['3', '6', '9'], null],
+            ['Que veut dire « ithnan » ?', '2', ['1', '3', '4'], null],
+            ['Que veut dire « arba\u2019a » ?', '4', ['5', '3', '6'], null]
+          ],
+          2: [
+            ['Comment dit-on « 6 » en arabe ?', 'sitta', ['sab\u2019a', 'khamsa', 'tis\u2019a'], null],
+            ['Comment dit-on « 7 » en arabe ?', 'sab\u2019a', ['sitta', 'thamaniya', 'arba\u2019a'], null],
+            ['Comment dit-on « 8 » en arabe ?', 'thamaniya', ['sab\u2019a', 'tis\u2019a', 'sitta'], null],
+            ['Que veut dire « sitta » ?', '6', ['7', '5', '8'], null],
+            ['Que veut dire « thamaniya » ?', '8', ['6', '9', '7'], null],
+            ['Comment dit-on « 10 » en arabe ?', 'achara', ['tis\u2019a', 'thamaniya', 'khamsa'], null]
+          ],
+          3: [
+            ['Comment dit-on « 9 » en arabe ?', 'tis\u2019a', ['achara', 'thamaniya', 'sab\u2019a'], null],
+            ['Que veut dire « achara » ?', '10', ['9', '8', '11'], null],
+            ['wahid + ithnan = ?', 'thalatha', ['arba\u2019a', 'ithnan', 'khamsa'], null],
+            ['ithnan + thalatha = ?', 'khamsa', ['arba\u2019a', 'sitta', 'sab\u2019a'], null],
+            ['khamsa + khamsa = ?', 'achara', ['tis\u2019a', 'thamaniya', 'sitta'], null],
+            ['arba\u2019a + wahid = ?', 'khamsa', ['sitta', 'thalatha', 'arba\u2019a'], null]
+          ]
+        }
+      },
+      moyens: {
+        ar1: {
+          1: [
+            ['Comment s\u2019appelle cette lettre ?', 'alif', ['ba', 'lam', 'waw'], ar('ا')],
+            ['Comment s\u2019appelle cette lettre ?', 'ba', ['ta', 'tha', 'nun'], ar('ب')],
+            ['Comment s\u2019appelle cette lettre ?', 'mim', ['nun', 'waw', 'ha'], ar('م')],
+            ['Comment s\u2019appelle cette lettre ?', 'sin', ['chin', 'sad', 'za'], ar('س')],
+            ['Comment s\u2019appelle cette lettre ?', 'lam', ['kaf', 'alif', 'dal'], ar('ل')],
+            ['Comment s\u2019appelle cette lettre ?', 'ra', ['za', 'waw', 'dal'], ar('ر')],
+            ['Comment s\u2019appelle cette lettre ?', 'kaf', ['qaf', 'fa', 'lam'], ar('ك')],
+            ['Comment s\u2019appelle cette lettre ?', 'ta', ['tha', 'ba', 'ya'], ar('ت')],
+            ['Comment s\u2019appelle cette lettre ?', 'nun', ['mim', 'ba', 'ya'], ar('ن')],
+            ['Comment s\u2019appelle cette lettre ?', 'ya', ['waw', 'nun', 'ta'], ar('ي')]
+          ],
+          2: [
+            ['Quelle lettre fait le son « b » ?', 'ب', ['ت', 'ن', 'م'], null],
+            ['Quelle lettre fait le son « m » ?', 'م', ['ن', 'ب', 'و'], null],
+            ['Quelle lettre fait le son « s » ?', 'س', ['ش', 'ص', 'ز'], null],
+            ['Comment s\u2019appelle cette lettre ?', 'jim', ['ha', 'kha', 'ghayn'], ar('ج')],
+            ['Comment s\u2019appelle cette lettre ?', 'ayn', ['ghayn', 'ha', 'hamza'], ar('ع')],
+            ['Comment s\u2019appelle cette lettre ?', 'fa', ['qaf', 'waw', 'ba'], ar('ف')]
+          ],
+          3: [
+            ['Comment s\u2019appelle cette lettre ?', 'dad', ['sad', 'dal', 'dha'], ar('ض')],
+            ['Comment s\u2019appelle cette lettre ?', 'dha', ['tha', 'dal', 'za'], ar('ظ')],
+            ['Quelle lettre fait le son « ch » ?', 'ش', ['س', 'ج', 'ص'], null],
+            ['Quelle lettre fait le son « r » roulé ?', 'ر', ['ز', 'د', 'غ'], null],
+            ['Comment s\u2019appelle cette lettre ?', 'ghayn', ['ayn', 'kha', 'qaf'], ar('غ')],
+            ['Comment s\u2019appelle cette lettre ?', 'tha', ['ta', 'dha', 'sin'], ar('ث')]
+          ]
+        },
+        ar2: {
+          1: [
+            ['Comment dit-on « bonjour / paix » en arabe ?', 'salam', ['choukran', 'afwan', 'marhaban'], null],
+            ['Que veut dire « choukran » ?', 'merci', ['bonjour', 'pardon', 'au revoir'], null],
+            ['Comment dit-on « l\u2019école » en arabe ?', 'madrassa', ['maktaba', 'bayt', 'masjid'], null],
+            ['Que veut dire « kitab » ?', 'le livre', ['le stylo', 'le cahier', 'la table'], null],
+            ['Comment dit-on « le stylo » en arabe ?', 'qalam', ['kitab', 'waraqa', 'bab'], null],
+            ['Que veut dire « bayt » ?', 'la maison', ['la porte', 'l\u2019école', 'la rue'], null],
+            ['Comment dit-on « la mosquée » en arabe ?', 'masjid', ['madrassa', 'bayt', 'souq'], null],
+            ['Que veut dire « ma\u2019 » ?', 'l\u2019eau', ['le lait', 'le jus', 'le thé'], null],
+            ['Que veut dire « marhaban » ?', 'bienvenue', ['au revoir', 'pardon', 'bonsoir'], null],
+            ['Comment dit-on « le marché » en arabe ?', 'souq', ['madina', 'bayt', 'masjid'], null]
+          ],
+          2: [
+            ['Que veut dire « chams » ?', 'le soleil', ['la lune', 'l\u2019étoile', 'le ciel'], null],
+            ['Comment dit-on « l\u2019étoile » en arabe ?', 'najma', ['qamar', 'chams', 'sama\u2019'], null],
+            ['Que veut dire « sama\u2019 » ?', 'le ciel', ['la terre', 'la mer', 'le nuage'], null],
+            ['Comment dit-on « la famille » en arabe ?', 'ousra', ['oumm', 'akh', 'jadd'], null],
+            ['Que veut dire « akh » ?', 'le frère', ['la sœur', 'le père', 'l\u2019oncle'], null],
+            ['Comment dit-on « la sœur » en arabe ?', 'oukht', ['akh', 'oumm', 'bint'], null]
+          ],
+          3: [
+            ['Que veut dire « madina » ?', 'la ville', ['le village', 'le pays', 'la rue'], null],
+            ['Comment dit-on « grand » en arabe ?', 'kabir', ['saghir', 'jamil', 'tawil'], null],
+            ['Que veut dire « saghir » ?', 'petit', ['grand', 'long', 'beau'], null],
+            ['Comment dit-on « beau » en arabe ?', 'jamil', ['kabir', 'qawi', 'jadid'], null],
+            ['Que veut dire « jadid » ?', 'nouveau', ['vieux', 'beau', 'rapide'], null],
+            ['Comment dit-on « rouge » en arabe ?', 'ahmar', ['azraq', 'akhdar', 'asfar'], null]
+          ]
+        },
+        ar3: {
+          1: [
+            ['Comment dit-on « 3 » en arabe ?', 'thalatha', ['ithnan', 'arba\u2019a', 'sitta'], null],
+            ['Que veut dire « khamsa » ?', '5', ['4', '6', '7'], null],
+            ['Comment dit-on « 7 » en arabe ?', 'sab\u2019a', ['sitta', 'thamaniya', 'tis\u2019a'], null],
+            ['Que veut dire « achara » ?', '10', ['8', '9', '12'], null],
+            ['Comment dit-on « 8 » en arabe ?', 'thamaniya', ['sab\u2019a', 'tis\u2019a', 'sitta'], null],
+            ['Que veut dire « sitta » ?', '6', ['5', '7', '8'], null],
+            ['Comment dit-on « 9 » en arabe ?', 'tis\u2019a', ['achara', 'thamaniya', 'khamsa'], null],
+            ['Que veut dire « arba\u2019a » ?', '4', ['3', '5', '6'], null]
+          ],
+          2: [
+            ['thalatha + arba\u2019a = ?', 'sab\u2019a', ['sitta', 'thamaniya', 'khamsa'], null],
+            ['khamsa + thalatha = ?', 'thamaniya', ['sab\u2019a', 'tis\u2019a', 'sitta'], null],
+            ['achara \u2212 ithnan = ?', 'thamaniya', ['tis\u2019a', 'sab\u2019a', 'sitta'], null],
+            ['Quel chiffre arabe est ceci : ٣ ?', '3', ['2', '4', '7'], null],
+            ['Quel chiffre arabe est ceci : ٥ ?', '5', ['0', '6', '4'], null],
+            ['Quel chiffre arabe est ceci : ٧ ?', '7', ['6', '8', '2'], null]
+          ],
+          3: [
+            ['Quel chiffre arabe est ceci : ٩ ?', '9', ['8', '6', '4'], null],
+            ['Comment écrit-on 10 en chiffres arabes ?', '١٠', ['٠١', '١١', '٩'], null],
+            ['ithnan \u00d7 thalatha = ?', 'sitta', ['khamsa', 'sab\u2019a', 'arba\u2019a'], null],
+            ['Comment dit-on « 20 » en arabe ?', 'ichroun', ['achara', 'thalathoun', 'mi\u2019a'], null],
+            ['Que veut dire « mi\u2019a » ?', '100', ['10', '20', '1000'], null],
+            ['Comment dit-on « 30 » en arabe ?', 'thalathoun', ['ichroun', 'thalatha', 'arba\u2019oun'], null]
+          ]
+        }
+      },
+      grands: {
+        ar1: {
+          1: [
+            ['Comment s\u2019appelle cette lettre ?', 'ba', ['ta', 'tha', 'nun'], ar('ب')],
+            ['Comment s\u2019appelle cette lettre ?', 'jim', ['ha', 'kha', 'ayn'], ar('ج')],
+            ['Comment s\u2019appelle cette lettre ?', 'sin', ['chin', 'sad', 'za'], ar('س')],
+            ['Quelle lettre fait le son « k » ?', 'ك', ['ق', 'خ', 'ح'], null],
+            ['Comment s\u2019appelle cette lettre ?', 'ayn', ['ghayn', 'hamza', 'ha'], ar('ع')],
+            ['Comment s\u2019appelle cette lettre ?', 'qaf', ['kaf', 'fa', 'ghayn'], ar('ق')],
+            ['Quelle lettre fait le son « ch » ?', 'ش', ['س', 'ص', 'ث'], null],
+            ['Comment s\u2019appelle cette lettre ?', 'dad', ['sad', 'dha', 'dal'], ar('ض')]
+          ],
+          2: [
+            ['Lis ce mot :', 'bab (la porte)', ['bayt (la maison)', 'ab (le père)', 'nab'], ar('باب')],
+            ['Lis ce mot :', 'qamar (la lune)', ['qalam (le stylo)', 'kamal', 'jabal'], ar('قمر')],
+            ['Lis ce mot :', 'kitab (le livre)', ['kalb (le chien)', 'katib', 'kabir'], ar('كتاب')],
+            ['Lis ce mot :', 'salam (la paix)', ['kalam', 'salim', 'alam'], ar('سلام')],
+            ['Lis ce mot :', 'chams (le soleil)', ['chay (le thé)', 'ism', 'samak'], ar('شمس')],
+            ['Lis ce mot :', 'yad (la main)', ['walad', 'yawm', 'jadid'], ar('يد')]
+          ],
+          3: [
+            ['Lis ce mot :', 'madrassa (l\u2019école)', ['madina (la ville)', 'maktab', 'masjid'], ar('مدرسة')],
+            ['Lis ce mot :', 'bahr (la mer)', ['barr', 'nahr (le fleuve)', 'matar'], ar('بحر')],
+            ['Lis ce mot :', 'nour (la lumière)', ['nar (le feu)', 'nahr', 'noum'], ar('نور')],
+            ['Lis ce mot :', 'ard (la terre)', ['arz', 'ain', 'oum'], ar('أرض')],
+            ['Lis ce mot :', 'qalb (le cœur)', ['kalb (le chien)', 'qalam', 'qabl'], ar('قلب')],
+            ['Lis ce mot :', 'ilm (la science)', ['alam (le drapeau)', 'amal', 'ism'], ar('علم')]
+          ]
+        },
+        ar2: {
+          1: [
+            ['Que veut dire « marhaban » ?', 'bienvenue', ['merci', 'pardon', 'au revoir'], null],
+            ['Comment dit-on « comment ça va ? » ?', 'kayfa halouk ?', ['ma ismouk ?', 'ayna anta ?', 'kam omrouk ?'], null],
+            ['Que veut dire « ma ismouk ? » ?', 'quel est ton nom ?', ['où es-tu ?', 'quel âge as-tu ?', 'comment ça va ?'], null],
+            ['Comment dit-on « je m\u2019appelle... » ?', 'ismi...', ['ana...', 'anta...', 'houwa...'], null],
+            ['Que veut dire « ana » ?', 'je / moi', ['tu / toi', 'il', 'nous'], null],
+            ['Que veut dire « anta » ?', 'tu (garçon)', ['je', 'elle', 'vous'], null],
+            ['Comment dit-on « la langue arabe » ?', 'al-arabiya', ['al-faransiya', 'al-lougha', 'al-kalima'], null],
+            ['Que veut dire « na\u2019am / la » ?', 'oui / non', ['bonjour / au revoir', 'grand / petit', 'ici / là-bas'], null]
+          ],
+          2: [
+            ['Que veut dire « ourid » ?', 'je veux', ['je peux', 'je vais', 'je sais'], null],
+            ['Comment dit-on « manger » en arabe ?', 'akala', ['chariba', 'nama', 'dhahaba'], null],
+            ['Que veut dire « chariba » ?', 'boire', ['manger', 'dormir', 'partir'], null],
+            ['Que veut dire « dhahaba » ?', 'aller / partir', ['venir', 'rester', 'courir'], null],
+            ['Comment dit-on « aujourd\u2019hui » ?', 'al-yawm', ['ghadan', 'ams', 'al-an'], null],
+            ['Que veut dire « ghadan » ?', 'demain', ['hier', 'aujourd\u2019hui', 'maintenant'], null]
+          ],
+          3: [
+            ['Que veut dire : « ana min faransa » ?', 'je viens de France', ['je vais en France', 'j\u2019aime la France', 'je parle français'], null],
+            ['Comment dit-on « j\u2019apprends l\u2019arabe » ?', 'ata\u2019allamou al-arabiya', ['atakallamou al-arabiya', 'ouhibbou al-arabiya', 'aktoubou al-arabiya'], null],
+            ['Que veut dire « atakallamou » ?', 'je parle', ['j\u2019écris', 'je lis', 'j\u2019écoute'], null],
+            ['Que veut dire « aqra\u2019ou » ?', 'je lis', ['j\u2019écris', 'je parle', 'je compte'], null],
+            ['Comment dit-on « la maison est grande » ?', 'al-baytou kabir', ['al-baytou saghir', 'al-baytou jamil', 'al-baytou jadid'], null],
+            ['Que veut dire « ouhibbou » ?', 'j\u2019aime', ['je déteste', 'je veux', 'je connais'], null]
+          ]
+        },
+        ar3: {
+          1: [
+            ['Que veut dire « ichroun » ?', '20', ['10', '12', '2'], null],
+            ['Comment dit-on « 100 » en arabe ?', 'mi\u2019a', ['alf', 'achara', 'mi\u2019atan'], null],
+            ['Que veut dire « alf » ?', '1000', ['100', '10', '1'], null],
+            ['Quel chiffre arabe est ceci : ٤ ?', '4', ['3', '5', '8'], null],
+            ['Quel chiffre arabe est ceci : ٦ ?', '6', ['7', '2', '9'], null],
+            ['Comment écrit-on 25 en chiffres arabes ?', '٢٥', ['٥٢', '٢٠', '١٥'], null],
+            ['thalathoun + ichroun = ?', 'khamsoun (50)', ['arba\u2019oun (40)', 'sittoun (60)', 'mi\u2019a (100)'], null],
+            ['Que veut dire « khamsoun » ?', '50', ['15', '5', '500'], null]
+          ],
+          2: [
+            ['Que veut dire « kam omrouk ? » ?', 'quel âge as-tu ?', ['comment t\u2019appelles-tu ?', 'où habites-tu ?', 'que fais-tu ?'], null],
+            ['« Omri arba\u2019a achar sana » veut dire :', 'j\u2019ai 14 ans', ['j\u2019ai 4 ans', 'j\u2019ai 40 ans', 'j\u2019ai 24 ans'], null],
+            ['Comment dit-on « premier » en arabe ?', 'awwal', ['akhir', 'thani', 'wahid'], null],
+            ['Que veut dire « nisf » ?', 'la moitié', ['le quart', 'le double', 'le tiers'], null],
+            ['Que veut dire « thani » ?', 'deuxième', ['premier', 'dernier', 'douze'], null],
+            ['Comment dit-on « combien ? » ?', 'kam ?', ['ayna ?', 'mata ?', 'limadha ?'], null]
+          ],
+          3: [
+            ['Lis ce nombre :', '15', ['51', '105', '155'], ar('١٥')],
+            ['Lis ce nombre :', '42', ['24', '402', '420'], ar('٤٢')],
+            ['Lis ce nombre :', '107', ['170', '17', '701'], ar('١٠٧')],
+            ['« achara \u00d7 achara » = ?', 'mi\u2019a (100)', ['ichroun (20)', 'alf (1000)', 'khamsoun (50)'], null],
+            ['Que veut dire « ayna ? » ?', 'où ?', ['quand ?', 'pourquoi ?', 'combien ?'], null],
+            ['Que veut dire « mata ? » ?', 'quand ?', ['où ?', 'qui ?', 'comment ?'], null]
+          ]
+        }
+      }
+    }
+  };
+
+  // ═════════════ HISTOIRE ═════════════
+  var HISTOIRE = {
+    label: 'Histoire', ico: '🏛️',
+    comps: {
+      petits: [
+        { key: 'hi1', nom: 'Le temps qui passe', ico: '⏳' },
+        { key: 'hi2', nom: 'Châteaux & chevaliers', ico: '🏰' },
+        { key: 'hi3', nom: 'Les grandes inventions', ico: '💡' }
+      ],
+      moyens: [
+        { key: 'hi1', nom: 'Préhistoire & Antiquité', ico: '🗿' },
+        { key: 'hi2', nom: 'Le Moyen Âge', ico: '🏰' },
+        { key: 'hi3', nom: 'Rois & Révolution', ico: '👑' }
+      ],
+      grands: [
+        { key: 'hi1', nom: 'L\u2019Antiquité', ico: '🏛️' },
+        { key: 'hi2', nom: 'Moyen Âge & Renaissance', ico: '🎨' },
+        { key: 'hi3', nom: 'Époque contemporaine', ico: '🗼' }
+      ]
+    },
+    pools: {
+      petits: {
+        hi1: {
+          1: [
+            ['Combien y a-t-il de jours dans une semaine ?', '7', ['5', '6', '10'], null],
+            ['Quel jour vient juste après lundi ?', 'mardi', ['dimanche', 'jeudi', 'samedi'], null],
+            ['Combien y a-t-il de saisons dans l\u2019année ?', '4', ['2', '3', '6'], null],
+            ['En quelle saison fait-il le plus froid ?', 'l\u2019hiver', ['l\u2019été', 'le printemps', 'l\u2019automne'], null],
+            ['Quand dort-on en général ?', 'la nuit', ['le matin', 'à midi', 'l\u2019après-midi'], null],
+            ['Combien y a-t-il de mois dans une année ?', '12', ['10', '7', '20'], null],
+            ['En quelle saison les fleurs poussent-elles ?', 'au printemps', ['en hiver', 'en automne', 'jamais'], null],
+            ['Quel jour vient juste avant dimanche ?', 'samedi', ['lundi', 'vendredi', 'mardi'], null],
+            ['Le jour d\u2019avant aujourd\u2019hui s\u2019appelle...', 'hier', ['demain', 'ce soir', 'l\u2019an dernier'], null],
+            ['Le jour d\u2019après aujourd\u2019hui s\u2019appelle...', 'demain', ['hier', 'avant-hier', 'la veille'], null]
+          ],
+          2: [
+            ['En quelle saison les feuilles tombent-elles ?', 'en automne', ['au printemps', 'en été', 'en hiver'], null],
+            ['En quelle saison va-t-on le plus à la plage ?', 'en été', ['en hiver', 'en automne', 'jamais'], null],
+            ['Le matin, le soleil...', 'se lève', ['se couche', 'disparaît', 'dort'], null],
+            ['Combien de jours dure environ un mois ?', '30', ['7', '100', '365'], null],
+            ['Tes grands-parents sont nés...', 'avant tes parents', ['après toi', 'après tes parents', 'en même temps que toi'], null],
+            ['Que raconte l\u2019Histoire ?', 'la vie des gens d\u2019avant', ['le futur', 'les rêves', 'la météo'], null]
+          ],
+          3: [
+            ['Combien d\u2019années y a-t-il dans un siècle ?', '100', ['10', '50', '1000'], null],
+            ['Combien d\u2019années y a-t-il dans une décennie ?', '10', ['100', '12', '2'], null],
+            ['Combien de jours y a-t-il dans une année ?', '365', ['100', '52', '12'], null],
+            ['Combien de mois dure une année ?', '12', ['52', '30', '4'], null],
+            ['Quel objet ancien donne l\u2019heure avec le soleil ?', 'le cadran solaire', ['le téléphone', 'la boussole', 'le sablier à eau'], null],
+            ['Dans quoi range-t-on les photos et souvenirs de famille ?', 'un album', ['une casserole', 'un cartable', 'un frigo'], null]
+          ]
+        },
+        hi2: {
+          1: [
+            ['Où habitaient les rois et les chevaliers ?', 'dans un château', ['dans une tente', 'dans un igloo', 'dans une fusée'], null],
+            ['Que porte un roi sur la tête ?', 'une couronne', ['un casque de vélo', 'un chapeau de paille', 'une casquette'], null],
+            ['Que porte un chevalier pour se protéger ?', 'une armure', ['un pyjama', 'un manteau', 'un maillot'], null],
+            ['Sur quel animal monte le chevalier ?', 'un cheval', ['une vache', 'un dragon', 'un éléphant'], null],
+            ['Avec quoi se bat un chevalier ?', 'une épée', ['une fourchette', 'un crayon', 'un balai'], null],
+            ['Comment entre-t-on dans un château fort ?', 'par le pont-levis', ['par la cheminée', 'par la fenêtre', 'par un toboggan'], null],
+            ['Comment s\u2019appelle la grande tour du château ?', 'le donjon', ['le garage', 'la cabane', 'l\u2019ascenseur'], null],
+            ['Qui est la femme du roi ?', 'la reine', ['la sorcière', 'la maîtresse', 'la fée'], null]
+          ],
+          2: [
+            ['À quoi servaient les murailles du château ?', 'à protéger des ennemis', ['à faire joli', 'à jouer à cache-cache', 'à sécher le linge'], null],
+            ['Comment s\u2019appelle l\u2019époque des châteaux forts ?', 'le Moyen Âge', ['la préhistoire', 'aujourd\u2019hui', 'le futur'], null],
+            ['Qui travaillait dans les champs au Moyen Âge ?', 'les paysans', ['les rois', 'les robots', 'les pirates'], null],
+            ['Que creusait-on autour du château pour le protéger ?', 'un fossé', ['une piscine', 'un tunnel', 'un jardin'], null],
+            ['Qui apprenait à devenir chevalier ?', 'l\u2019écuyer', ['le boulanger', 'le pirate', 'le clown'], null],
+            ['Quel oiseau les seigneurs dressaient-ils pour la chasse ?', 'le faucon', ['le pingouin', 'la poule', 'le perroquet'], null]
+          ],
+          3: [
+            ['Qui était Jeanne d\u2019Arc ?', 'une jeune fille qui a défendu la France', ['une reine d\u2019Angleterre', 'une sorcière', 'une princesse de conte'], null],
+            ['Que construisait-on de très haut au Moyen Âge pour prier ?', 'des cathédrales', ['des gratte-ciels', 'des stades', 'des ponts'], null],
+            ['Comment s\u2019appelait la fête avec des combats de chevaliers ?', 'un tournoi', ['un match de foot', 'un carnaval', 'une kermesse'], null],
+            ['Charlemagne était...', 'un grand roi', ['un pirate', 'un inventeur', 'un peintre'], null],
+            ['Qui racontait des histoires en musique dans les châteaux ?', 'le troubadour', ['le chevalier', 'le forgeron', 'le boulanger'], null],
+            ['Avec quoi écrivait-on au Moyen Âge ?', 'une plume', ['un stylo à bille', 'un clavier', 'un feutre'], null]
+          ]
+        },
+        hi3: {
+          1: [
+            ['Qu\u2019ont découvert les hommes préhistoriques pour se chauffer ?', 'le feu', ['la télévision', 'le chauffage', 'les gants'], null],
+            ['Quelle invention ronde a permis de faire des chariots ?', 'la roue', ['le ballon', 'la pièce', 'l\u2019assiette'], null],
+            ['Quelle machine vole dans le ciel ?', 'l\u2019avion', ['la voiture', 'le bateau', 'le vélo'], null],
+            ['Quelle invention éclaire nos maisons ?', 'l\u2019ampoule', ['la bougie magique', 'la lune', 'le miroir'], null],
+            ['Quel véhicule roule sur des rails ?', 'le train', ['l\u2019avion', 'le bateau', 'la trottinette'], null],
+            ['Que regardaient les hommes préhistoriques la nuit ?', 'les étoiles', ['la télévision', 'leur téléphone', 'des films'], null],
+            ['Où les hommes préhistoriques dessinaient-ils ?', 'sur les murs des grottes', ['sur du papier', 'sur des écrans', 'sur des ardoises'], null],
+            ['Avant la voiture, comment voyageait-on ?', 'à cheval ou en charrette', ['en fusée', 'en métro', 'en avion'], null]
+          ],
+          2: [
+            ['Qu\u2019est-ce qui a remplacé les bougies ?', 'l\u2019électricité', ['les lampes magiques', 'le soleil', 'rien'], null],
+            ['Le premier bateau était fait en...', 'bois', ['métal', 'plastique', 'verre'], null],
+            ['Quelle invention garde les aliments au froid ?', 'le réfrigérateur', ['le four', 'le placard', 'la valise'], null],
+            ['Qu\u2019ont inventé les hommes pour compter et raconter ?', 'l\u2019écriture', ['la danse', 'le sport', 'la sieste'], null],
+            ['Quelle invention permet de parler à quelqu\u2019un très loin ?', 'le téléphone', ['le porte-voix', 'la corde', 'le tambour uniquement'], null],
+            ['Avec quoi prend-on des photos ?', 'un appareil photo', ['un miroir', 'une loupe', 'un pinceau'], null]
+          ],
+          3: [
+            ['Quelle machine calcule très vite ?', 'l\u2019ordinateur', ['le grille-pain', 'la montre à aiguilles', 'le tambour'], null],
+            ['Quel engin est allé sur la Lune ?', 'une fusée', ['un avion', 'un hélicoptère', 'une montgolfière'], null],
+            ['Le train le plus rapide de France s\u2019appelle...', 'le TGV', ['le tracteur', 'le métro', 'la locomotive à vapeur'], null],
+            ['Avant l\u2019écriture, comment transmettait-on les histoires ?', 'en les racontant', ['par SMS', 'par des livres', 'par la radio'], null],
+            ['Quelle invention permet de voir les tout petits objets ?', 'le microscope', ['le télescope', 'les jumelles', 'la loupe de poche uniquement'], null],
+            ['Quelle invention permet de voir les étoiles de près ?', 'le télescope', ['le microscope', 'le périscope', 'la lampe torche'], null]
+          ]
+        }
+      },
+      moyens: {
+        hi1: {
+          1: [
+            ['Où vivaient souvent les hommes préhistoriques ?', 'dans des grottes', ['dans des immeubles', 'dans des châteaux', 'dans des tentes de camping'], null],
+            ['Quelle célèbre grotte française a des peintures préhistoriques ?', 'Lascaux', ['le Louvre', 'Versailles', 'Chambord'], null],
+            ['Avec quelle pierre faisait-on des outils préhistoriques ?', 'le silex', ['le diamant', 'le marbre', 'la craie'], null],
+            ['Les dinosaures ont vécu...', 'bien avant les hommes', ['avec les chevaliers', 'avec les hommes préhistoriques', 'il y a 100 ans'], null],
+            ['Qui a construit les pyramides ?', 'les Égyptiens', ['les Romains', 'les Gaulois', 'les Vikings'], null],
+            ['Comment s\u2019appelaient les rois d\u2019Égypte ?', 'les pharaons', ['les empereurs', 'les sultans', 'les tsars'], null],
+            ['Que faisaient les Égyptiens avec leurs pharaons morts ?', 'des momies', ['des statues de glace', 'rien', 'des tableaux'], null],
+            ['Qui habitait la Gaule avant les Romains ?', 'les Gaulois', ['les Anglais', 'les Chinois', 'les Vikings'], null]
+          ],
+          2: [
+            ['Quel chef gaulois a résisté à Jules César ?', 'Vercingétorix', ['Astérix', 'Clovis', 'Charlemagne'], null],
+            ['Qui a conquis la Gaule ?', 'Jules César', ['Napoléon', 'Alexandre', 'Attila'], null],
+            ['Où les Romains regardaient-ils les combats de gladiateurs ?', 'au Colisée', ['au stade de France', 'au théâtre', 'à la piscine'], null],
+            ['Quelle langue parlaient les Romains ?', 'le latin', ['le grec', 'le français', 'l\u2019anglais'], null],
+            ['Quelle bataille Vercingétorix a-t-il perdue ?', 'Alésia', ['Waterloo', 'Verdun', 'Marignan'], null],
+            ['Quel fleuve traverse l\u2019Égypte ?', 'le Nil', ['la Seine', 'l\u2019Amazone', 'le Rhin'], null]
+          ],
+          3: [
+            ['Comment s\u2019appelle la période avant l\u2019écriture ?', 'la Préhistoire', ['l\u2019Antiquité', 'le Moyen Âge', 'la Renaissance'], null],
+            ['L\u2019invention de l\u2019écriture marque le début de...', 'l\u2019Histoire', ['la Préhistoire', 'la géographie', 'l\u2019art'], null],
+            ['Qui était Cléopâtre ?', 'une reine d\u2019Égypte', ['une déesse grecque', 'une reine de France', 'une impératrice romaine'], null],
+            ['Quels jeux ont été inventés en Grèce antique ?', 'les Jeux olympiques', ['les jeux vidéo', 'le football', 'les échecs'], null],
+            ['Que veut dire « av. J.-C. » ?', 'avant Jésus-Christ', ['avec Jules César', 'avant juillet', 'après Jésus-Christ'], null],
+            ['Quelle grande route commerciale reliait la Chine à l\u2019Europe ?', 'la route de la soie', ['la route 66', 'l\u2019autoroute du soleil', 'la voie lactée'], null]
+          ]
+        },
+        hi2: {
+          1: [
+            ['Qui était couronné empereur en l\u2019an 800 ?', 'Charlemagne', ['Napoléon', 'Jules César', 'Louis XIV'], null],
+            ['Comment s\u2019appelle la grande tour d\u2019un château fort ?', 'le donjon', ['le grenier', 'la flèche', 'le phare'], null],
+            ['Qui protégeait le seigneur en échange de terres ?', 'le chevalier', ['le boulanger', 'le moine copiste', 'le troubadour'], null],
+            ['Qui copiait les livres à la main au Moyen Âge ?', 'les moines', ['les imprimeurs', 'les chevaliers', 'les rois'], null],
+            ['Comment s\u2019appelle le grand bâtiment religieux du Moyen Âge ?', 'la cathédrale', ['le gratte-ciel', 'le temple grec', 'la pyramide'], null],
+            ['Quelle jeune fille a aidé le roi Charles VII ?', 'Jeanne d\u2019Arc', ['Marie Curie', 'Aliénor', 'Marianne'], null],
+            ['Quelle maladie terrible a frappé le Moyen Âge ?', 'la peste', ['la grippe A', 'le rhume', 'la varicelle'], null],
+            ['Quel roi franc s\u2019est fait baptiser vers 496 ?', 'Clovis', ['Charlemagne', 'Dagobert', 'Pépin'], null]
+          ],
+          2: [
+            ['Qui a gagné la bataille d\u2019Hastings en 1066 ?', 'Guillaume le Conquérant', ['Jeanne d\u2019Arc', 'Richard Cœur de Lion', 'Clovis'], null],
+            ['Comment s\u2019appelait la longue guerre France-Angleterre ?', 'la guerre de Cent Ans', ['la guerre des étoiles', 'la guerre de Trente Ans', 'la Grande Guerre'], null],
+            ['Où Jeanne d\u2019Arc a-t-elle délivré la ville assiégée ?', 'Orléans', ['Paris', 'Marseille', 'Rouen'], null],
+            ['Que chantaient les troubadours ?', 'des poèmes et des chansons', ['du rap', 'des opéras', 'des berceuses uniquement'], null],
+            ['Sur quoi écrivait-on au Moyen Âge ?', 'du parchemin', ['du papier d\u2019imprimante', 'des tablettes', 'des ardoises magiques'], null],
+            ['Qui dirigeait les prières dans les monastères ?', 'les moines et l\u2019abbé', ['les chevaliers', 'les seigneurs', 'les paysans'], null]
+          ],
+          3: [
+            ['Qui a inventé l\u2019imprimerie vers 1450 ?', 'Gutenberg', ['Léonard de Vinci', 'Galilée', 'Newton'], null],
+            ['Quel événement de 1492 a changé le monde ?', 'Christophe Colomb arrive en Amérique', ['la Révolution française', 'l\u2019invention du train', 'la chute de Rome'], null],
+            ['La Renaissance est une période de renouveau...', 'des arts et des sciences', ['des guerres uniquement', 'du sport', 'de la cuisine'], null],
+            ['Qui a peint la Joconde ?', 'Léonard de Vinci', ['Picasso', 'Michel-Ange', 'Van Gogh'], null],
+            ['Quel château de la Loire François Ier a-t-il fait construire ?', 'Chambord', ['Versailles', 'Vincennes', 'Carcassonne'], null],
+            ['Quel océan les explorateurs ont-ils traversé vers l\u2019Amérique ?', 'l\u2019Atlantique', ['la Méditerranée', 'le Pacifique', 'la mer Noire'], null]
+          ]
+        },
+        hi3: {
+          1: [
+            ['Quel roi était surnommé le Roi-Soleil ?', 'Louis XIV', ['Louis XVI', 'Henri IV', 'François Ier'], null],
+            ['Quel château Louis XIV a-t-il fait construire ?', 'Versailles', ['Chambord', 'le Louvre', 'Fontainebleau'], null],
+            ['En quelle année a eu lieu la prise de la Bastille ?', '1789', ['1492', '1515', '1914'], null],
+            ['Quelle est la date de la fête nationale française ?', 'le 14 juillet', ['le 25 décembre', 'le 1er janvier', 'le 11 novembre'], null],
+            ['Quelle était la devise de la Révolution ?', 'Liberté, Égalité, Fraternité', ['Travail, Famille, Patrie', 'Un pour tous', 'Vive le roi'], null],
+            ['Qui est devenu empereur des Français en 1804 ?', 'Napoléon Bonaparte', ['Louis XIV', 'Charlemagne', 'De Gaulle'], null],
+            ['Quel roi a été guillotiné pendant la Révolution ?', 'Louis XVI', ['Louis XIV', 'Henri IV', 'Charles X'], null],
+            ['Comment s\u2019appelait la reine mariée à Louis XVI ?', 'Marie-Antoinette', ['Joséphine', 'Catherine', 'Aliénor'], null]
+          ],
+          2: [
+            ['Quelle bataille Napoléon a-t-il perdue en 1815 ?', 'Waterloo', ['Austerlitz', 'Alésia', 'Verdun'], null],
+            ['Quelle victoire célèbre Napoléon a-t-il remportée en 1805 ?', 'Austerlitz', ['Waterloo', 'Trafalgar', 'Marignan'], null],
+            ['Que déclarent les révolutionnaires en août 1789 ?', 'les droits de l\u2019homme et du citoyen', ['la guerre à l\u2019Espagne', 'les congés payés', 'l\u2019école obligatoire'], null],
+            ['Sous quel régime la France n\u2019a plus de roi ?', 'la République', ['l\u2019Empire', 'la monarchie', 'le royaume'], null],
+            ['Qui a rendu l\u2019école gratuite et obligatoire vers 1881 ?', 'Jules Ferry', ['Napoléon', 'Louis XIV', 'Pasteur'], null],
+            ['Quel savant français a inventé un vaccin contre la rage ?', 'Louis Pasteur', ['Marie Curie', 'Newton', 'Einstein'], null]
+          ],
+          3: [
+            ['Symbole de la République, comment s\u2019appelle-t-elle ?', 'Marianne', ['Jeanne', 'Louise', 'Victoire'], null],
+            ['La Marseillaise est...', 'l\u2019hymne national français', ['une danse', 'un gâteau', 'un bateau'], null],
+            ['Avant la Révolution, la société était divisée en...', 'trois ordres', ['deux clans', 'dix castes', 'régions'], null],
+            ['Quel moyen de transport à vapeur se développe au XIXe siècle ?', 'le train', ['l\u2019avion', 'la voiture électrique', 'le métro'], null],
+            ['Que s\u2019est-il passé le 4 août 1789 ?', 'l\u2019abolition des privilèges', ['la prise de la Bastille', 'le sacre de Napoléon', 'la fin de la guerre'], null],
+            ['Sur quelle île Napoléon a-t-il fini sa vie ?', 'Sainte-Hélène', ['la Corse', 'l\u2019île d\u2019Elbe', 'la Sicile'], null]
+          ]
+        }
+      },
+      grands: {
+        hi1: {
+          1: [
+            ['Quelle cité grecque a inventé la démocratie ?', 'Athènes', ['Sparte', 'Rome', 'Troie'], null],
+            ['Quel temple célèbre domine Athènes ?', 'le Parthénon', ['le Colisée', 'le Panthéon de Paris', 'les pyramides'], null],
+            ['Qui a franchi le Rubicon en 49 av. J.-C. ?', 'Jules César', ['Alexandre le Grand', 'Auguste', 'Hannibal'], null],
+            ['Quel général a traversé les Alpes avec des éléphants ?', 'Hannibal', ['César', 'Alexandre', 'Vercingétorix'], null],
+            ['Quelle reine d\u2019Égypte s\u2019est alliée à César ?', 'Cléopâtre', ['Néfertiti', 'Hatchepsout', 'Théodora'], null],
+            ['Quelle langue est à l\u2019origine du français ?', 'le latin', ['le grec', 'le gaulois', 'l\u2019arabe'], null],
+            ['Quel volcan a détruit Pompéi en 79 ?', 'le Vésuve', ['l\u2019Etna', 'le Stromboli', 'le Vulcano'], null],
+            ['Qui fut le premier empereur romain ?', 'Auguste', ['César', 'Néron', 'Trajan'], null]
+          ],
+          2: [
+            ['Quel conquérant a créé un empire jusqu\u2019en Inde ?', 'Alexandre le Grand', ['César', 'Attila', 'Gengis Khan'], null],
+            ['Quels récits sont attribués à Homère ?', 'l\u2019Iliade et l\u2019Odyssée', ['l\u2019Énéide', 'les Métamorphoses', 'la République'], null],
+            ['Quel philosophe grec fut le maître d\u2019Alexandre ?', 'Aristote', ['Socrate', 'Platon', 'Pythagore'], null],
+            ['En quelle année tombe l\u2019Empire romain d\u2019Occident ?', '476', ['1453', '800', '1492'], null],
+            ['Quelle mer était appelée « Mare Nostrum » ?', 'la Méditerranée', ['la mer Noire', 'l\u2019Atlantique', 'la mer Rouge'], null],
+            ['Que distribuaient les empereurs pour calmer le peuple ?', 'du pain et des jeux', ['de l\u2019or et des terres', 'des livres', 'des vacances'], null]
+          ],
+          3: [
+            ['Quelle bibliothèque antique était la plus célèbre ?', 'celle d\u2019Alexandrie', ['celle de Rome', 'celle d\u2019Athènes', 'celle de Babylone'], null],
+            ['D\u2019où vient le mot « marathon » ?', 'd\u2019une course d\u2019un messager grec', ['d\u2019un empereur romain', 'd\u2019un dieu égyptien', 'd\u2019une ville perse'], null],
+            ['Quel mur les Romains ont-ils construit en Grande-Bretagne ?', 'le mur d\u2019Hadrien', ['le mur de Berlin', 'la muraille de Chine', 'le limes du Rhin'], null],
+            ['Les hiéroglyphes ont été déchiffrés par...', 'Champollion', ['Newton', 'Darwin', 'Hérodote'], null],
+            ['Quelle bataille navale les Grecs gagnent-ils en 480 av. J.-C. ?', 'Salamine', ['Actium', 'Trafalgar', 'Lépante'], null],
+            ['Quel édit de 313 autorise le christianisme dans l\u2019Empire ?', 'l\u2019édit de Milan', ['l\u2019édit de Nantes', 'la Pax Romana', 'l\u2019édit de Rome'], null]
+          ]
+        },
+        hi2: {
+          1: [
+            ['En quelle année Colomb atteint-il l\u2019Amérique ?', '1492', ['1515', '1453', '1066'], null],
+            ['Qui a inventé l\u2019imprimerie à caractères mobiles en Europe ?', 'Gutenberg', ['Léonard de Vinci', 'Copernic', 'Érasme'], null],
+            ['Quel génie de la Renaissance a peint la Joconde ?', 'Léonard de Vinci', ['Michel-Ange', 'Raphaël', 'Botticelli'], null],
+            ['Quelle victoire française de 1515 est restée célèbre ?', 'Marignan', ['Waterloo', 'Bouvines', 'Azincourt'], null],
+            ['Quel roi de France a signé l\u2019édit de Nantes en 1598 ?', 'Henri IV', ['Louis XIV', 'François Ier', 'Charles IX'], null],
+            ['Quelle ville tombe aux mains des Ottomans en 1453 ?', 'Constantinople', ['Rome', 'Vienne', 'Jérusalem'], null],
+            ['Qui a démontré que la Terre tourne autour du Soleil ?', 'Copernic puis Galilée', ['Ptolémée', 'Aristote', 'Newton seulement'], null],
+            ['Quelle expédition a réalisé le premier tour du monde ?', 'celle de Magellan', ['celle de Colomb', 'celle de Vasco de Gama', 'celle de Marco Polo'], null]
+          ],
+          2: [
+            ['Quel événement sanglant a lieu le 24 août 1572 ?', 'la Saint-Barthélemy', ['la prise de la Bastille', 'la Fronde', 'la peste noire'], null],
+            ['Quel empire Cortés a-t-il conquis ?', 'l\u2019Empire aztèque', ['l\u2019Empire inca', 'l\u2019Empire maya', 'l\u2019Empire perse'], null],
+            ['Michel-Ange a peint le plafond de...', 'la chapelle Sixtine', ['Notre-Dame', 'Saint-Marc', 'Westminster'], null],
+            ['Guillaume le Conquérant gagne quelle bataille en 1066 ?', 'Hastings', ['Bouvines', 'Azincourt', 'Crécy'], null],
+            ['Quelle tapisserie raconte la conquête de l\u2019Angleterre ?', 'la tapisserie de Bayeux', ['la tenture d\u2019Angers', 'les Gobelins', 'la Dame à la licorne'], null],
+            ['Quelle dynastie règne en France à partir d\u2019Henri IV ?', 'les Bourbons', ['les Valois', 'les Capétiens directs', 'les Carolingiens'], null]
+          ],
+          3: [
+            ['Que cherchaient les alchimistes ?', 'la pierre philosophale', ['le Graal', 'l\u2019Atlantide', 'l\u2019Eldorado uniquement'], null],
+            ['Quel traité de 1494 partage le Nouveau Monde ?', 'Tordesillas', ['Westphalie', 'Verdun', 'Utrecht'], null],
+            ['Quel savant a été jugé pour l\u2019héliocentrisme ?', 'Galilée', ['Copernic', 'Kepler', 'Newton'], null],
+            ['Léonard de Vinci a fini sa vie en France, invité par...', 'François Ier', ['Louis XIV', 'Henri IV', 'Charles Quint'], null],
+            ['Quel humaniste a écrit « l\u2019Éloge de la folie » ?', 'Érasme', ['Montaigne', 'Rabelais', 'Voltaire'], null],
+            ['La guerre de Cent Ans opposait la France à...', 'l\u2019Angleterre', ['l\u2019Espagne', 'l\u2019Italie', 'le Saint-Empire'], null]
+          ]
+        },
+        hi3: {
+          1: [
+            ['Quand commence la Première Guerre mondiale ?', '1914', ['1918', '1939', '1870'], null],
+            ['Quand se termine la Seconde Guerre mondiale ?', '1945', ['1944', '1939', '1918'], null],
+            ['Qui lance l\u2019appel du 18 juin 1940 ?', 'le général de Gaulle', ['Pétain', 'Churchill', 'Jean Moulin'], null],
+            ['Quelle bataille de 1916 symbolise la Grande Guerre ?', 'Verdun', ['Waterloo', 'la Marne 1944', 'Austerlitz'], null],
+            ['Quand les femmes obtiennent-elles le droit de vote en France ?', '1944', ['1918', '1936', '1968'], null],
+            ['Quel mur est tombé en 1989 ?', 'le mur de Berlin', ['le mur d\u2019Hadrien', 'la ligne Maginot', 'la muraille de Chine'], null],
+            ['Qui a marché sur la Lune en 1969 ?', 'Neil Armstrong', ['Gagarine', 'Thomas Pesquet', 'Youri'], null],
+            ['Quel débarquement a eu lieu le 6 juin 1944 ?', 'celui de Normandie', ['celui de Provence', 'celui de Sicile', 'celui de Dunkerque'], null]
+          ],
+          2: [
+            ['Quel traité met fin à la Première Guerre mondiale ?', 'le traité de Versailles', ['le traité de Rome', 'les accords d\u2019Évian', 'Maastricht'], null],
+            ['Quel régime dirige la France de 1940 à 1944 ?', 'le régime de Vichy', ['la IVe République', 'le Second Empire', 'la Commune'], null],
+            ['Qui unifie la Résistance intérieure française ?', 'Jean Moulin', ['de Gaulle seul', 'Leclerc', 'Jaurès'], null],
+            ['Quels congés sont créés par le Front populaire en 1936 ?', 'les congés payés', ['les RTT', 'les vacances scolaires', 'le repos dominical'], null],
+            ['Quelle organisation mondiale est créée en 1945 ?', 'l\u2019ONU', ['l\u2019OTAN', 'la SDN', 'l\u2019UE'], null],
+            ['La guerre froide oppose deux blocs :', 'USA contre URSS', ['France contre Angleterre', 'Chine contre Japon', 'Nord contre Sud'], null]
+          ],
+          3: [
+            ['Quel traité fonde la CEE en 1957 ?', 'le traité de Rome', ['Maastricht', 'Versailles', 'Schengen'], null],
+            ['Quand la Ve République est-elle fondée ?', '1958', ['1946', '1968', '1981'], null],
+            ['Quels accords mettent fin à la guerre d\u2019Algérie ?', 'les accords d\u2019Évian (1962)', ['les accords de Munich', 'Camp David', 'Genève 54'], null],
+            ['Quel président abolit la peine de mort en France ?', 'François Mitterrand', ['de Gaulle', 'Chirac', 'Giscard'], null],
+            ['Que se passe-t-il en mai 1968 en France ?', 'de grandes manifestations étudiantes et ouvrières', ['une guerre', 'un référendum', 'une épidémie'], null],
+            ['Quelle monnaie européenne arrive en 2002 ?', 'l\u2019euro', ['l\u2019écu', 'le franc nouveau', 'le mark'], null]
+          ]
+        }
+      }
+    }
+  };
+
+  // ═════════════ SCIENCES ═════════════
+  var SCIENCES = {
+    label: 'Sciences', ico: '🔬',
+    comps: {
+      petits: [
+        { key: 'sc1', nom: 'Les animaux', ico: '🦁' },
+        { key: 'sc2', nom: 'Mon corps', ico: '🫀' },
+        { key: 'sc3', nom: 'La nature', ico: '🌱' }
+      ],
+      moyens: [
+        { key: 'sc1', nom: 'Le vivant', ico: '🧬' },
+        { key: 'sc2', nom: 'Terre & espace', ico: '🌍' },
+        { key: 'sc3', nom: 'La matière', ico: '🧪' }
+      ],
+      grands: [
+        { key: 'sc1', nom: 'Physique-chimie', ico: '⚗️' },
+        { key: 'sc2', nom: 'Sciences de la vie', ico: '🧬' },
+        { key: 'sc3', nom: 'Terre & univers', ico: '🔭' }
+      ]
+    },
+    pools: {
+      petits: {
+        sc1: {
+          1: [
+            ['Quel animal nous donne du lait ?', 'la vache', ['le chat', 'la poule', 'le poisson'], null],
+            ['Quel animal pond des œufs qu\u2019on mange ?', 'la poule', ['la vache', 'le chien', 'le mouton'], null],
+            ['Quel insecte fabrique le miel ?', 'l\u2019abeille', ['la mouche', 'la fourmi', 'le papillon'], null],
+            ['Comment se déplace le poisson ?', 'il nage', ['il vole', 'il court', 'il saute'], null],
+            ['Que fait l\u2019oiseau avec ses ailes ?', 'il vole', ['il nage', 'il creuse', 'il grimpe'], null],
+            ['Quel cri fait le chien ?', 'il aboie', ['il miaule', 'il meugle', 'il hennit'], null],
+            ['Quel animal miaule ?', 'le chat', ['le chien', 'le canard', 'le cochon'], null],
+            ['Combien de pattes a une araignée ?', '8', ['6', '4', '10'], null],
+            ['Quel animal porte sa maison sur son dos ?', 'l\u2019escargot', ['le lapin', 'l\u2019oiseau', 'la souris'], null],
+            ['Où vivent les poissons ?', 'dans l\u2019eau', ['dans les arbres', 'sous la terre', 'dans le ciel'], null]
+          ],
+          2: [
+            ['Combien de pattes a un insecte ?', '6', ['8', '4', '2'], null],
+            ['Que devient la chenille ?', 'un papillon', ['une abeille', 'un ver de terre', 'une libellule'], null],
+            ['Quel grand animal a une trompe ?', 'l\u2019éléphant', ['la girafe', 'le rhinocéros', 'l\u2019hippopotame'], null],
+            ['Quel animal a un très long cou ?', 'la girafe', ['le zèbre', 'le lion', 'l\u2019ours'], null],
+            ['Comment s\u2019appelle le bébé de la vache ?', 'le veau', ['le poulain', 'l\u2019agneau', 'le chevreau'], null],
+            ['Comment s\u2019appelle le bébé de la poule ?', 'le poussin', ['le caneton', 'l\u2019oisillon', 'le chaton'], null]
+          ],
+          3: [
+            ['Quel animal dort tout l\u2019hiver ?', 'l\u2019ours (il hiberne)', ['le chien', 'la vache', 'le pigeon'], null],
+            ['Les animaux qui mangent de la viande sont...', 'des carnivores', ['des herbivores', 'des végétariens', 'des insectivores seulement'], null],
+            ['Les animaux qui mangent de l\u2019herbe sont...', 'des herbivores', ['des carnivores', 'des omnivores', 'des piscivores'], null],
+            ['Quel oiseau ne vole pas mais court très vite ?', 'l\u2019autruche', ['l\u2019aigle', 'le moineau', 'la mouette'], null],
+            ['Quel animal change de couleur pour se cacher ?', 'le caméléon', ['le lion', 'la vache', 'le mouton'], null],
+            ['Quel animal marin a 8 bras ?', 'la pieuvre', ['le requin', 'le dauphin', 'la baleine'], null]
+          ]
+        },
+        sc2: {
+          1: [
+            ['Combien as-tu de doigts sur une main ?', '5', ['4', '6', '10'], null],
+            ['Combien as-tu d\u2019yeux ?', '2', ['1', '3', '4'], null],
+            ['Avec quoi sens-tu les odeurs ?', 'le nez', ['les oreilles', 'les yeux', 'les mains'], null],
+            ['Avec quoi entends-tu ?', 'les oreilles', ['le nez', 'la bouche', 'les pieds'], null],
+            ['Qu\u2019est-ce qui bat dans ta poitrine ?', 'le cœur', ['le ventre', 'les poumons', 'le cerveau'], null],
+            ['À quoi servent les dents ?', 'à mâcher', ['à sentir', 'à voir', 'à entendre'], null],
+            ['Combien as-tu de doigts sur les deux mains ?', '10', ['5', '8', '20'], null],
+            ['Avec quoi vois-tu ?', 'les yeux', ['les oreilles', 'le nez', 'les cheveux'], null]
+          ],
+          2: [
+            ['Que faut-il faire avant de manger ?', 'se laver les mains', ['courir', 'dormir', 'crier'], null],
+            ['Combien de fois par jour faut-il se brosser les dents ?', 'au moins 2 fois', ['jamais', '1 fois par semaine', '1 fois par mois'], null],
+            ['Avec quels organes respire-t-on ?', 'les poumons', ['le cœur', 'l\u2019estomac', 'les reins'], null],
+            ['Qu\u2019est-ce qui protège notre tête ?', 'le crâne', ['le genou', 'la peau seulement', 'les cheveux seulement'], null],
+            ['Pour être en forme, il faut...', 'bien dormir', ['ne jamais dormir', 'manger que des bonbons', 'regarder des écrans toute la nuit'], null],
+            ['Que respire-t-on ?', 'de l\u2019air', ['de l\u2019eau', 'de la terre', 'du lait'], null]
+          ],
+          3: [
+            ['Qu\u2019est-ce qui commande tout le corps ?', 'le cerveau', ['le cœur', 'l\u2019estomac', 'les muscles'], null],
+            ['Que transportent les veines et les artères ?', 'le sang', ['l\u2019air', 'l\u2019eau', 'la nourriture'], null],
+            ['Qu\u2019est-ce qui tient notre corps debout ?', 'le squelette', ['la peau', 'les cheveux', 'les ongles'], null],
+            ['Où va la nourriture après la bouche ?', 'dans l\u2019estomac', ['dans les poumons', 'dans le cœur', 'dans la tête'], null],
+            ['Combien de sens avons-nous ?', '5', ['3', '4', '7'], null],
+            ['Quel sens utilise la langue ?', 'le goût', ['l\u2019ouïe', 'la vue', 'l\u2019odorat'], null]
+          ]
+        },
+        sc3: {
+          1: [
+            ['De quoi a besoin une plante pour pousser ?', 'd\u2019eau et de soleil', ['de bonbons', 'de nuit uniquement', 'de vent seulement'], null],
+            ['D\u2019où vient la pluie ?', 'des nuages', ['du sol', 'de la mer directement', 'des arbres'], null],
+            ['Que voit-on parfois après la pluie ?', 'un arc-en-ciel', ['la neige', 'des étoiles filantes', 'la lune verte'], null],
+            ['En hiver, l\u2019eau très froide devient...', 'de la glace', ['de la vapeur', 'du sable', 'du sel'], null],
+            ['Que devient une graine plantée ?', 'une plante', ['un caillou', 'un insecte', 'de l\u2019eau'], null],
+            ['Quelle est la couleur de la plupart des feuilles ?', 'verte', ['bleue', 'rose', 'noire'], null],
+            ['Qui brille dans le ciel la journée ?', 'le soleil', ['la lune', 'les étoiles', 'les lampadaires'], null],
+            ['Comment s\u2019appelle la maison des abeilles ?', 'la ruche', ['le nid', 'le terrier', 'la niche'], null]
+          ],
+          2: [
+            ['Quelle saison suit l\u2019hiver ?', 'le printemps', ['l\u2019été', 'l\u2019automne', 'Noël'], null],
+            ['Où poussent les racines d\u2019une plante ?', 'sous la terre', ['dans l\u2019air', 'sur les feuilles', 'dans l\u2019eau de mer'], null],
+            ['Que boivent les plantes par leurs racines ?', 'de l\u2019eau', ['du lait', 'du soda', 'de l\u2019huile'], null],
+            ['Comment s\u2019appelle l\u2019eau qui tombe en flocons ?', 'la neige', ['la grêle', 'la pluie', 'la rosée'], null],
+            ['Le vent, c\u2019est...', 'de l\u2019air qui bouge', ['de l\u2019eau invisible', 'de la fumée', 'du son'], null],
+            ['Qu\u2019y a-t-il au centre d\u2019une fleur qui attire les abeilles ?', 'le pollen et le nectar', ['du chocolat', 'de l\u2019eau salée', 'des graines de café'], null]
+          ],
+          3: [
+            ['Que trie-t-on pour protéger la planète ?', 'les déchets', ['les jouets', 'les habits', 'les livres'], null],
+            ['Quelle énergie vient du soleil ?', 'l\u2019énergie solaire', ['l\u2019énergie du charbon', 'l\u2019essence', 'le gaz'], null],
+            ['Pourquoi ne faut-il pas gaspiller l\u2019eau ?', 'parce qu\u2019elle est précieuse', ['parce qu\u2019elle est sale', 'parce qu\u2019elle coûte 1 euro', 'ce n\u2019est pas grave'], null],
+            ['La journée, il fait clair grâce...', 'au soleil', ['à la lune', 'aux nuages', 'aux étoiles'], null],
+            ['Quel arbre garde ses aiguilles toute l\u2019année ?', 'le sapin', ['le chêne', 'le platane', 'le pommier'], null],
+            ['Quel fruit pousse sur le pommier ?', 'la pomme', ['la poire', 'la cerise', 'l\u2019orange'], null]
+          ]
+        }
+      },
+      moyens: {
+        sc1: {
+          1: [
+            ['Comment les plantes fabriquent-elles leur nourriture ?', 'grâce à la lumière (photosynthèse)', ['en mangeant des insectes', 'en buvant du lait', 'en dormant'], null],
+            ['Quels animaux allaitent leurs petits ?', 'les mammifères', ['les oiseaux', 'les poissons', 'les insectes'], null],
+            ['Combien de pattes ont les insectes ?', '6', ['8', '4', '10'], null],
+            ['Combien d\u2019os environ compte le squelette humain ?', '206', ['52', '500', '1000'], null],
+            ['Le cœur est un...', 'muscle', ['os', 'nerf', 'organe qui pense'], null],
+            ['Avec quoi respirons-nous ?', 'les poumons', ['le foie', 'l\u2019estomac', 'les reins'], null],
+            ['Un animal qui mange plantes ET viande est...', 'omnivore', ['herbivore', 'carnivore', 'frugivore'], null],
+            ['Herbe → souris → hibou : qui est en haut de la chaîne ?', 'le hibou', ['la souris', 'l\u2019herbe', 'personne'], null]
+          ],
+          2: [
+            ['Où commence la digestion ?', 'dans la bouche', ['dans l\u2019estomac', 'dans l\u2019intestin', 'dans le foie'], null],
+            ['Quel organe filtre le sang ?', 'les reins', ['les poumons', 'le cerveau', 'la peau'], null],
+            ['Les araignées sont-elles des insectes ?', 'non, ce sont des arachnides', ['oui', 'ce sont des reptiles', 'ce sont des crustacés'], null],
+            ['Comment respirent les poissons ?', 'avec des branchies', ['avec des poumons', 'par la peau seulement', 'ils ne respirent pas'], null],
+            ['Quel gaz rejettent les plantes le jour ?', 'de l\u2019oxygène', ['du CO2 uniquement', 'de l\u2019azote', 'de l\u2019hélium'], null],
+            ['La grenouille est un...', 'amphibien', ['reptile', 'mammifère', 'poisson'], null]
+          ],
+          3: [
+            ['La transformation du têtard en grenouille s\u2019appelle...', 'la métamorphose', ['la mutation', 'l\u2019évolution', 'la digestion'], null],
+            ['Quel scientifique a étudié l\u2019évolution des espèces ?', 'Darwin', ['Newton', 'Pasteur', 'Einstein'], null],
+            ['De quoi sont faits tous les êtres vivants ?', 'de cellules', ['de briques', 'd\u2019atomes uniquement', 'd\u2019eau uniquement'], null],
+            ['Quel est le plus grand animal du monde ?', 'la baleine bleue', ['l\u2019éléphant', 'le requin blanc', 'la girafe'], null],
+            ['Les champignons sont-ils des plantes ?', 'non, c\u2019est un règne à part', ['oui', 'ce sont des animaux', 'ce sont des bactéries'], null],
+            ['Que produit la ruche grâce au nectar ?', 'le miel', ['la cire uniquement', 'le pollen', 'le sucre'], null]
+          ]
+        },
+        sc2: {
+          1: [
+            ['Autour de quoi tourne la Terre ?', 'autour du Soleil', ['autour de la Lune', 'autour de Mars', 'elle ne tourne pas'], null],
+            ['Combien de temps met la Terre pour tourner autour du Soleil ?', '1 an', ['1 jour', '1 mois', '1 semaine'], null],
+            ['Qu\u2019est-ce qui cause le jour et la nuit ?', 'la rotation de la Terre sur elle-même', ['le Soleil qui s\u2019éteint', 'la Lune', 'les nuages'], null],
+            ['La Lune est...', 'le satellite de la Terre', ['une étoile', 'une planète', 'un soleil'], null],
+            ['Combien y a-t-il de planètes dans le système solaire ?', '8', ['9', '7', '12'], null],
+            ['Quelle est la planète la plus proche du Soleil ?', 'Mercure', ['Vénus', 'la Terre', 'Mars'], null],
+            ['Quelle planète est surnommée la planète rouge ?', 'Mars', ['Jupiter', 'Vénus', 'Saturne'], null],
+            ['Que crache un volcan en éruption ?', 'de la lave', ['de l\u2019eau', 'de la neige', 'du sable'], null]
+          ],
+          2: [
+            ['Comment s\u2019appelle le tremblement du sol ?', 'un séisme', ['une tempête', 'un cyclone', 'une éruption'], null],
+            ['Quelle est la plus grande planète du système solaire ?', 'Jupiter', ['Saturne', 'la Terre', 'Neptune'], null],
+            ['Quelle planète a de grands anneaux visibles ?', 'Saturne', ['Mars', 'Vénus', 'Mercure'], null],
+            ['Quelle part de la Terre est couverte d\u2019eau ?', 'environ 70 %', ['environ 30 %', 'environ 10 %', '100 %'], null],
+            ['Comment s\u2019appelle notre galaxie ?', 'la Voie lactée', ['Andromède', 'le Système solaire', 'Orion'], null],
+            ['Le premier homme dans l\u2019espace était...', 'Youri Gagarine', ['Neil Armstrong', 'Thomas Pesquet', 'Buzz Aldrin'], null]
+          ],
+          3: [
+            ['Pourquoi y a-t-il des saisons ?', 'car l\u2019axe de la Terre est incliné', ['car le Soleil s\u2019éloigne beaucoup', 'à cause de la Lune', 'à cause du vent'], null],
+            ['Qu\u2019est-ce qu\u2019une année-lumière ?', 'une distance', ['une durée', 'une vitesse', 'une planète'], null],
+            ['Que provoque l\u2019attraction de la Lune sur les océans ?', 'les marées', ['les vagues du vent', 'les tsunamis', 'les courants chauds'], null],
+            ['Quelle couche de la Terre est au centre ?', 'le noyau', ['la croûte', 'le manteau', 'l\u2019atmosphère'], null],
+            ['Quelle couche gazeuse protège la Terre du Soleil ?', 'la couche d\u2019ozone', ['la couche d\u2019oxygène', 'les nuages', 'le champ de blé'], null],
+            ['Comment s\u2019appelle un caillou de l\u2019espace qui brûle dans le ciel ?', 'une étoile filante (météore)', ['une comète gelée', 'une planète', 'un satellite'], null]
+          ]
+        },
+        sc3: {
+          1: [
+            ['La glace, c\u2019est de l\u2019eau à l\u2019état...', 'solide', ['liquide', 'gazeux', 'invisible'], null],
+            ['La vapeur d\u2019eau est à l\u2019état...', 'gazeux', ['solide', 'liquide', 'pâteux'], null],
+            ['À quelle température l\u2019eau gèle-t-elle ?', '0 °C', ['100 °C', '10 °C', '-100 °C'], null],
+            ['À quelle température l\u2019eau bout-elle ?', '100 °C', ['0 °C', '50 °C', '1000 °C'], null],
+            ['Qu\u2019attire un aimant ?', 'le fer', ['le bois', 'le plastique', 'le verre'], null],
+            ['L\u2019air, on ne le voit pas, mais...', 'il existe et il pèse', ['il n\u2019existe pas', 'il est liquide', 'il est solide'], null],
+            ['Quel instrument mesure la température ?', 'le thermomètre', ['la règle', 'la balance', 'le chronomètre'], null],
+            ['Quel instrument mesure la masse ?', 'la balance', ['le mètre', 'le thermomètre', 'la loupe'], null]
+          ],
+          2: [
+            ['Quand l\u2019eau liquide devient gaz, elle...', 's\u2019évapore', ['fond', 'gèle', 'se solidifie'], null],
+            ['Quand la glace devient liquide, elle...', 'fond', ['s\u2019évapore', 'bout', 'se condense'], null],
+            ['Le sel disparaît dans l\u2019eau : il...', 'se dissout', ['fond', 's\u2019évapore', 'brûle'], null],
+            ['Quel matériau laisse passer la lumière ?', 'le verre (transparent)', ['le bois', 'le métal', 'le carton'], null],
+            ['L\u2019huile et l\u2019eau...', 'ne se mélangent pas', ['se mélangent parfaitement', 'explosent', 'gèlent ensemble'], null],
+            ['Quel gaz nous fait respirer ?', 'l\u2019oxygène', ['le CO2', 'l\u2019azote', 'l\u2019hélium'], null]
+          ],
+          3: [
+            ['De quoi est composée l\u2019eau (H2O) ?', 'd\u2019hydrogène et d\u2019oxygène', ['d\u2019hélium et d\u2019or', 'd\u2019azote et de carbone', 'de sel et de sucre'], null],
+            ['Qu\u2019est-ce qui conduit l\u2019électricité ?', 'les métaux', ['le bois', 'le plastique', 'le verre'], null],
+            ['Un matériau qui ne conduit pas l\u2019électricité est un...', 'isolant', ['conducteur', 'aimant', 'métal'], null],
+            ['La matière est faite de minuscules particules appelées...', 'atomes', ['pixels', 'grains de sable', 'cellules'], null],
+            ['Que devient la vapeur sur une vitre froide ?', 'des gouttes (condensation)', ['de la neige', 'du sel', 'rien'], null],
+            ['L\u2019énergie du vent s\u2019appelle l\u2019énergie...', 'éolienne', ['solaire', 'nucléaire', 'fossile'], null]
+          ]
+        }
+      },
+      grands: {
+        sc1: {
+          1: [
+            ['Quelle est la formule chimique de l\u2019eau ?', 'H2O', ['CO2', 'O2', 'H2'], null],
+            ['Quel est le symbole chimique de l\u2019oxygène ?', 'O', ['Ox', 'O2', 'Og'], null],
+            ['Quelle est la vitesse de la lumière ?', 'environ 300 000 km/s', ['300 km/s', '3 000 km/s', '300 000 km/h'], null],
+            ['Autour de quoi tournent les électrons ?', 'le noyau de l\u2019atome', ['le proton seul', 'la molécule', 'rien'], null],
+            ['Quelle particule a une charge négative ?', 'l\u2019électron', ['le proton', 'le neutron', 'le photon'], null],
+            ['Le son se propage-t-il dans le vide ?', 'non', ['oui', 'seulement la nuit', 'seulement les graves'], null],
+            ['Quelle est l\u2019unité de la force ?', 'le newton', ['le joule', 'le watt', 'le volt'], null],
+            ['Quel gaz est le plus présent dans l\u2019air ?', 'l\u2019azote (78 %)', ['l\u2019oxygène', 'le CO2', 'l\u2019hélium'], null]
+          ],
+          2: [
+            ['Quelle est l\u2019unité de l\u2019énergie ?', 'le joule', ['le newton', 'le volt', 'l\u2019ampère'], null],
+            ['U = R \u00d7 I est la loi de...', 'Ohm', ['Newton', 'Joule', 'Ampère'], null],
+            ['Quel est le symbole du fer ?', 'Fe', ['Fr', 'F', 'Ir'], null],
+            ['Le pH 7 correspond à une solution...', 'neutre', ['acide', 'basique', 'salée'], null],
+            ['La combustion a besoin de combustible, de chaleur et...', 'd\u2019oxygène (comburant)', ['d\u2019azote', 'd\u2019eau', 'de CO2'], null],
+            ['Quelle énergie possède un objet en hauteur ?', 'l\u2019énergie potentielle', ['l\u2019énergie cinétique', 'thermique', 'chimique'], null]
+          ],
+          3: [
+            ['Qui a formulé la loi de la gravitation universelle ?', 'Newton', ['Einstein', 'Galilée', 'Kepler'], null],
+            ['E = mc² est une formule de...', 'Einstein', ['Newton', 'Curie', 'Bohr'], null],
+            ['Qui a découvert le radium ?', 'Marie Curie', ['Pasteur', 'Lavoisier', 'Becquerel seul'], null],
+            ['Combien d\u2019éléments environ compte le tableau périodique ?', '118', ['50', '92', '200'], null],
+            ['La masse se mesure en kg, le poids en...', 'newtons', ['kilogrammes', 'litres', 'pascals'], null],
+            ['Quelle couleur visible a la plus grande longueur d\u2019onde ?', 'le rouge', ['le bleu', 'le violet', 'le vert'], null]
+          ]
+        },
+        sc2: {
+          1: [
+            ['Où se trouve l\u2019information génétique ?', 'dans l\u2019ADN', ['dans le sang uniquement', 'dans les muscles', 'dans la peau'], null],
+            ['De quoi sont constitués tous les êtres vivants ?', 'de cellules', ['d\u2019organes uniquement', 'd\u2019eau pure', 'd\u2019atomes de fer'], null],
+            ['Quel organe pompe le sang ?', 'le cœur', ['le foie', 'les poumons', 'les reins'], null],
+            ['Où a lieu l\u2019échange oxygène/CO2 dans le corps ?', 'dans les poumons (alvéoles)', ['dans l\u2019estomac', 'dans le cerveau', 'dans les os'], null],
+            ['Quel est le rôle des globules rouges ?', 'transporter l\u2019oxygène', ['digérer', 'combattre les microbes seulement', 'produire des os'], null],
+            ['Les microbes qui rendent malades peuvent être...', 'des virus ou des bactéries', ['des cellules humaines', 'des vitamines', 'des globules'], null],
+            ['Que produisent les plantes par photosynthèse ?', 'du glucose (et de l\u2019O2)', ['du CO2', 'de l\u2019azote', 'du sel'], null],
+            ['Combien de cavités a le cœur humain ?', '4', ['2', '3', '6'], null]
+          ],
+          2: [
+            ['Qui a mis au point le vaccin contre la rage ?', 'Pasteur', ['Curie', 'Darwin', 'Fleming'], null],
+            ['Qui a découvert la pénicilline ?', 'Fleming', ['Pasteur', 'Koch', 'Curie'], null],
+            ['Quels chromosomes déterminent le sexe ?', 'X et Y', ['A et B', '1 et 2', 'M et F'], null],
+            ['Que produit le pancréas pour réguler le sucre ?', 'l\u2019insuline', ['la bile', 'l\u2019adrénaline', 'la salive'], null],
+            ['Le système nerveux central = le cerveau et...', 'la moelle épinière', ['les nerfs des mains', 'le cœur', 'les muscles'], null],
+            ['La théorie de l\u2019évolution est due à...', 'Darwin', ['Lamarck seul', 'Mendel', 'Pasteur'], null]
+          ],
+          3: [
+            ['Qui transmet l\u2019influx nerveux ?', 'les neurones', ['les globules', 'les os', 'les artères'], null],
+            ['Qui a étudié l\u2019hérédité avec des petits pois ?', 'Mendel', ['Darwin', 'Curie', 'Watson'], null],
+            ['L\u2019ADN a une structure en...', 'double hélice', ['triangle', 'spirale simple', 'cube'], null],
+            ['La division d\u2019une cellule en deux s\u2019appelle...', 'la mitose', ['la fusion', 'l\u2019osmose', 'la synthèse'], null],
+            ['Quel groupe sanguin est donneur universel ?', 'O négatif', ['AB positif', 'A positif', 'B négatif'], null],
+            ['Quelle molécule transporte l\u2019oxygène dans le sang ?', 'l\u2019hémoglobine', ['l\u2019insuline', 'le glucose', 'la mélanine'], null]
+          ]
+        },
+        sc3: {
+          1: [
+            ['Combien de planètes compte le système solaire ?', '8', ['9', '10', '7'], null],
+            ['Quelle est la plus grande planète ?', 'Jupiter', ['Saturne', 'Neptune', 'la Terre'], null],
+            ['Quelle planète est la plus proche du Soleil ?', 'Mercure', ['Vénus', 'Mars', 'la Terre'], null],
+            ['Une année-lumière mesure...', 'une distance', ['un temps', 'une vitesse', 'une masse'], null],
+            ['Comment s\u2019appelle la station spatiale internationale ?', 'l\u2019ISS', ['Apollo', 'Hubble', 'Ariane'], null],
+            ['Qui a marché le premier sur la Lune ?', 'Neil Armstrong', ['Gagarine', 'Aldrin', 'Collins'], null],
+            ['Quelle force nous retient au sol ?', 'la gravité', ['le magnétisme', 'la pression', 'l\u2019électricité'], null],
+            ['Le Soleil est...', 'une étoile', ['une planète', 'une galaxie', 'une comète'], null]
+          ],
+          2: [
+            ['Comment s\u2019appelle notre galaxie ?', 'la Voie lactée', ['Andromède', 'le Grand Nuage', 'Orion'], null],
+            ['Quelle théorie décrit l\u2019origine de l\u2019Univers ?', 'le Big Bang', ['la relativité', 'l\u2019évolution', 'la tectonique'], null],
+            ['Que sont les plaques tectoniques ?', 'des morceaux de croûte terrestre qui bougent', ['des nuages', 'des couches d\u2019air', 'des courants marins'], null],
+            ['Quel phénomène résulte du choc des plaques ?', 'les séismes', ['les marées', 'les arcs-en-ciel', 'les aurores'], null],
+            ['Quelle planète a perdu son statut de planète en 2006 ?', 'Pluton', ['Neptune', 'Mercure', 'Cérès'], null],
+            ['Combien de temps met la lumière du Soleil pour arriver ?', 'environ 8 minutes', ['8 secondes', '8 heures', '8 jours'], null]
+          ],
+          3: [
+            ['Un trou noir retient tout, même...', 'la lumière', ['les planètes', 'le son', 'la chaleur'], null],
+            ['Quel télescope spatial a été lancé en 1990 ?', 'Hubble', ['James Webb', 'Kepler', 'Galileo'], null],
+            ['Quel gaz à effet de serre produisent les voitures ?', 'le CO2', ['l\u2019oxygène', 'l\u2019ozone', 'l\u2019hélium'], null],
+            ['La dérive des continents a été proposée par...', 'Wegener', ['Darwin', 'Newton', 'Hubble'], null],
+            ['Quelle planète tourne « couchée » sur son orbite ?', 'Uranus', ['Mars', 'Vénus', 'Saturne'], null],
+            ['Le James Webb observe surtout en lumière...', 'infrarouge', ['visible', 'ultraviolette', 'radio'], null]
+          ]
+        }
+      }
+    }
+  };
+
+  // ═════════════ SCIENCES RELIGIEUSES (Sîra · Coran · Fiqh) ═════════════
+  var RELIGION = {
+    label: 'Sciences religieuses', ico: '☪️',
+    comps: {
+      petits: [
+        { key: 'is1', nom: 'Les prophètes (Sîra)', ico: '🌟' },
+        { key: 'is2', nom: 'Les piliers', ico: '🕋' },
+        { key: 'is3', nom: 'Bien se comporter', ico: '💚' }
+      ],
+      moyens: [
+        { key: 'is1', nom: 'Sîra & prophètes', ico: '🌟' },
+        { key: 'is2', nom: 'Le Coran', ico: '📖' },
+        { key: 'is3', nom: 'Fiqh & pratique', ico: '🕌' }
+      ],
+      grands: [
+        { key: 'is1', nom: 'Sîra & prophètes', ico: '🌟' },
+        { key: 'is2', nom: 'Le Coran', ico: '📖' },
+        { key: 'is3', nom: 'Fiqh & histoire', ico: '🕌' }
+      ]
+    },
+    pools: {
+      petits: {
+        is1: {
+          1: [
+            ['Qui est le premier homme créé par Allah ?', 'Adam', ['Nouh', 'Ibrahim', 'Moussa'], null],
+            ['Quel prophète a construit une grande arche (un bateau) ?', 'Nouh', ['Adam', 'Youssouf', 'Issa'], null],
+            ['Qu\u2019a mis Nouh dans son arche ?', 'des animaux de chaque espèce', ['des jouets', 'des voitures', 'des livres'], null],
+            ['Quel est le dernier prophète ?', 'Mohammed ﷺ', ['Issa', 'Moussa', 'Ibrahim'], null],
+            ['Dans quelle ville est né le prophète Mohammed ﷺ ?', 'La Mecque', ['Médine', 'Jérusalem', 'Le Caire'], null],
+            ['Quel prophète a été avalé par un très grand poisson ?', 'Younous', ['Nouh', 'Adam', 'Dawoud'], null],
+            ['Qui est la maman du prophète Issa ?', 'Maryam', ['Khadija', 'Assia', 'Hawwa'], null],
+            ['Quel prophète comprenait le langage des animaux ?', 'Souleyman', ['Adam', 'Nouh', 'Younous'], null]
+          ],
+          2: [
+            ['Quel prophète a reconstruit la Kaaba avec son fils ?', 'Ibrahim', ['Moussa', 'Nouh', 'Issa'], null],
+            ['Comment s\u2019appelle le fils qui a aidé Ibrahim ?', 'Ismaïl', ['Ishaq', 'Youssouf', 'Yahya'], null],
+            ['Quel prophète avait un bâton extraordinaire ?', 'Moussa', ['Adam', 'Nouh', 'Souleyman'], null],
+            ['Que s\u2019est-il passé quand Moussa a frappé la mer ?', 'la mer s\u2019est ouverte', ['il a plu', 'la mer a gelé', 'rien'], null],
+            ['Quel prophète a été jeté dans un puits par ses frères ?', 'Youssouf', ['Younous', 'Yahya', 'Zakariya'], null],
+            ['Youssouf était connu pour...', 'sa grande beauté et sa bonté', ['sa force', 'sa richesse', 'sa rapidité'], null]
+          ],
+          3: [
+            ['Quel roi-prophète chantait de très beaux chants à Allah ?', 'Dawoud', ['Souleyman', 'Moussa', 'Haroun'], null],
+            ['Qui était le frère de Moussa, prophète lui aussi ?', 'Haroun', ['Ismaïl', 'Ishaq', 'Yahya'], null],
+            ['Le prophète Ayyoub est connu pour...', 'sa grande patience', ['sa force', 'ses voyages', 'ses chevaux'], null],
+            ['Quel animal a protégé le Prophète ﷺ dans la grotte ?', 'une araignée (avec sa toile)', ['un lion', 'un aigle', 'un serpent'], null],
+            ['Le métier du prophète Mohammed ﷺ jeune était...', 'berger puis commerçant', ['pêcheur', 'forgeron', 'soldat'], null],
+            ['Comment s\u2019appelait la première épouse du Prophète ﷺ ?', 'Khadija', ['Aïcha', 'Fatima', 'Maryam'], null]
+          ]
+        },
+        is2: {
+          1: [
+            ['Combien y a-t-il de piliers de l\u2019islam ?', '5', ['3', '4', '7'], null],
+            ['Combien de prières fait-on chaque jour ?', '5', ['3', '7', '10'], null],
+            ['Quel est le mois du jeûne ?', 'Ramadan', ['Chawwal', 'Rajab', 'Mouharram'], null],
+            ['Pendant le Ramadan, on ne mange pas...', 'du lever au coucher du soleil', ['toute la journée et la nuit', 'le soir', 'le week-end'], null],
+            ['Vers quoi se tourne-t-on pour prier ?', 'la Kaaba', ['le soleil', 'la lune', 'la mer'], null],
+            ['Dans quelle ville se trouve la Kaaba ?', 'La Mecque', ['Médine', 'Jérusalem', 'Istanbul'], null],
+            ['Comment s\u2019appelle le grand voyage à La Mecque ?', 'le Hajj', ['la Omra seulement', 'la Hijra', 'le Safar'], null],
+            ['Que veut dire « Allah » ?', 'Dieu', ['le prophète', 'l\u2019ange', 'le livre'], null]
+          ],
+          2: [
+            ['Comment s\u2019appelle le partage avec les pauvres ?', 'la zakat', ['le hajj', 'le jeûne', 'la salat'], null],
+            ['Comment s\u2019appelle la prière en arabe ?', 'la salat', ['la zakat', 'le sawm', 'la chahada'], null],
+            ['Comment s\u2019appelle le jeûne en arabe ?', 'le sawm (siyam)', ['la salat', 'le hajj', 'la zakat'], null],
+            ['Quelle fête vient après le Ramadan ?', 'l\u2019Aïd el-Fitr', ['l\u2019Aïd el-Kebir', 'le Mawlid', 'l\u2019Achoura'], null],
+            ['Que dit-on avant de commencer à manger ?', 'Bismillah', ['Alhamdoulillah', 'Salam', 'Amine'], null],
+            ['Que dit-on après avoir fini de manger ?', 'Alhamdoulillah', ['Bismillah', 'Inchallah', 'Sobhanallah'], null]
+          ],
+          3: [
+            ['La première prière du matin s\u2019appelle...', 'Fajr', ['Isha', 'Maghrib', 'Dhohr'], null],
+            ['La prière du coucher du soleil s\u2019appelle...', 'Maghrib', ['Fajr', 'Asr', 'Isha'], null],
+            ['Comment s\u2019appelle le petit lavage avant la prière ?', 'les ablutions (woudou)', ['la douche', 'le ghousl seulement', 'le tayammoum seulement'], null],
+            ['Quel jour a lieu la grande prière en commun ?', 'le vendredi', ['le dimanche', 'le samedi', 'le lundi'], null],
+            ['Où les musulmans prient-ils ensemble ?', 'à la mosquée', ['à l\u2019école', 'au stade', 'au marché'], null],
+            ['Comment s\u2019appelle l\u2019appel à la prière ?', 'l\u2019adhan', ['la sourate', 'le takbir seulement', 'le dhikr'], null]
+          ]
+        },
+        is3: {
+          1: [
+            ['Que dit-on pour saluer en islam ?', 'Assalamou alaykoum', ['Bonjour à tous', 'Bismillah', 'Amine'], null],
+            ['Que répond-on au salam ?', 'Wa alaykoum salam', ['Merci', 'Bismillah', 'Bonjour'], null],
+            ['Avec qui faut-il être très gentil en premier ?', 'ses parents', ['ses jouets', 'ses voisins seulement', 'personne'], null],
+            ['Faut-il dire la vérité ?', 'oui, toujours', ['non', 'seulement le vendredi', 'seulement aux parents'], null],
+            ['Que fait-on quand on a quelque chose en plus ?', 'on partage', ['on cache', 'on jette', 'on garde tout'], null],
+            ['Si on fait une bêtise, il faut...', 's\u2019excuser', ['se cacher', 'mentir', 'accuser un autre'], null],
+            ['Comment traite-t-on les animaux ?', 'avec douceur', ['on les embête', 'on les ignore', 'on leur crie dessus'], null],
+            ['Avant de manger, il faut avoir les mains...', 'propres', ['pleines', 'froides', 'mouillées'], null]
+          ],
+          2: [
+            ['Que dit-on quand on éternue ?', 'Alhamdoulillah', ['Bismillah', 'Salam', 'Inchallah'], null],
+            ['Que dit-on pour un projet de demain ?', 'Inchallah', ['Alhamdoulillah', 'Bismillah', 'Amine'], null],
+            ['Le sourire à son frère est...', 'une bonne action (sadaqa)', ['inutile', 'interdit', 'obligatoire une fois par an'], null],
+            ['Gaspiller l\u2019eau, même au bord d\u2019une rivière, c\u2019est...', 'déconseillé', ['permis sans limite', 'obligatoire', 'sans importance'], null],
+            ['Aider quelqu\u2019un à porter ses affaires, c\u2019est...', 'une bonne action', ['une perte de temps', 'interdit', 'réservé aux adultes'], null],
+            ['Le mensonge est...', 'un mauvais comportement', ['permis pour rire', 'bien', 'sans importance'], null]
+          ],
+          3: [
+            ['Que dit-on quand quelque chose nous émerveille ?', 'Sobhanallah', ['Salam', 'Chokran', 'Marhaba'], null],
+            ['Le paradis se trouve sous les pieds...', 'des mères', ['des rois', 'des voyageurs', 'des enfants'], null],
+            ['Respecter son voisin, c\u2019est...', 'très important en islam', ['facultatif', 'réservé aux amis', 'inutile'], null],
+            ['La propreté est...', 'une partie de la foi', ['facultative', 'réservée au vendredi', 'seulement pour la maison'], null],
+            ['Tenir sa promesse, c\u2019est...', 'obligatoire pour un bon croyant', ['facultatif', 'impossible', 'réservé aux adultes'], null],
+            ['Dire du mal des gens en leur absence s\u2019appelle...', 'la médisance (ghiba), c\u2019est interdit', ['la politesse', 'une blague', 'un conseil'], null]
+          ]
+        }
+      },
+      moyens: {
+        is1: {
+          1: [
+            ['Combien de prophètes sont cités dans le Coran ?', '25', ['10', '99', '124'], null],
+            ['Quel prophète a reçu la Torah ?', 'Moussa', ['Issa', 'Dawoud', 'Ibrahim'], null],
+            ['Quel prophète a reçu l\u2019Évangile (Injil) ?', 'Issa', ['Moussa', 'Mohammed ﷺ', 'Dawoud'], null],
+            ['Quel prophète a reçu les Psaumes (Zabour) ?', 'Dawoud', ['Souleyman', 'Moussa', 'Haroun'], null],
+            ['À quel âge Mohammed ﷺ a-t-il reçu la première révélation ?', '40 ans', ['25 ans', '63 ans', '30 ans'], null],
+            ['Dans quelle grotte le Prophète ﷺ méditait-il ?', 'Hira', ['Thawr', 'Ouhoud', 'Safa'], null],
+            ['Qui fut la première épouse du Prophète ﷺ ?', 'Khadija', ['Aïcha', 'Fatima', 'Hafsa'], null],
+            ['Comment s\u2019appelle le voyage de La Mecque à Médine ?', 'la Hijra', ['le Hajj', 'l\u2019Isra', 'la Omra'], null]
+          ],
+          2: [
+            ['En quelle année a eu lieu la Hijra ?', '622', ['570', '632', '610'], null],
+            ['Quel prophète est resté dans le ventre du poisson ?', 'Younous', ['Youssouf', 'Yahya', 'Ayyoub'], null],
+            ['Quel prophète est célèbre pour sa patience ?', 'Ayyoub', ['Adam', 'Loth', 'Chouayb'], null],
+            ['Quel roi-prophète commandait le vent et les djinns ?', 'Souleyman', ['Dawoud', 'Moussa', 'Ibrahim'], null],
+            ['Qui a élevé le Prophète ﷺ après ses grands-parents ?', 'son oncle Abou Talib', ['Abou Bakr', 'Omar', 'Hamza'], null],
+            ['Le surnom du Prophète ﷺ avant l\u2019islam était...', 'Al-Amine (le digne de confiance)', ['Al-Farouk', 'As-Siddiq', 'Al-Fatih'], null]
+          ],
+          3: [
+            ['Quel prophète a été sauvé du feu de son peuple ?', 'Ibrahim', ['Moussa', 'Loth', 'Nouh'], null],
+            ['Qui était le père de Youssouf, prophète lui aussi ?', 'Yaqoub', ['Ishaq', 'Ibrahim', 'Ismaïl'], null],
+            ['Quel prophète a interprété les rêves du roi d\u2019Égypte ?', 'Youssouf', ['Moussa', 'Haroun', 'Chouayb'], null],
+            ['Qui a annoncé à Maryam la naissance de Issa ?', 'l\u2019ange Jibril', ['Mikaïl', 'Israfil', 'un prophète'], null],
+            ['Quel prophète était le fils de Zakariya ?', 'Yahya', ['Issa', 'Younous', 'Ismaïl'], null],
+            ['La mère de Maryam l\u2019avait consacrée au service de...', 'la maison sainte (le temple)', ['la mer', 'la montagne', 'la ville'], null]
+          ]
+        },
+        is2: {
+          1: [
+            ['Combien de sourates compte le Coran ?', '114', ['100', '99', '120'], null],
+            ['Quelle est la première sourate du Coran ?', 'Al-Fatiha', ['Al-Baqara', 'Al-Ikhlas', 'An-Nas'], null],
+            ['Que veut dire « Al-Fatiha » ?', 'l\u2019ouverture', ['la vache', 'la lumière', 'les hommes'], null],
+            ['En quelle langue le Coran a-t-il été révélé ?', 'en arabe', ['en hébreu', 'en araméen', 'en persan'], null],
+            ['Quel ange a transmis le Coran au Prophète ﷺ ?', 'Jibril', ['Mikaïl', 'Israfil', 'Malik'], null],
+            ['Pendant quel mois la révélation a-t-elle commencé ?', 'Ramadan', ['Chaabane', 'Rajab', 'Mouharram'], null],
+            ['Quelle est la plus longue sourate ?', 'Al-Baqara', ['Al-Fatiha', 'Ya-Sin', 'Al-Kahf'], null],
+            ['Combien de temps a duré la révélation du Coran ?', 'environ 23 ans', ['1 an', '10 ans', '40 ans'], null]
+          ],
+          2: [
+            ['Quelle nuit vaut mieux que mille mois ?', 'Laylat al-Qadr', ['la nuit du vendredi', 'la nuit de l\u2019Aïd', 'la nuit du Mawlid'], null],
+            ['Quelle sourate lit-on à chaque unité de prière ?', 'Al-Fatiha', ['Al-Ikhlas', 'An-Nas', 'Al-Falaq'], null],
+            ['Quelle sourate parle de l\u2019unicité d\u2019Allah en 4 versets ?', 'Al-Ikhlas', ['Al-Fatiha', 'Al-Kawthar', 'Al-Asr'], null],
+            ['Comment s\u2019appelle un verset du Coran ?', 'une aya', ['une sourate', 'un hadith', 'un juz'], null],
+            ['En combien de parties (juz\u2019) le Coran est-il divisé ?', '30', ['114', '60', '10'], null],
+            ['Celui qui connaît tout le Coran par cœur est un...', 'hafiz', ['imam', 'mufti', 'calife'], null]
+          ],
+          3: [
+            ['Quelle est la plus courte sourate du Coran ?', 'Al-Kawthar', ['Al-Ikhlas', 'An-Nas', 'Al-Asr'], null],
+            ['Quel verset célèbre parle du Trône d\u2019Allah ?', 'Ayat al-Koursi', ['Ayat an-Nour', 'le premier verset', 'Ayat as-Sajda'], null],
+            ['Dans quelle sourate se trouve Ayat al-Koursi ?', 'Al-Baqara', ['Al-Fatiha', 'Ya-Sin', 'Ar-Rahman'], null],
+            ['Quelle sourate est recommandée le vendredi ?', 'Al-Kahf', ['Al-Baqara', 'Maryam', 'Al-Fil'], null],
+            ['Quelle sourate porte le nom de la mère de Issa ?', 'Maryam', ['Fatima', 'Khadija', 'Assia'], null],
+            ['Sous quel calife le Coran a-t-il été unifié en un livre ?', 'Othman', ['Abou Bakr seul', 'Omar seul', 'Ali'], null]
+          ]
+        },
+        is3: {
+          1: [
+            ['Cite les 5 prières dans l\u2019ordre :', 'Fajr, Dhohr, Asr, Maghrib, Isha', ['Isha, Fajr, Asr, Dhohr, Maghrib', 'Dhohr, Fajr, Maghrib, Asr, Isha', 'Fajr, Asr, Dhohr, Isha, Maghrib'], null],
+            ['Quelle prière a lieu à l\u2019aube ?', 'Fajr', ['Isha', 'Asr', 'Maghrib'], null],
+            ['Quelle prière a lieu juste après le coucher du soleil ?', 'Maghrib', ['Isha', 'Asr', 'Fajr'], null],
+            ['Quel jour a lieu la prière du joumou\u2019a ?', 'le vendredi', ['le samedi', 'le dimanche', 'le jeudi'], null],
+            ['Comment s\u2019appelle la direction de la prière ?', 'la qibla', ['le mihrab', 'le minbar', 'le minaret'], null],
+            ['Combien y a-t-il de fêtes de l\u2019Aïd par an ?', '2', ['1', '3', '4'], null],
+            ['Comment s\u2019appelle la fête du sacrifice ?', 'l\u2019Aïd el-Adha (el-Kebir)', ['l\u2019Aïd el-Fitr', 'le Mawlid', 'l\u2019Achoura'], null],
+            ['Que fait-on avant chaque prière ?', 'les ablutions', ['un repas', 'une sieste', 'du sport'], null]
+          ],
+          2: [
+            ['Qui appelle à la prière depuis le minaret ?', 'le muezzin', ['l\u2019imam', 'le calife', 'le mufti'], null],
+            ['Qui dirige la prière en commun ?', 'l\u2019imam', ['le muezzin', 'le plus jeune', 'le plus riche'], null],
+            ['La niche qui indique la qibla dans la mosquée est...', 'le mihrab', ['le minbar', 'le minaret', 'la coupole'], null],
+            ['D\u2019où l\u2019imam fait-il le sermon du vendredi ?', 'du minbar', ['du mihrab', 'du minaret', 'de la cour'], null],
+            ['Le petit pèlerinage s\u2019appelle...', 'la Omra', ['le Hajj', 'la Hijra', 'la Ziyara'], null],
+            ['Combien de tours fait-on autour de la Kaaba ?', '7', ['5', '3', '10'], null]
+          ],
+          3: [
+            ['Quel mois vient juste avant le Ramadan ?', 'Chaabane', ['Chawwal', 'Rajab', 'Mouharram'], null],
+            ['Quel calendrier suit les mois islamiques ?', 'le calendrier lunaire (hégirien)', ['le calendrier solaire', 'le calendrier chinois', 'le calendrier julien'], null],
+            ['Combien de jours environ dure un mois lunaire ?', '29 ou 30', ['31', '28 toujours', '27'], null],
+            ['Quelle colline monte-t-on avec Safa pendant le pèlerinage ?', 'Marwa', ['Arafat', 'Mina', 'Ouhoud'], null],
+            ['Où les pèlerins se rassemblent-ils le 9 Dhoul-Hijja ?', 'à Arafat', ['à Mina', 'à Mouzdalifa', 'à Badr'], null],
+            ['Quelle eau célèbre coule près de la Kaaba ?', 'Zamzam', ['Kawthar', 'Salsabil', 'Tasnim'], null]
+          ]
+        }
+      },
+      grands: {
+        is1: {
+          1: [
+            ['Combien de messagers « doués de résolution » (Oulou al-Azm) ?', '5', ['3', '7', '10'], null],
+            ['Qui sont les Oulou al-Azm ?', 'Nouh, Ibrahim, Moussa, Issa, Mohammed ﷺ', ['Adam, Nouh, Loth, Issa, Mohammed ﷺ', 'Ibrahim, Ismaïl, Ishaq, Yaqoub, Youssouf', 'Moussa, Haroun, Dawoud, Souleyman, Issa'], null],
+            ['Quel prophète est surnommé « Khalil Allah » ?', 'Ibrahim', ['Moussa', 'Mohammed ﷺ', 'Issa'], null],
+            ['Quel prophète est surnommé « Kalim Allah » ?', 'Moussa', ['Ibrahim', 'Issa', 'Adam'], null],
+            ['En quelle année est né le Prophète ﷺ (année de l\u2019Éléphant) ?', 'vers 570', ['610', '622', '632'], null],
+            ['En quelle année le Prophète ﷺ est-il décédé ?', '632', ['622', '640', '610'], null],
+            ['Quelle bataille eut lieu en l\u2019an 2 de l\u2019Hégire ?', 'Badr', ['Ouhoud', 'Le Fossé', 'Hounayn'], null],
+            ['Qui accompagnait le Prophète ﷺ pendant la Hijra ?', 'Abou Bakr', ['Omar', 'Ali', 'Othman'], null]
+          ],
+          2: [
+            ['Dans quelle grotte se sont-ils cachés pendant la Hijra ?', 'Thawr', ['Hira', 'Ouhoud', 'Nour'], null],
+            ['Quel voyage nocturne mena le Prophète ﷺ à Jérusalem ?', 'al-Isra', ['la Hijra', 'le Hajj', 'la Omra'], null],
+            ['Comment s\u2019appelle l\u2019ascension aux cieux ?', 'al-Miraj', ['al-Isra', 'al-Qadr', 'al-Fath'], null],
+            ['Combien de prières furent prescrites lors du Miraj ?', '5 (après réduction de 50)', ['3', '7', '10 directement'], null],
+            ['Quelle année est appelée « l\u2019année de la tristesse » ?', 'celle des décès de Khadija et Abou Talib', ['l\u2019année de Badr', 'l\u2019année de la conquête', 'l\u2019année de l\u2019Éléphant'], null],
+            ['Quel jeune compagnon dormit dans le lit du Prophète ﷺ la nuit de la Hijra ?', 'Ali', ['Omar', 'Zayd', 'Ibn Abbas'], null]
+          ],
+          3: [
+            ['Quel traité fut signé avec les Mecquois en l\u2019an 6 ?', 'Houdaybiya', ['Aqaba', 'Médine', 'Taïf'], null],
+            ['En quelle année la Mecque fut-elle ouverte pacifiquement ?', 'an 8 de l\u2019Hégire (630)', ['an 2', 'an 10', 'an 5'], null],
+            ['Comment s\u2019appelle le dernier sermon du Prophète ﷺ ?', 'le sermon de l\u2019adieu (Arafat)', ['le sermon du vendredi', 'le sermon de Badr', 'le sermon de Médine'], null],
+            ['Qui fut le premier muezzin de l\u2019islam ?', 'Bilal', ['Abou Bakr', 'Salman', 'Ammar'], null],
+            ['Quel prophète gouvernait hommes, djinns et vent ?', 'Souleyman', ['Dawoud', 'Idris', 'Dhoul-Qarnayn'], null],
+            ['Vers quel pays les premiers musulmans ont-ils émigré ?', 'l\u2019Abyssinie (Éthiopie)', ['la Perse', 'Byzance', 'le Yémen'], null]
+          ]
+        },
+        is2: {
+          1: [
+            ['Combien de sourates compte le Coran ?', '114', ['113', '115', '99'], null],
+            ['En combien de juz\u2019 le Coran est-il divisé ?', '30', ['60', '114', '20'], null],
+            ['Quelle est la plus longue sourate ?', 'Al-Baqara', ['An-Nisa', 'Al-Imran', 'Al-Maïda'], null],
+            ['Quelle est la plus courte sourate ?', 'Al-Kawthar', ['Al-Asr', 'Al-Ikhlas', 'An-Nasr'], null],
+            ['Où se trouve Ayat al-Koursi ?', 'Al-Baqara, verset 255', ['Al-Fatiha', 'Ya-Sin', 'Al-Imran, verset 100'], null],
+            ['Quels furent les premiers versets révélés ?', 'Al-Alaq (« Lis ! »)', ['Al-Fatiha', 'Al-Mouddathir', 'Al-Qalam'], null],
+            ['Quel mot signifie « récitation » ?', 'Qur\u2019an', ['Kitab', 'Furqan', 'Dhikr'], null],
+            ['Quelle sourate ne commence pas par la basmala ?', 'At-Tawba', ['Al-Fatiha', 'An-Nas', 'Al-Ikhlas'], null]
+          ],
+          2: [
+            ['Sourate Al-Ikhlas équivaut à quelle part du Coran (hadith) ?', 'un tiers', ['la moitié', 'un quart', 'un dixième'], null],
+            ['Quelles sont les deux sourates protectrices ?', 'Al-Falaq et An-Nas', ['Al-Fatiha et Al-Ikhlas', 'Ya-Sin et Al-Mulk', 'Al-Kahf et Maryam'], null],
+            ['Quelle sourate est surnommée « le cœur du Coran » ?', 'Ya-Sin', ['Al-Fatiha', 'Ar-Rahman', 'Al-Baqara'], null],
+            ['Quelle sourate protège de l\u2019épreuve de la tombe (hadith) ?', 'Al-Mulk', ['Al-Kahf', 'Ya-Sin', 'Ad-Dukhan'], null],
+            ['Quel refrain revient dans Ar-Rahman ?', '« Lequel des bienfaits de votre Seigneur nierez-vous ? »', ['« Allah est Un »', '« Louange à Allah »', '« Lis au nom de ton Seigneur »'], null],
+            ['Combien de versets compte Al-Fatiha ?', '7', ['5', '6', '10'], null]
+          ],
+          3: [
+            ['Sous quel calife les copies officielles furent-elles diffusées ?', 'Othman', ['Abou Bakr', 'Omar', 'Ali'], null],
+            ['Qui fut le principal scribe de la révélation ?', 'Zayd ibn Thabit', ['Bilal', 'Abou Hourayra', 'Ibn Omar'], null],
+            ['Comment s\u2019appelle la science de la bonne récitation ?', 'le tajwid', ['le tafsir', 'le fiqh', 'la sira'], null],
+            ['Comment s\u2019appelle l\u2019explication du Coran ?', 'le tafsir', ['le tajwid', 'le hadith', 'la fatwa'], null],
+            ['Quelle sourate raconte l\u2019histoire des gens de la caverne ?', 'Al-Kahf', ['Maryam', 'Al-Qasas', 'Nouh'], null],
+            ['« Iqra » (Lis !) fut révélé dans la grotte de...', 'Hira', ['Thawr', 'Arafat', 'Mina'], null]
+          ]
+        },
+        is3: {
+          1: [
+            ['Qui fut le premier calife après le Prophète ﷺ ?', 'Abou Bakr', ['Omar', 'Othman', 'Ali'], null],
+            ['Qui fut le deuxième calife ?', 'Omar', ['Abou Bakr', 'Ali', 'Othman'], null],
+            ['Combien y eut-il de califes « bien guidés » ?', '4', ['2', '5', '12'], null],
+            ['Quel calife était surnommé « Al-Farouk » ?', 'Omar', ['Abou Bakr', 'Othman', 'Ali'], null],
+            ['Quel calife était surnommé « As-Siddiq » ?', 'Abou Bakr', ['Omar', 'Ali', 'Othman'], null],
+            ['Quelle ville accueillit le Prophète ﷺ après la Hijra ?', 'Médine', ['La Mecque', 'Damas', 'Bagdad'], null],
+            ['Quel calendrier commence à la Hijra ?', 'le calendrier hégirien', ['le grégorien', 'le julien', 'le persan'], null],
+            ['La science des règles pratiques (prière, jeûne...) s\u2019appelle...', 'le fiqh', ['la sira', 'le tajwid', 'la aqida'], null]
+          ],
+          2: [
+            ['Quelle science étudie les paroles du Prophète ﷺ ?', 'la science du hadith', ['le tajwid', 'la grammaire', 'le calcul'], null],
+            ['Quels sont les deux recueils de hadiths les plus authentiques ?', 'Boukhari et Mouslim', ['Tirmidhi et Nasa\u2019i', 'Abou Dawoud et Ibn Maja', 'Malik et Ahmad'], null],
+            ['Comment s\u2019appelle la biographie du Prophète ﷺ ?', 'la Sîra', ['le Tafsir', 'le Fiqh', 'la Aqida'], null],
+            ['Combien de grandes écoles juridiques sunnites ?', '4', ['2', '5', '7'], null],
+            ['Quelle dynastie a construit la mosquée de Cordoue ?', 'les Omeyyades', ['les Abbassides', 'les Ottomans', 'les Fatimides'], null],
+            ['La science des fondements du droit s\u2019appelle...', 'ousoul al-fiqh', ['le tajwid', 'la sira', 'le kalam'], null]
+          ],
+          3: [
+            ['Quelle ville abritait la « Maison de la Sagesse » ?', 'Bagdad', ['Le Caire', 'Damas', 'Cordoue'], null],
+            ['Quel savant est le père de l\u2019algèbre ?', 'Al-Khwarizmi', ['Avicenne', 'Averroès', 'Al-Biruni'], null],
+            ['Quel médecin a écrit le « Canon de la médecine » ?', 'Avicenne (Ibn Sina)', ['Averroès', 'Razi', 'Ibn Nafis'], null],
+            ['De quel nom vient le mot « algorithme » ?', 'd\u2019Al-Khwarizmi', ['d\u2019Al-Jabr', 'd\u2019Al-Kindi', 'd\u2019Al-Farabi'], null],
+            ['Quel voyageur musulman a parcouru le monde au XIVe siècle ?', 'Ibn Battuta', ['Ibn Khaldoun', 'Al-Idrissi', 'Sinbad'], null],
+            ['Qui a fondé la sociologie moderne avec sa « Mouqaddima » ?', 'Ibn Khaldoun', ['Ibn Battuta', 'Al-Ghazali', 'Al-Farabi'], null]
+          ]
+        }
+      }
+    }
+  };
+
+  // ═════════════ MATHS QUIZ (tournoi uniquement) ═════════════
+  var MATHSQUIZ = {
+    petits: [
+      ['Combien font 3 + 4 ?', '7', ['6', '8', '5'], null],
+      ['Combien font 10 \u2212 6 ?', '4', ['5', '3', '6'], null],
+      ['Quel est le double de 6 ?', '12', ['10', '14', '8'], null],
+      ['Quelle est la moitié de 10 ?', '5', ['4', '6', '2'], null],
+      ['Combien font 5 + 5 + 5 ?', '15', ['10', '20', '12'], null],
+      ['Combien font 2 \u00d7 4 ?', '8', ['6', '10', '4'], null],
+      ['Quel nombre vient après 19 ?', '20', ['18', '21', '30'], null],
+      ['Combien font 7 + 8 ?', '15', ['14', '16', '13'], null]
+    ],
+    moyens: [
+      ['Combien font 7 \u00d7 8 ?', '56', ['54', '58', '64'], null],
+      ['Combien font 45 \u00f7 9 ?', '5', ['4', '6', '9'], null],
+      ['Combien font 3/4 de 20 ?', '15', ['12', '16', '10'], null],
+      ['Combien font 6,5 + 2,7 ?', '9,2', ['8,2', '9,7', '8,7'], null],
+      ['Périmètre d\u2019un carré de côté 7 cm ?', '28 cm', ['14 cm', '49 cm', '21 cm'], null],
+      ['Combien font 12 \u00d7 11 ?', '132', ['122', '144', '121'], null],
+      ['Quel est le reste de 23 \u00f7 5 ?', '3', ['2', '4', '5'], null],
+      ['Combien font 1 000 \u2212 250 ?', '750', ['850', '650', '700'], null]
+    ],
+    grands: [
+      ['Combien font (\u22123) \u00d7 (\u22124) ?', '12', ['\u221212', '7', '\u22127'], null],
+      ['Combien vaut 5² ?', '25', ['10', '15', '52'], null],
+      ['Combien vaut \u221a81 ?', '9', ['8', '81', '7'], null],
+      ['Combien font 20 % de 150 ?', '30', ['20', '35', '15'], null],
+      ['Résous : 3x = 21. x = ?', '7', ['6', '8', '18'], null],
+      ['Combien vaut 2³ \u00d7 2² ?', '32', ['16', '64', '10'], null],
+      ['Développe : 2(x + 5)', '2x + 10', ['2x + 5', 'x + 10', '2x + 7'], null],
+      ['Triangle rectangle de côtés 6 et 8 : hypoténuse ?', '10', ['12', '14', '9'], null]
+    ]
+  };
+
+  // ═════════════ API ═════════════
+  var SUBJECTS = { arabe: ARABE, histoire: HISTOIRE, sciences: SCIENCES, religion: RELIGION };
+
+  function bandOf(classe){
+    if(classe === 'gs' || classe === 'ce1') return 'petits';
+    if(classe === 'cm2' || classe === 'sixieme') return 'moyens';
+    return 'grands';
+  }
+
+  function shuffleArr(arr){
     var a = arr.slice();
     for(var i = a.length - 1; i > 0; i--){
       var j = Math.floor(Math.random() * (i + 1));
@@ -1442,36 +2362,451 @@ var EDU_BANKS = (function(){
     }
     return a;
   }
-
-  // Convertit {q,a,w} → {q, choices, answer} — 3 choix pour GS, 4 sinon
-  function toQuestion(item, classe){
-    var nWrong = classe === 'gs' ? 2 : 3;
-    var wrongs = shuffle(item.w).slice(0, nWrong);
-    var choices = shuffle([item.a].concat(wrongs));
-    return { q: item.q, choices: choices, answer: choices.indexOf(item.a), svg: null };
+  function toQ(item){
+    var choices = shuffleArr([item[1]].concat(item[2]));
+    return { q: item[0], choices: choices, answer: choices.indexOf(item[1]), svg: item[3] || null };
   }
 
-  function buildSubject(subject, classe, nb){
+  function subjectMeta(subject){
+    var s = SUBJECTS[subject];
+    return s ? { label: s.label, ico: s.ico } : null;
+  }
+  function subjectComps(subject, classe){
+    var s = SUBJECTS[subject];
+    return s ? s.comps[bandOf(classe)] : [];
+  }
+  function buildBankMission(subject, compKey, niveau, classe, nb){
     nb = nb || 10;
-    var bank = SUBJECTS[subject].bank[tierFor(classe)];
-    return shuffle(bank).slice(0, Math.min(nb, bank.length))
-      .map(function(item){ return toQuestion(item, classe); });
+    var s = SUBJECTS[subject];
+    if(!s) return [];
+    var tiers = s.pools[bandOf(classe)][compKey];
+    var pool = [];
+    for(var t = 1; t <= niveau; t++) pool = pool.concat(tiers[t] || []);
+    return shuffleArr(pool).slice(0, nb).map(toQ);
   }
 
-  // Grand Quiz : 15 questions — 3 par matière (arabe, islam, sciences, histoire) + 3 maths
-  function buildGrandQuiz(classe, mathQuestions){
-    var out = [];
-    ['islam', 'sciences', 'histoire', 'arabe'].forEach(function(s){
-      var bank = SUBJECTS[s].bank[tierFor(classe)];
-      shuffle(bank).slice(0, 3).forEach(function(item){
-        out.push(toQuestion(item, classe));
+  // ── Tournoi hebdomadaire : mêmes 15 questions pour tous (par tranche) ──
+  function mulberry32(seed){
+    return function(){
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function weekKey(){
+    var d = new Date();
+    var onejan = new Date(d.getFullYear(), 0, 1);
+    var week = Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    return d.getFullYear() + '-S' + (week < 10 ? '0' + week : week);
+  }
+  function seededShuffle(arr, rng){
+    var a = arr.slice();
+    for(var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function seededToQ(item, rng){
+    var choices = seededShuffle([item[1]].concat(item[2]), rng);
+    return { q: item[0], choices: choices, answer: choices.indexOf(item[1]), svg: item[3] || null };
+  }
+
+  // 15 questions : 3 par catégorie (religion, sciences, arabe, maths, histoire)
+  function buildTournoi(classe){
+    var band = bandOf(classe);
+    var wk = weekKey();
+    var seed = 0;
+    for(var i = 0; i < wk.length; i++) seed = (seed * 31 + wk.charCodeAt(i)) | 0;
+    seed = seed + (band === 'petits' ? 1 : band === 'moyens' ? 2 : 3);
+    var rng = mulberry32(seed);
+
+    function pickFrom(subject){
+      var pools = SUBJECTS[subject].pools[band];
+      var all = [];
+      Object.keys(pools).forEach(function(ck){
+        [1, 2, 3].forEach(function(t){ all = all.concat(pools[ck][t] || []); });
       });
-    });
-    (mathQuestions || []).slice(0, 3).forEach(function(q){ out.push(q); });
-    return shuffle(out);
+      return seededShuffle(all, rng).slice(0, 3);
+    }
+
+    var items = []
+      .concat(pickFrom('religion'))
+      .concat(pickFrom('sciences'))
+      .concat(pickFrom('arabe'))
+      .concat(seededShuffle(MATHSQUIZ[band], rng).slice(0, 3))
+      .concat(pickFrom('histoire'));
+
+    return { week: wk, questions: seededShuffle(items, rng).map(function(it){ return seededToQ(it, rng); }) };
   }
 
-  return { SUBJECTS: SUBJECTS, tierFor: tierFor, buildSubject: buildSubject, buildGrandQuiz: buildGrandQuiz };
+  return {
+    SUBJECTS: SUBJECTS,
+    bandOf: bandOf,
+    subjectMeta: subjectMeta,
+    subjectComps: subjectComps,
+    buildBankMission: buildBankMission,
+    buildTournoi: buildTournoi,
+    weekKey: weekKey
+  };
+})();
+
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   EDUVERSE — Monde Français v4 (générateurs)
+   petits (GS-CE1) : lettres & sons · le bon petit mot · pluriels
+   moyens (CM2-6e) : conjugaison · homophones · accords
+   grands (4e-2nde) : conjugaison · homophones · orthographe
+   ═══════════════════════════════════════════════════════════ */
+
+var EDU_FRANCAIS = (function(){
+
+  function rnd(a, b){ return Math.floor(Math.random() * (b - a + 1)) + a; }
+  function pick(arr){ return arr[rnd(0, arr.length - 1)]; }
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i = a.length - 1; i > 0; i--){
+      var j = rnd(0, i); var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function textQ(text, good, wrongs, svg){
+    var uniq = [];
+    shuffle(wrongs).forEach(function(w){
+      if(w !== good && uniq.indexOf(w) < 0 && uniq.length < 3) uniq.push(w);
+    });
+    var choices = shuffle([good].concat(uniq));
+    return { q: text, choices: choices, answer: choices.indexOf(good), svg: svg || null };
+  }
+  function big(t){
+    return '<div style="font-size:44px;line-height:1.4;text-align:center;font-weight:800">' + t + '</div>';
+  }
+
+  // ── Données ────────────────────────────────────────────
+  var MOTS_EMOJI = [
+    ['POMME', '🍎'], ['BALLON', '⚽'], ['CHAT', '🐱'], ['MAISON', '🏠'], ['SOLEIL', '☀️'],
+    ['TABLE', '🪑'], ['LIVRE', '📖'], ['FLEUR', '🌸'], ['VOITURE', '🚗'], ['GATEAU', '🎂'],
+    ['LUNE', '🌙'], ['ROBOT', '🤖'], ['NUAGE', '☁️'], ['POISSON', '🐟'], ['DRAGON', '🐉']
+  ];
+  var VOYELLES = ['A', 'E', 'I', 'O', 'U'];
+  var NOMS_LE = ['chat', 'ballon', 'livre', 'soleil', 'gâteau', 'chien', 'vélo', 'jardin', 'cartable', 'crayon'];
+  var NOMS_LA = ['pomme', 'maison', 'fleur', 'table', 'voiture', 'lune', 'porte', 'trousse', 'chaise', 'fusée'];
+  var PLURIEL_S = ['chat', 'livre', 'fleur', 'ballon', 'maison', 'voiture', 'crayon', 'étoile'];
+  var PLURIEL_X = [['gâteau', 'gâteaux'], ['jeu', 'jeux'], ['bateau', 'bateaux'], ['cadeau', 'cadeaux'], ['château', 'châteaux'], ['cheveu', 'cheveux']];
+
+  var PRONOMS = ['je', 'tu', 'il', 'nous', 'vous', 'elles'];
+  var IDX = { 'je': 0, 'tu': 1, 'il': 2, 'elle': 2, 'nous': 3, 'vous': 4, 'ils': 5, 'elles': 5 };
+  var ER = ['chanter', 'jouer', 'danser', 'regarder', 'manger', 'parler', 'travailler', 'dessiner'];
+  function conjER(v, i, temps){
+    var rad = v.slice(0, -2);
+    if(temps === 'present'){
+      var e = ['e', 'es', 'e', 'ons', 'ez', 'ent'][i];
+      if(v === 'manger' && i === 3) return 'mangeons';
+      return rad + e;
+    }
+    if(temps === 'futur') return v + ['ai', 'as', 'a', 'ons', 'ez', 'ont'][i];
+    // imparfait
+    if(v === 'manger' && i !== 3 && i !== 4) return 'mange' + ['ais', 'ais', 'ait', 'ions', 'iez', 'aient'][i];
+    return rad + ['ais', 'ais', 'ait', 'ions', 'iez', 'aient'][i];
+  }
+  var IRREG = {
+    'être':    ['suis', 'es', 'est', 'sommes', 'êtes', 'sont'],
+    'avoir':   ['ai', 'as', 'a', 'avons', 'avez', 'ont'],
+    'aller':   ['vais', 'vas', 'va', 'allons', 'allez', 'vont'],
+    'faire':   ['fais', 'fais', 'fait', 'faisons', 'faites', 'font'],
+    'prendre': ['prends', 'prends', 'prend', 'prenons', 'prenez', 'prennent'],
+    'venir':   ['viens', 'viens', 'vient', 'venons', 'venez', 'viennent'],
+    'pouvoir': ['peux', 'peux', 'peut', 'pouvons', 'pouvez', 'peuvent'],
+    'voir':    ['vois', 'vois', 'voit', 'voyons', 'voyez', 'voient'],
+    'dire':    ['dis', 'dis', 'dit', 'disons', 'dites', 'disent'],
+    'vouloir': ['veux', 'veux', 'veut', 'voulons', 'voulez', 'veulent']
+  };
+  var PASSE_COMPOSE = [
+    ['manger', 'a mangé', ['est mangé', 'a manger', 'a mangée']],
+    ['partir', 'est parti', ['a parti', 'est partit', 'a partis']],
+    ['finir', 'a fini', ['est fini', 'a finit', 'a finie']],
+    ['prendre', 'a pris', ['a prit', 'est pris', 'a prendu']],
+    ['venir', 'est venu', ['a venu', 'est venue (pour il)', 'a venu'].slice(0, 3)],
+    ['voir', 'a vu', ['est vu', 'a vue', 'a voyé']],
+    ['faire', 'a fait', ['est fait', 'a faite', 'a fais']],
+    ['aller', 'est allé', ['a allé', 'est allait', 'a été allé']]
+  ];
+
+  // Phrases à trous : [avant, après, bonne, [mauvaises]]
+  var HOMO = {
+    a_as: [
+      ['Il ', ' un nouveau vélo.', 'a', ['à', 'as', 'ah']],
+      ['Elle va ', ' la plage.', 'à', ['a', 'as', 'ha']],
+      ['Tu ', ' bien travaillé.', 'as', ['a', 'à', 'ha']],
+      ['Léa ', ' faim ce midi.', 'a', ['à', 'as', 'ha']],
+      ['Nous allons ', ' Paris demain.', 'à', ['a', 'as', 'ah']],
+      ['Mon frère ', ' dix ans.', 'a', ['à', 'as', 'ah']]
+    ],
+    et_est: [
+      ['Le chat ', ' noir et blanc.', 'est', ['et', 'ai', 'es']],
+      ['Tom ', ' Léa jouent ensemble.', 'et', ['est', 'es', 'ait']],
+      ['Il ', ' l\u2019heure de partir.', 'est', ['et', 'ai', 'aie']],
+      ['J\u2019aime le chocolat ', ' les fraises.', 'et', ['est', 'ai', 'aie']],
+      ['Mon cartable ', ' trop lourd.', 'est', ['et', 'es', 'ait']],
+      ['Papa ', ' maman arrivent.', 'et', ['est', 'ai', 'es']]
+    ],
+    son_sont: [
+      ['Il a perdu ', ' cahier.', 'son', ['sont', 'sons', 'çon']],
+      ['Les élèves ', ' arrivés.', 'sont', ['son', 'sons', 'çont']],
+      ['Elle range ', ' bureau.', 'son', ['sont', 'sons', 'çon']],
+      ['Où ', ' mes clés ?', 'sont', ['son', 'sons', 'çont']],
+      ['Ils ', ' très contents.', 'sont', ['son', 'sons', 'çont']],
+      ['Léo prête ', ' stylo.', 'son', ['sont', 'sons', 'çon']]
+    ],
+    on_ont: [
+      ['Ils ', ' gagné le match.', 'ont', ['on', 'onts', 'hont']],
+      ['', ' va au parc cet après-midi.', 'On', ['Ont', 'Onts', 'Hon']],
+      ['Les enfants ', ' fini leurs devoirs.', 'ont', ['on', 'onts', 'hont']],
+      ['', ' entend la musique.', 'On', ['Ont', 'Onts', 'Hon']],
+      ['Elles ', ' un chien.', 'ont', ['on', 'onts', 'hont']],
+      ['Ce soir, ', ' mange des pâtes.', 'on', ['ont', 'onts', 'hon']]
+    ],
+    ou_où: [
+      ['', ' habites-tu ?', 'Où', ['Ou', 'Out', 'Oû']],
+      ['Tu veux une pomme ', ' une poire ?', 'ou', ['où', 'oû', 'out']],
+      ['Voici la ville ', ' je suis né.', 'où', ['ou', 'oû', 'out']],
+      ['Fromage ', ' dessert ?', 'ou', ['où', 'oû', 'out']],
+      ['Le jour ', ' tu es venu, il pleuvait.', 'où', ['ou', 'oû', 'out']],
+      ['Tu préfères le bleu ', ' le rouge ?', 'ou', ['où', 'oû', 'hou']]
+    ],
+    ce_se: [
+      ['', ' matin, il fait beau.', 'Ce', ['Se', 'Ceux', 'Sceau']],
+      ['Il ', ' lave les mains.', 'se', ['ce', 'ceux', 'sse']],
+      ['', ' chien est adorable.', 'Ce', ['Se', 'Ceux', 'Sce']],
+      ['Elle ', ' promène au parc.', 'se', ['ce', 'ceux', 'sse']],
+      ['', ' que tu dis est vrai.', 'Ce', ['Se', 'Ceux', 'Sce']],
+      ['Le soleil ', ' couche tôt.', 'se', ['ce', 'ceux', 'sse']]
+    ],
+    ces_ses: [
+      ['Il a rangé ', ' affaires (les siennes).', 'ses', ['ces', 'c\u2019est', 's\u2019est']],
+      ['Regarde ', ' montagnes au loin !', 'ces', ['ses', 'c\u2019est', 's\u2019est']],
+      ['Elle adore ', ' grands-parents (les siens).', 'ses', ['ces', 'sait', 's\u2019est']],
+      ['', ' gâteaux ont l\u2019air délicieux !', 'Ces', ['Ses', 'C\u2019est', 'S\u2019est']],
+      ['Tom a prêté ', ' crayons (les siens).', 'ses', ['ces', 'c\u2019est', 'sais']],
+      ['', ' nuages annoncent la pluie.', 'Ces', ['Ses', 'Sait', 'S\u2019est']]
+    ],
+    cest_sest: [
+      ['', ' une excellente idée.', 'C\u2019est', ['S\u2019est', 'Ces', 'Ses']],
+      ['Elle ', ' blessée en tombant.', 's\u2019est', ['c\u2019est', 'ces', 'ses']],
+      ['', ' lui qui a gagné.', 'C\u2019est', ['S\u2019est', 'Ces', 'Sait']],
+      ['Il ', ' endormi très vite.', 's\u2019est', ['c\u2019est', 'ces', 'sait']],
+      ['', ' aujourd\u2019hui que ça se passe.', 'C\u2019est', ['S\u2019est', 'Ces', 'Ses']],
+      ['Le chat ', ' caché sous le lit.', 's\u2019est', ['c\u2019est', 'ces', 'ses']]
+    ],
+    leur_leurs: [
+      ['Ils ont rangé ', ' chambres (plusieurs).', 'leurs', ['leur', 'leures', 'leurres']],
+      ['Je ', ' ai dit la vérité.', 'leur', ['leurs', 'leure', 'leurre']],
+      ['Les élèves sortent ', ' cahiers (plusieurs).', 'leurs', ['leur', 'leures', 'leurres']],
+      ['Elle ', ' donne un conseil.', 'leur', ['leurs', 'leure', 'leurre']],
+      ['', ' maison est grande (une seule).', 'Leur', ['Leurs', 'Leure', 'Leurre']],
+      ['Il ', ' souhaite bonne chance.', 'leur', ['leurs', 'leure', 'leurre']]
+    ],
+    la_là: [
+      ['Pose le livre ', ' , sur la table.', 'là', ['la', 'l\u2019a', 'las']],
+      ['', ' voiture est rouge.', 'La', ['Là', 'L\u2019a', 'Las']],
+      ['Il ', ' vue hier au marché.', 'l\u2019a', ['la', 'là', 'las']],
+      ['Viens ', ' tout de suite !', 'là', ['la', 'l\u2019a', 'lha']],
+      ['', ' maîtresse explique la leçon.', 'La', ['Là', 'L\u2019a', 'Lat']],
+      ['Ce jour-', ' , il neigeait.', 'là', ['la', 'l\u2019a', 'las']]
+    ]
+  };
+
+  var FEMININS = [['boulanger', 'boulangère'], ['danseur', 'danseuse'], ['acteur', 'actrice'], ['chanteur', 'chanteuse'], ['directeur', 'directrice'], ['infirmier', 'infirmière']];
+  var ORTHO = [
+    ['Comment écrit-on ce mot ?', 'accueil', ['acceuil', 'accueille', 'akeuil']],
+    ['Comment écrit-on ce mot ?', 'malgré', ['malgrés', 'malgret', 'mal gré']],
+    ['Comment écrit-on ce mot ?', 'parmi', ['parmis', 'parmit', 'par mi']],
+    ['Comment écrit-on ce mot ?', 'toujours', ['toujour', 'tous jours', 'toujoure']],
+    ['Comment écrit-on ce mot ?', 'appeler', ['appeller', 'apeler', 'apeller']],
+    ['Comment écrit-on ce mot ?', 'la permission', ['la permition', 'la permision', 'la permissions'].slice(0,3)],
+    ['Comment écrit-on ce mot ?', 'l\u2019attention', ['l\u2019attension', 'l\u2019atention', 'l\u2019attencion']],
+    ['Comment écrit-on ce mot ?', 'un professionnel', ['un profesionnel', 'un professionel', 'un proffessionnel']],
+    ['Comment écrit-on ce mot ?', 'la nourriture', ['la nouriture', 'la nourriturre', 'la nourritur']],
+    ['Comment écrit-on ce mot ?', 'développer', ['dévelloper', 'developper', 'dévellopper']]
+  ];
+
+  // ── Générateurs par tranche ────────────────────────────
+  var GEN = {
+    petits: {
+      fr1: function(niv){
+        var m = pick(MOTS_EMOJI);
+        if(niv === 1){
+          var l = m[0][0];
+          var wrongs = shuffle(['B','C','D','F','G','L','M','P','R','S','T','V'].filter(function(x){ return x !== l; })).slice(0, 3);
+          return textQ('Par quelle lettre commence ce mot ?', l, wrongs, big(m[1] + '<br>' + m[0]));
+        }
+        if(niv === 2){
+          var d = m[0][m[0].length - 1];
+          var w2 = shuffle(['A','E','I','N','R','S','T','U'].filter(function(x){ return x !== d; })).slice(0, 3);
+          return textQ('Par quelle lettre se termine ce mot ?', d, w2, big(m[1] + '<br>' + m[0]));
+        }
+        var lettre = pick('ABCDEFILMNOPRSTU'.split(''));
+        var isVoy = VOYELLES.indexOf(lettre) >= 0;
+        return textQ('La lettre « ' + lettre + ' » est...', isVoy ? 'une voyelle' : 'une consonne',
+          [isVoy ? 'une consonne' : 'une voyelle', 'un chiffre', 'un mot'], big(lettre));
+      },
+      fr2: function(niv){
+        if(niv <= 2){
+          var isLe = rnd(0, 1) === 0;
+          var nom = isLe ? pick(NOMS_LE) : pick(NOMS_LA);
+          if(niv === 1) return textQ('Complète : ... ' + nom, isLe ? 'le' : 'la', [isLe ? 'la' : 'le', 'les', 'lu']);
+          return textQ('Complète : ... ' + nom, isLe ? 'un' : 'une', [isLe ? 'une' : 'un', 'des', 'de']);
+        }
+        var isLe3 = rnd(0, 1) === 0;
+        var nom3 = isLe3 ? pick(NOMS_LE) : pick(NOMS_LA);
+        return textQ('Complète : ... ' + nom3 + ' (à moi)', isLe3 ? 'mon' : 'ma', [isLe3 ? 'ma' : 'mon', 'mes', 'moi']);
+      },
+      fr3: function(niv){
+        if(niv === 1){
+          var n = pick(PLURIEL_S);
+          return textQ('Un ' + n + ', des ...', n + 's', [n, n + 'x', n + 'es']);
+        }
+        if(niv === 2){
+          var n2 = pick(PLURIEL_S);
+          return textQ('Des ' + n2 + 's, un ...', n2, [n2 + 's', n2 + 'e', n2 + 'x']);
+        }
+        var px = pick(PLURIEL_X);
+        return textQ('Un ' + px[0] + ', des ...', px[1], [px[0] + 's', px[0], px[0] + 'es']);
+      }
+    },
+    moyens: {
+      fr1: function(niv){
+        var temps = niv === 1 ? 'present' : niv === 2 ? 'futur' : 'imparfait';
+        var tempsNom = niv === 1 ? 'présent' : niv === 2 ? 'futur' : 'imparfait';
+        if(niv === 1 && rnd(0, 1) === 0){
+          var v = pick(['être', 'avoir', 'aller', 'faire']);
+          var p = pick(PRONOMS);
+          var i = IDX[p];
+          var forms = IRREG[v];
+          var good = forms[i];
+          return textQ('Conjugue au présent : ' + p + ' (' + v + ') → ?', (p === 'je' && 'aeiou'.indexOf(good[0]) >= 0 ? 'j\u2019' : '') + good,
+            shuffle(forms.filter(function(f){ return f !== good; })).slice(0, 3));
+        }
+        var v2 = pick(ER);
+        var p2 = pick(PRONOMS);
+        var i2 = IDX[p2];
+        var good2 = conjER(v2, i2, temps);
+        var wrongs2 = [];
+        [0, 1, 2, 3, 4, 5].forEach(function(k){
+          if(k !== i2){ var f = conjER(v2, k, temps); if(f !== good2) wrongs2.push(f); }
+        });
+        return textQ('Conjugue au ' + tempsNom + ' : ' + p2 + ' (' + v2 + ') → ?', good2, wrongs2);
+      },
+      fr2: function(niv){
+        var pairs = niv === 1 ? ['a_as', 'et_est', 'son_sont'] : niv === 2 ? ['on_ont', 'ou_où', 'a_as'] : ['ce_se', 'la_là', 'et_est'];
+        var ph = pick(HOMO[pick(pairs)]);
+        return textQ('Complète : « ' + ph[0] + '___' + ph[1] + ' »', ph[2], ph[3]);
+      },
+      fr3: function(niv){
+        if(niv === 1){
+          var n = pick(PLURIEL_S);
+          return textQ('Écris au pluriel : un ' + n + ' → des ...', n + 's', [n + 'x', n, n + 'es']);
+        }
+        if(niv === 2){
+          var px = pick(PLURIEL_X);
+          return textQ('Écris au pluriel : un ' + px[0] + ' → des ...', px[1], [px[0] + 's', px[0], px[0] + 'es']);
+        }
+        var f = pick(FEMININS);
+        return textQ('Écris au féminin : un ' + f[0] + ' → une ...', f[1], [f[0] + 'e', f[0], f[0] + 'esse']);
+      }
+    },
+    grands: {
+      fr1: function(niv){
+        if(niv === 1){
+          var v = pick(Object.keys(IRREG));
+          var p = pick(PRONOMS);
+          var i = IDX[p];
+          var forms = IRREG[v];
+          var good = forms[i];
+          var pr = (p === 'je' && 'aeiouéè'.indexOf(good[0]) >= 0) ? 'j\u2019' : '';
+          return textQ('Conjugue au présent : ' + p + ' (' + v + ') → ?', pr + good,
+            shuffle(forms.filter(function(f){ return f !== good; })).slice(0, 3));
+        }
+        if(niv === 2){
+          var pc = pick(PASSE_COMPOSE);
+          return textQ('Conjugue au passé composé : hier, il (' + pc[0] + ') → il ...', pc[1], pc[2]);
+        }
+        var v3 = pick(ER.concat(['finir']));
+        var p3 = pick(PRONOMS);
+        var i3 = IDX[p3];
+        var good3 = v3 === 'finir' ? 'finir' + ['ai','as','a','ons','ez','ont'][i3] : conjER(v3, i3, 'futur');
+        var w3 = [];
+        [0,1,2,3,4,5].forEach(function(k){
+          if(k !== i3){
+            var f = v3 === 'finir' ? 'finir' + ['ai','as','a','ons','ez','ont'][k] : conjER(v3, k, 'futur');
+            if(f !== good3) w3.push(f);
+          }
+        });
+        return textQ('Conjugue au futur : ' + p3 + ' (' + v3 + ') → ?', good3, w3);
+      },
+      fr2: function(niv){
+        var pairs = niv === 1 ? ['ces_ses', 'cest_sest'] : niv === 2 ? ['leur_leurs', 'la_là'] : ['ce_se', 'cest_sest', 'leur_leurs'];
+        var ph = pick(HOMO[pick(pairs)]);
+        return textQ('Complète : « ' + ph[0] + '___' + ph[1] + ' »', ph[2], ph[3]);
+      },
+      fr3: function(niv){
+        if(niv <= 2){
+          var o = pick(ORTHO);
+          return textQ(o[0], o[1], o[2]);
+        }
+        var pp = pick([
+          ['Les fleurs que j\u2019ai (cueillir)...', 'cueillies', ['cueilli', 'cueillie', 'cueillis']],
+          ['Elles sont (partir) tôt.', 'parties', ['partis', 'parti', 'partie']],
+          ['Les gâteaux qu\u2019elle a (faire)...', 'faits', ['fait', 'faites', 'faite']],
+          ['Elle s\u2019est (laver) les mains.', 'lavé', ['lavée', 'lavés', 'lavées']],
+          ['Ils ont (finir) leurs devoirs.', 'fini', ['finis', 'finie', 'finies']],
+          ['La lettre que tu as (écrire)...', 'écrite', ['écrit', 'écrits', 'écrites']]
+        ]);
+        return textQ('Accorde le participe passé : ' + pp[0], pp[1], pp[2]);
+      }
+    }
+  };
+
+  var COMPS = {
+    petits: [
+      { key: 'fr1', nom: 'Lettres & sons', ico: '🔠' },
+      { key: 'fr2', nom: 'Le bon petit mot', ico: '✏️' },
+      { key: 'fr3', nom: 'Singulier & pluriel', ico: '👥' }
+    ],
+    moyens: [
+      { key: 'fr1', nom: 'Conjugaison', ico: '🔀' },
+      { key: 'fr2', nom: 'Homophones', ico: '👂' },
+      { key: 'fr3', nom: 'Accords', ico: '🤝' }
+    ],
+    grands: [
+      { key: 'fr1', nom: 'Conjugaison', ico: '🔀' },
+      { key: 'fr2', nom: 'Homophones', ico: '👂' },
+      { key: 'fr3', nom: 'Orthographe', ico: '📝' }
+    ]
+  };
+
+  function bandOf(classe){
+    if(classe === 'gs' || classe === 'ce1') return 'petits';
+    if(classe === 'cm2' || classe === 'sixieme') return 'moyens';
+    return 'grands';
+  }
+  function comps(classe){ return COMPS[bandOf(classe)]; }
+  function buildMission(compKey, niveau, classe, nb){
+    nb = nb || 10;
+    var gen = GEN[bandOf(classe)][compKey];
+    var out = [], seen = {}, guard = 0;
+    while(out.length < nb && guard < 300){
+      guard++;
+      var q = gen(niveau);
+      var sig = q.q + q.choices.join('|');
+      if(!seen[sig]){ seen[sig] = true; out.push(q); }
+    }
+    return out;
+  }
+
+  return { label: 'Français', ico: '📚', comps: comps, buildMission: buildMission, bandOf: bandOf };
 })();
 
 </script>
@@ -1542,12 +2877,34 @@ var state = null;
 var session = null; // { id, pin } en mode en ligne
 
 function prog(){ return EDU_QUESTIONS.programme(state.classe); }
-function competences(){ return prog().comps; }
+
+// ── Mondes : définition unifiée (maths génératif, français génératif, banques) ──
+var currentSubject = 'maths';
+function subjectDef(sub, classe){
+  classe = classe || (state && state.classe) || 'ce1';
+  if(sub === 'maths'){
+    var p = EDU_QUESTIONS.programme(classe);
+    return { label: 'Mathématiques', ico: '🧮', comps: p.comps,
+      build: function(ck, niv){ return EDU_QUESTIONS.buildMission(classe, ck, niv, CONFIG.QUESTIONS_PAR_MISSION); } };
+  }
+  if(sub === 'francais'){
+    return { label: EDU_FRANCAIS.label, ico: EDU_FRANCAIS.ico, comps: EDU_FRANCAIS.comps(classe),
+      build: function(ck, niv){ return EDU_FRANCAIS.buildMission(ck, niv, classe, CONFIG.QUESTIONS_PAR_MISSION); } };
+  }
+  var meta = EDU_BANKS.subjectMeta(sub);
+  return { label: meta.label, ico: meta.ico, comps: EDU_BANKS.subjectComps(sub, classe),
+    build: function(ck, niv){ return EDU_BANKS.buildBankMission(sub, ck, niv, classe, CONFIG.QUESTIONS_PAR_MISSION); } };
+}
+var SUBJECT_KEYS = ['maths', 'francais', 'arabe', 'religion', 'sciences', 'histoire'];
+
+function competences(){ return subjectDef(currentSubject).comps; }
 
 function defaultComps(classe){
   var comps = {};
-  EDU_QUESTIONS.programme(classe).comps.forEach(function(c){
-    comps[c.key] = { niveau: 1, etoiles: [0, 0, 0] };
+  SUBJECT_KEYS.forEach(function(sub){
+    subjectDef(sub, classe).comps.forEach(function(c){
+      comps[c.key] = { niveau: 1, etoiles: [0, 0, 0] };
+    });
   });
   return comps;
 }
@@ -1556,7 +2913,7 @@ function defaultState(classe){
     prenom: '', avatar: AVATARS[0], classe: classe || 'ce1',
     xp: 0, pieces: 0, vies: CONFIG.VIES_MAX,
     comps: defaultComps(classe || 'ce1'), badges: [], missions: 0,
-    dailyDone: '', quizDone: '', lastDay: '', history: []
+    dailyDone: '', quizDone: '', tournoiWeek: '', streak: 0, lastPlay: '', lastDay: '', history: []
   };
 }
 function saveState(){
@@ -1591,10 +2948,16 @@ function compPct(key){
   if(!c) return 0;
   return Math.round((c.etoiles[0] + c.etoiles[1] + c.etoiles[2]) / 9 * 100);
 }
-function globalPct(){
-  var t = 0, list = competences();
+function subjectPct(sub){
+  var list = subjectDef(sub).comps;
+  var t = 0;
   list.forEach(function(c){ t += compPct(c.key); });
-  return Math.round(t / list.length);
+  return list.length ? Math.round(t / list.length) : 0;
+}
+function globalPct(){
+  var t = 0;
+  SUBJECT_KEYS.forEach(function(s){ t += subjectPct(s); });
+  return Math.round(t / SUBJECT_KEYS.length);
 }
 function toast(msg){
   var t = $('toast');
@@ -1690,6 +3053,18 @@ function apiSaveProgress(detail, xpGain, silent){
       return res;
     })
     .catch(function(e){ if(!silent) toast('📡 Erreur réseau : ' + e.message); });
+}
+
+function apiTournoi(week, score){
+  if(!isOnline() || !session) return;
+  var url = CONFIG.APPS_URL
+    + '?action=tournoi'
+    + '&id='    + encodeURIComponent(session.id)
+    + '&pin='   + encodeURIComponent(session.pin)
+    + '&week='  + encodeURIComponent(week)
+    + '&score=' + encodeURIComponent(score)
+    + '&_t='    + Date.now();
+  fetch(url, { cache: 'no-store' }).catch(function(){});
 }
 
 function apiSaveComps(){
@@ -1839,11 +3214,16 @@ function islandSvg(kind, active){
 }
 
 var MATIERES = [
-  { key: 'maths',    nom: 'Mathématiques',     unlocked: true, art: 'crystal', subject: false },
-  { key: 'arabe',    nom: 'Arabe',             unlocked: true, art: 'tower',   subject: true },
-  { key: 'islam',    nom: 'Coran & Prophètes', unlocked: true, art: 'minaret', subject: true },
-  { key: 'sciences', nom: 'Sciences',          unlocked: true, art: 'dome',    subject: true },
-  { key: 'histoire', nom: 'Histoire',          unlocked: true, art: 'castle',  subject: true }
+  { key: 'maths',    nom: 'Mathématiques',        unlocked: true,  art: 'crystal' },
+  { key: 'francais', nom: 'Français',             unlocked: true,  art: 'tower'   },
+  { key: 'arabe',    nom: 'Arabe',                unlocked: true,  art: 'minaret' },
+  { key: 'religion', nom: 'Sciences religieuses', unlocked: true,  art: 'dome'    },
+  { key: 'sciences', nom: 'Sciences',             unlocked: true,  art: 'dome'    },
+  { key: 'histoire', nom: 'Histoire',             unlocked: true,  art: 'castle'  },
+  { key: 'anglais',      nom: 'Anglais',          unlocked: false, art: 'tower'   },
+  { key: 'geographie',   nom: 'Géographie',       unlocked: false, art: 'dome'    },
+  { key: 'programmation',nom: 'Programmation',    unlocked: false, art: 'crystal' },
+  { key: 'brevet',       nom: 'Objectif Brevet',  unlocked: false, art: 'castle'  }
 ];
 
 // ── ÉCRAN ACCUEIL ──────────────────────────────────────────
@@ -1858,84 +3238,71 @@ function renderHome(){
   $('homeXpBar').style.width = (inLevel / CONFIG.XP_PAR_NIVEAU * 100) + '%';
   $('homeCoins').textContent = state.pieces;
   $('homeLives').textContent = state.vies + '/' + CONFIG.VIES_MAX;
+  var streakEl = $('homeStreak');
+  if(streakEl) streakEl.textContent = (state.streak || 0);
   $('btnRecharge').style.display = state.vies < CONFIG.VIES_MAX ? 'inline-flex' : 'none';
 
   var grid = $('islandsGrid');
   grid.innerHTML = '';
-  var order = [MATIERES[0], null, MATIERES[1], MATIERES[2], MATIERES[3], MATIERES[4]];
-  order.forEach(function(m){
-    if(m === null){
-      var daily = document.createElement('div');
-      daily.className = 'daily-card';
-      var done = state.dailyDone === todayStr();
-      daily.innerHTML = '<div class="daily-flame">' + (done ? '✅' : '☄️') + '</div>'
-        + '<div class="daily-title">Défi quotidien</div>'
-        + '<div class="daily-xp">+' + CONFIG.XP_BONUS_DEFI + ' XP</div>'
-        + (done
-            ? '<div class="daily-done">Défi du jour réussi ! Reviens demain 🌙</div>'
-            : '<div style="margin-top:10px"><span class="btn btn-gold" style="font-size:11px;padding:9px 20px">Commencer</span></div>');
-      if(!done) daily.onclick = function(){ startMission('daily', 0); };
-      grid.appendChild(daily);
-      return;
-    }
+
+  // Défi quotidien
+  var daily = document.createElement('div');
+  daily.className = 'daily-card';
+  var done = state.dailyDone === todayStr();
+  daily.innerHTML = '<div class="daily-flame">' + (done ? '✅' : '☄️') + '</div>'
+    + '<div class="daily-title">Défi quotidien</div>'
+    + '<div class="daily-xp">+' + CONFIG.XP_BONUS_DEFI + ' XP</div>'
+    + (done
+        ? '<div class="daily-done">Défi du jour réussi ! Reviens demain 🌙</div>'
+        : '<div style="margin-top:10px"><span class="btn btn-gold" style="font-size:11px;padding:9px 20px">Commencer</span></div>');
+  if(!done) daily.onclick = function(){ startMission('daily', 0); };
+  grid.appendChild(daily);
+
+  // Tournoi hebdomadaire (mêmes questions pour toute la famille)
+  var wk = EDU_BANKS.weekKey();
+  var tDone = state.tournoiWeek === wk;
+  var tour = document.createElement('div');
+  tour.className = 'daily-card';
+  tour.innerHTML = '<div class="daily-flame">🏆</div>'
+    + '<div class="daily-title">Tournoi de la semaine</div>'
+    + '<div class="daily-xp">' + wk + ' · 15 questions · 5 matières</div>'
+    + (tDone
+        ? '<div class="daily-done">Déjà joué cette semaine ! Regarde le classement 🏆</div>'
+        : '<div style="margin-top:10px"><span class="btn btn-gold" style="font-size:11px;padding:9px 20px">Participer</span></div>');
+  tour.onclick = tDone ? function(){ show('classement'); } : function(){ startTournoi(); };
+  grid.appendChild(tour);
+
+  // Îles des mondes
+  MATIERES.forEach(function(m){
     var card = document.createElement('div');
     card.className = 'island ' + (m.unlocked ? 'unlocked' : 'locked');
     var sub;
-    if(m.key === 'maths'){
-      var pct = globalPct();
-      sub = '<span>Niveau ' + playerLevel() + '</span>'
+    if(m.unlocked){
+      var pct = subjectPct(m.key);
+      sub = '<span>' + subjectDef(m.key).ico + '</span>'
         + '<span class="mini-bar"><i style="width:' + pct + '%"></i></span><span>' + pct + '%</span>';
     } else {
-      sub = '<span>' + (EDU_BANKS.SUBJECTS[m.key] ? EDU_BANKS.SUBJECTS[m.key].ico : '🎯') + ' Mission de 10 questions</span>';
+      sub = '<span>Bientôt disponible</span>';
     }
     card.innerHTML = '<div class="island-art">' + islandSvg(m.art, m.unlocked) + '</div>'
       + '<div class="island-name">' + m.nom + '</div>'
       + '<div class="island-sub">' + sub + '</div>'
       + (m.unlocked ? '<div class="island-cta">Explorer →</div>' : '<div class="lock-badge">🔒</div>');
-    if(m.key === 'maths') card.onclick = function(){ show('world'); };
-    else if(m.unlocked) card.onclick = function(){ startSubjectMission(m.key); };
-    else card.onclick = function(){ toast('🔒 Ce monde sera bientôt débloqué !'); };
+    if(m.unlocked) card.onclick = function(){ currentSubject = m.key; show('world'); };
+    else card.onclick = function(){ toast('🔒 ' + m.nom + ' arrive bientôt dans EduVerse !'); };
     grid.appendChild(card);
   });
-
-  // ── Carte Grand Quiz 🏆 ──
-  var quiz = document.createElement('div');
-  quiz.className = 'daily-card';
-  var quizDone = state.quizDone === todayStr();
-  quiz.innerHTML = '<div class="daily-flame">🏆</div>'
-    + '<div class="daily-title">Grand Quiz</div>'
-    + '<div class="daily-xp">' + (quizDone ? 'Rejouable · bonus demain' : 'Bonus +150 XP aujourd\u2019hui !') + '</div>'
-    + '<div style="margin-top:10px"><span class="btn btn-gold" style="font-size:11px;padding:9px 20px">'
-    + '15 questions toutes matières</span></div>';
-  quiz.onclick = function(){ startGrandQuiz(); };
-  grid.appendChild(quiz);
 }
 
-// ── Missions matières culturelles ──────────────────────────
-function startSubjectMission(subjectKey){
-  if(state.vies <= 0){ toast('💔 Plus de vies ! Recharge-les sur l\u2019accueil.'); return; }
-  var questions = EDU_BANKS.buildSubject(subjectKey, state.classe, CONFIG.QUESTIONS_PAR_MISSION);
-  var meta = EDU_BANKS.SUBJECTS[subjectKey];
+// ── Tournoi hebdomadaire ────────────────────────────────────
+function startTournoi(){
+  var t = EDU_BANKS.buildTournoi(state.classe);
   mission = {
-    comp: subjectKey, niveau: 0, daily: false, subject: subjectKey,
-    questions: questions, index: 0, bonnes: 0, streak: 0, bestStreak: 0,
+    comp: 'tournoi', niveau: 0, daily: false, tournoi: true, week: t.week,
+    questions: t.questions, index: 0, bonnes: 0, streak: 0, bestStreak: 0,
     xp: 0, answers: []
   };
-  $('missionTag').textContent = meta.ico + ' ' + meta.nom.toUpperCase();
-  show('mission');
-  renderQuestion();
-}
-
-function startGrandQuiz(){
-  if(state.vies <= 0){ toast('💔 Plus de vies ! Recharge-les sur l\u2019accueil.'); return; }
-  var mathQs = EDU_QUESTIONS.buildDaily(state.classe, levelsSnapshot(), 3);
-  var questions = EDU_BANKS.buildGrandQuiz(state.classe, mathQs);
-  mission = {
-    comp: 'grandquiz', niveau: 0, daily: false, subject: 'grandquiz', grandQuiz: true,
-    questions: questions, index: 0, bonnes: 0, streak: 0, bestStreak: 0,
-    xp: 0, answers: []
-  };
-  $('missionTag').textContent = '🏆 GRAND QUIZ · TOUTES MATIÈRES';
+  $('missionTag').textContent = '🏆 TOURNOI ' + t.week + ' · 5 MATIÈRES';
   show('mission');
   renderQuestion();
 }
@@ -1953,6 +3320,9 @@ function starsStr(n){
   return out;
 }
 function renderWorld(){
+  var def = subjectDef(currentSubject);
+  var titleEl = document.querySelector('#screen-world .screen-title');
+  if(titleEl) titleEl.textContent = def.ico + ' Monde ' + (currentSubject === 'maths' ? 'des Mathématiques' : '· ' + def.label);
   $('worldSub').textContent = classeLabel(state.classe)
     + ' · Chaque mission : ' + CONFIG.QUESTIONS_PAR_MISSION + ' questions · Gagne 2 étoiles ⭐⭐ pour débloquer le niveau suivant';
   var grid = $('compGrid');
@@ -1990,12 +3360,15 @@ var timerHandle = null;
 
 function levelsSnapshot(){
   var out = {};
-  competences().forEach(function(c){ out[c.key] = state.comps[c.key].niveau; });
+  subjectDef('maths').comps.forEach(function(c){ out[c.key] = state.comps[c.key] ? state.comps[c.key].niveau : 1; });
   return out;
 }
 function compName(key){
-  var c = competences().filter(function(x){ return x.key === key; })[0];
-  return c ? c.nom : key;
+  for(var i = 0; i < SUBJECT_KEYS.length; i++){
+    var c = subjectDef(SUBJECT_KEYS[i]).comps.filter(function(x){ return x.key === key; })[0];
+    if(c) return c.nom;
+  }
+  return key;
 }
 
 function startMission(compKey, niveau){
@@ -2006,14 +3379,15 @@ function startMission(compKey, niveau){
   var isDaily = compKey === 'daily';
   var questions = isDaily
     ? EDU_QUESTIONS.buildDaily(state.classe, levelsSnapshot(), CONFIG.QUESTIONS_PAR_MISSION)
-    : EDU_QUESTIONS.buildMission(state.classe, compKey, niveau, CONFIG.QUESTIONS_PAR_MISSION);
+    : subjectDef(currentSubject).build(compKey, niveau);
 
   mission = {
     comp: compKey, niveau: niveau, daily: isDaily,
     questions: questions, index: 0, bonnes: 0, streak: 0, bestStreak: 0,
     xp: 0, answers: []
   };
-  $('missionTag').textContent = (isDaily ? '☄️ DÉFI QUOTIDIEN' : '🎯 ' + compName(compKey).toUpperCase() + ' · NIV. ' + niveau);
+  $('missionTag').textContent = (isDaily ? '☄️ DÉFI QUOTIDIEN'
+    : subjectDef(currentSubject).ico + ' ' + compName(compKey).toUpperCase() + ' · NIV. ' + niveau);
   show('mission');
   renderQuestion();
 }
@@ -2150,25 +3524,31 @@ function endMission(){
   if(mission.bonnes >= 8 && state.vies < CONFIG.VIES_MAX){ state.vies++; gagneVie = true; }
 
   var detailMission;
-  if(mission.grandQuiz){
-    detailMission = '🏆 Grand Quiz';
-    if(stars >= 1 && state.quizDone !== todayStr()){
-      xp += 150;
-      state.quizDone = todayStr();
-    }
-  } else if(mission.subject){
-    var metaS = EDU_BANKS.SUBJECTS[mission.subject];
-    detailMission = (metaS ? metaS.ico + ' ' + metaS.nom : mission.subject);
+  if(mission.tournoi){
+    // Tournoi : score sur 15, bonus si ≥ 12, une participation par semaine
+    xp = mission.bonnes * CONFIG.XP_BONNE_REPONSE + (mission.bonnes >= 12 ? 50 : 0);
+    detailMission = '🏆 Tournoi ' + mission.week + ' · ' + mission.bonnes + '/' + total;
+    state.tournoiWeek = mission.week;
+    apiTournoi(mission.week, mission.bonnes);
   } else if(mission.daily){
     detailMission = 'Défi quotidien';
   } else {
-    detailMission = compName(mission.comp) + ' · Niv. ' + mission.niveau;
+    detailMission = subjectDef(currentSubject).label + ' · ' + compName(mission.comp) + ' · Niv. ' + mission.niveau;
     var st = state.comps[mission.comp];
+    if(!st){ st = state.comps[mission.comp] = { niveau: 1, etoiles: [0, 0, 0] }; }
     st.etoiles[mission.niveau - 1] = Math.max(st.etoiles[mission.niveau - 1], stars);
     if(stars >= 2 && mission.niveau < 3 && st.niveau < mission.niveau + 1){
       st.niveau = mission.niveau + 1;
       if(st.niveau === 3 && state.badges.indexOf('niveau3') < 0){ state.badges.push('niveau3'); newBadges.push('niveau3'); }
     }
+  }
+
+  // Série quotidienne 🔥 : jours consécutifs avec au moins une mission
+  var today = todayStr();
+  if(state.lastPlay !== today){
+    var hier = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    state.streak = (state.lastPlay === hier) ? (state.streak || 0) + 1 : 1;
+    state.lastPlay = today;
   }
 
   state.xp += xp;
@@ -2243,12 +3623,18 @@ function renderProfil(){
   $('donutTxt').textContent = pct >= 60 ? 'Tu progresses très bien. Continue comme ça !'
     : 'Chaque mission te fait gagner des étoiles et des XP.';
 
-  $('skillsList').innerHTML = competences().map(function(c){
-    var p = compPct(c.key);
-    var col = p >= 70 ? '#22C55E' : p >= 40 ? '#F5C518' : '#FF7849';
-    return '<div class="skill-row"><span class="skill-name">' + c.ico + ' ' + c.nom + '</span>'
-      + '<span class="bar"><i style="width:' + p + '%;background:' + col + ';box-shadow:0 0 8px ' + col + '"></i></span>'
-      + '<span class="skill-pct" style="color:' + col + '">' + p + '%</span></div>';
+  $('skillsList').innerHTML = SUBJECT_KEYS.map(function(sub){
+    var def = subjectDef(sub);
+    var rows = def.comps.map(function(c){
+      var p = compPct(c.key);
+      var col = p >= 70 ? '#22C55E' : p >= 40 ? '#F5C518' : '#FF7849';
+      return '<div class="skill-row"><span class="skill-name">' + c.ico + ' ' + c.nom + '</span>'
+        + '<span class="bar"><i style="width:' + p + '%;background:' + col + ';box-shadow:0 0 8px ' + col + '"></i></span>'
+        + '<span class="skill-pct" style="color:' + col + '">' + p + '%</span></div>';
+    }).join('');
+    return '<div style="margin:14px 0 6px;font-family:\'Exo 2\',sans-serif;font-weight:900;font-size:12px;'
+      + 'letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan)">'
+      + def.ico + ' ' + def.label + ' · ' + subjectPct(sub) + '%</div>' + rows;
   }).join('');
 
   $('badgesGrid').innerHTML = BADGES.map(function(b){
@@ -2274,7 +3660,32 @@ $('btnLogout').onclick = function(){
 };
 
 // ── ÉCRAN CLASSEMENT ───────────────────────────────────────
+function renderTournoiBoard(){
+  var panel = $('tournoiPanel');
+  if(!panel) return;
+  var wk = EDU_BANKS.weekKey();
+  $('tournoiTitle').textContent = '🏆 Tournoi de la semaine · ' + wk;
+  if(!isOnline()){ panel.style.display = 'none'; return; }
+  api({ action: 'tournoiBoard', week: wk }).then(function(res){
+    if(res.status !== 'ok' || !res.scores || !res.scores.length){
+      panel.style.display = 'block';
+      $('tournoiList').innerHTML = '<div class="hist-row"><span class="hist-lbl">Personne n\u2019a encore joué cette semaine — sois le premier ! 🚀</span></div>';
+      return;
+    }
+    panel.style.display = 'block';
+    var medals = ['🥇', '🥈', '🥉'];
+    $('tournoiList').innerHTML = res.scores.map(function(s, i){
+      var me = session && s.id === session.id;
+      return '<div class="hist-row' + (me ? ' me' : '') + '"><span class="hist-lbl">'
+        + (medals[i] || (i + 1) + '.') + ' ' + s.prenom + (me ? ' (toi)' : '')
+        + ' <small style="color:var(--muted)">' + classeLabel(s.classe) + '</small></span>'
+        + '<span class="hist-val">' + s.score + ' / 15</span></div>';
+    }).join('');
+  }).catch(function(){ panel.style.display = 'none'; });
+}
+
 function renderClassement(){
+  renderTournoiBoard();
   if(isOnline()){
     $('rankList').innerHTML = '<div class="rank-row"><span class="rank-name">Chargement du classement… 📡</span></div>';
     $('podium').innerHTML = '';

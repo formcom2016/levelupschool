@@ -639,6 +639,22 @@ body.cls-gs .btn-speak{width:52px;height:52px;font-size:24px}
   <button class="nav-btn" data-nav="profil"><span class="n-ico">👤</span><span class="n-lbl">Profil</span></button>
 </nav>
 
+<!-- ═══ ÉCRAN AVENTURE ═══ -->
+<section class="screen" id="screen-aventure">
+  <div class="mission-head" style="max-width:560px;margin:0 auto">
+    <button class="btn btn-ghost" id="avQuit" style="padding:8px 14px">✕</button>
+    <div style="flex:1">
+      <div class="mission-tag" id="avTag">🧭 PROLOGUE</div>
+      <div class="progress-track" style="margin-top:6px"><div class="progress-fill" id="avBar" style="width:0%"></div></div>
+    </div>
+    <div class="mission-tag" id="avXp" style="color:var(--gold)">+0 XP</div>
+  </div>
+  <div style="max-width:560px;margin:14px auto 0;padding:0 4px">
+    <div class="panel" id="avScene" style="min-height:280px"></div>
+    <div id="avFeedback" style="margin-top:12px"></div>
+    <button class="btn btn-gold btn-block" id="avNext" style="margin-top:14px;display:none">Continuer →</button>
+  </div>
+</section>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1152,6 +1168,101 @@ var EDU_QUESTIONS = (function(){
   }
 
   return { programme: programme, buildMission: buildMission, buildDaily: buildDaily, CLASSES: Object.keys(PROGRAMMES) };
+})();
+
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   EDUVERSE — 🧭 L'AVENTURE · « Le Voyage »
+   Apprentissage narratif de l'islam (compréhension salafie)
+   Mélange Duolingo × livre dont vous êtes le héros × RPG
+
+   Types de scènes :
+     recit  — narration courte (jamais plus de quelques lignes)
+     qcm    — question à choix multiples
+     vf     — vrai / faux
+     paires — associer deux éléments
+     ordre  — remettre dans le bon ordre
+     chrono — quiz chronométré
+   ═══════════════════════════════════════════════════════════ */
+
+var EDU_AVENTURE = (function(){
+
+  var CHAPITRES = [
+    {
+      id: 'prologue', num: 0, titre: 'Prologue', sousTitre: 'Je me pose des questions',
+      ico: '🧭', badge: 'av_prologue', badgeNom: 'Chercheur de vérité',
+      xpBonus: 100, pieces: 30,
+      scenes: [
+        { t: 'recit', ico: '🌌', texte: 'Ce soir-là, tu n\u2019arrives pas à dormir.<br><br>Par la fenêtre, tu regardes le ciel rempli d\u2019étoiles. Des milliards de lumières, parfaitement à leur place, depuis toujours.<br><br>Et une question monte en toi, simple et immense :<br><b>« Pourquoi suis-je ici ? »</b>' },
+        { t: 'recit', ico: '🚶', texte: 'Tu décides de ne plus fuir tes questions.<br><br>À partir de ce soir, tu pars en voyage. Pas avec tes jambes — avec ta raison et ton cœur.<br><br><b>Ton aventure commence maintenant.</b>' },
+        { t: 'qcm', ico: '🤔',
+          q: 'Tu marches dans le désert et tu trouves une montre posée sur le sable. Que penses-tu ?',
+          choices: ['Quelqu\u2019un l\u2019a fabriquée et apportée ici', 'Elle s\u2019est assemblée toute seule avec le vent', 'Elle a toujours été là, sans origine', 'Le sable s\u2019est transformé en montre'],
+          answer: 0,
+          explication: 'Exactement. Une chose organisée pointe vers celui qui l\u2019a organisée. Ta raison le sait déjà — c\u2019est le premier pas du voyage.' },
+        { t: 'vf', ico: '🎨',
+          q: 'Un magnifique tableau peut exister sans aucun peintre.',
+          answer: false,
+          explication: 'Faux, bien sûr. Un tableau exige un peintre, une maison un constructeur\u2026 et cet univers immense, parfaitement réglé ? Le Coran pose la question : « Ont-ils été créés à partir de rien, ou sont-ils eux-mêmes les créateurs ? » (52:35)' },
+        { t: 'recit', ico: '👀', texte: 'Le lendemain, tu ouvres les yeux différemment.<br><br>L\u2019alternance de la nuit et du jour. La pluie qui fait revivre la terre. Ton propre cœur qui bat sans que tu y penses.<br><br>Des <b>signes</b>. Partout.' },
+        { t: 'paires', ico: '🧩',
+          consigne: 'Associe chaque chose à ce qu\u2019elle t\u2019indique :',
+          paires: [
+            ['Une maison', 'un constructeur'],
+            ['Un livre', 'un auteur'],
+            ['Un repas préparé', 'un cuisinier'],
+            ['L\u2019univers entier', 'un Créateur']
+          ],
+          explication: 'Tout ce qui existe pointe vers celui qui l\u2019a fait exister. L\u2019univers — le plus parfait de tous les « ouvrages » — pointe vers le plus grand des créateurs.' },
+        { t: 'qcm', ico: '💡',
+          q: 'Comment s\u2019appelle le Créateur de toute chose ?',
+          choices: ['Allah', 'la nature', 'le hasard', 'l\u2019énergie'],
+          answer: 0,
+          explication: '« Allah » signifie « La Divinité » : Celui qui seul mérite d\u2019être adoré. C\u2019est Lui qui t\u2019a créé, toi, les étoiles, et tout ce qui existe.' },
+        { t: 'recit', ico: '💭', texte: 'Un Créateur\u2026 Alors une nouvelle question arrive, encore plus personnelle :<br><br><b>« Pourquoi m\u2019a-t-Il créé, MOI ? »</b><br><br>Est-ce pour rien ? Juste manger, dormir, puis disparaître ?' },
+        { t: 'qcm', ico: '🎯',
+          q: 'D\u2019après le Coran, pourquoi avons-nous été créés ?',
+          choices: ['Pour adorer Allah seul', 'Pour accumuler des richesses', 'Sans aucune raison', 'Pour être les plus forts'],
+          answer: 0,
+          explication: '« Je n\u2019ai créé les djinns et les hommes que pour qu\u2019ils M\u2019adorent. » (51:56). Ta vie a un but — et ce but donne un sens à chaque journée.' },
+        { t: 'vf', ico: '🔍',
+          q: 'Pour savoir ce qui est vrai, je peux suivre n\u2019importe qui, sans jamais demander de preuve.',
+          answer: false,
+          explication: 'Faux. Allah nous a donné la raison, et Il dit : « Apportez votre preuve, si vous êtes véridiques. » (2:111). La vérité se cherche avec des preuves : c\u2019est tout ton voyage.' },
+        { t: 'qcm', ico: '📖',
+          q: 'Quel livre Allah a-t-Il révélé pour guider les hommes ?',
+          choices: ['Le Coran', 'Un livre secret réservé aux savants', 'Aucun livre', 'Un livre différent pour chaque pays'],
+          answer: 0,
+          explication: 'Le Coran : la parole d\u2019Allah, préservée lettre par lettre, ta carte pour tout le voyage. Tu apprendras à le connaître chapitre après chapitre.' },
+        { t: 'ordre', ico: '🗺️',
+          consigne: 'Remets les étapes de ton début de voyage dans l\u2019ordre :',
+          items: ['Je me pose des questions', 'J\u2019observe les signes autour de moi', 'Je comprends qu\u2019il y a un Créateur', 'Je veux Le connaître et savoir pourquoi je suis là'],
+          explication: 'C\u2019est le chemin de tout chercheur de vérité : les questions, puis les signes, puis la certitude, puis l\u2019envie d\u2019apprendre.' },
+        { t: 'chrono', ico: '⚡', secondes: 15,
+          q: 'Quiz éclair ! Combien y a-t-il de créateurs de l\u2019univers ?',
+          choices: ['Un seul', 'Deux', 'Des milliers', 'Aucun'],
+          answer: 0,
+          explication: '« Si dans le ciel et la terre il y avait d\u2019autres divinités qu\u2019Allah, tous deux seraient déjà en désordre. » (21:22). Un seul Créateur, un ordre parfait.' },
+        { t: 'recit', ico: '🌅', texte: 'Le soleil se lève sur ton premier jour de voyage.<br><br>Tu sais maintenant qu\u2019il y a un Créateur, qu\u2019Il s\u2019appelle <b>Allah</b>, que ta vie a un <b>but</b>, et qu\u2019un <b>Livre</b> t\u2019attend pour te guider.<br><br>Au prochain chapitre : les preuves de Son existence, plus belles les unes que les autres.<br><br><b>🧭 Bienvenue dans l\u2019aventure.</b>' }
+      ]
+    },
+    // Chapitres suivants — visibles mais verrouillés (livrés après validation du Prologue)
+    { id: 'ch1', num: 1, titre: 'Chapitre 1', sousTitre: 'L\u2019existence d\u2019Allah', ico: '✨', verrouille: true },
+    { id: 'ch2', num: 2, titre: 'Chapitre 2', sousTitre: 'Le Tawhid', ico: '☝️', verrouille: true },
+    { id: 'ch3', num: 3, titre: 'Chapitre 3', sousTitre: 'Les piliers de la foi', ico: '🕊️', verrouille: true },
+    { id: 'ch4', num: 4, titre: 'Chapitre 4', sousTitre: 'Les 5 piliers de l\u2019Islam', ico: '🕋', verrouille: true },
+    { id: 'ch5', num: 5, titre: 'Chapitre 5', sousTitre: 'La purification', ico: '💧', verrouille: true },
+    { id: 'ch6', num: 6, titre: 'Chapitre 6', sousTitre: 'Les conditions de la prière', ico: '🧎', verrouille: true },
+    { id: 'ch7', num: 7, titre: 'Chapitre 7', sousTitre: 'Apprendre la prière', ico: '🕌', verrouille: true },
+    { id: 'ch8', num: 8, titre: 'Chapitre 8', sousTitre: 'Les erreurs fréquentes', ico: '⚠️', verrouille: true },
+    { id: 'ch9', num: 9, titre: 'Chapitre 9', sousTitre: 'Ma première prière complète', ico: '🌟', verrouille: true }
+  ];
+
+  return {
+    CHAPITRES: CHAPITRES,
+    chapitre: function(n){ return CHAPITRES.filter(function(c){ return c.num === n; })[0] || null; }
+  };
 })();
 
 </script>
@@ -3351,7 +3462,7 @@ var CONFIG = {
   XP_PAR_NIVEAU: 200,
   VIES_MAX: 5
 };
-var EDU_VERSION = 'v5.0';
+var EDU_VERSION = 'v5.1';
 function isOnline(){ return !!CONFIG.APPS_URL; }
 try { console.log('EduVerse ' + EDU_VERSION); } catch(e){}
 
@@ -3379,7 +3490,8 @@ var BADGES = [
   { key: 'defi',        nom: 'Défi quotidien',   ico: '⚡' },
   { key: 'xp500',       nom: '500 XP',           ico: '🏅' },
   { key: 'niveau3',     nom: 'Niveau 3 atteint', ico: '👑' },
-  { key: 'explorateur', nom: '10 missions',      ico: '🗺️' }
+  { key: 'explorateur', nom: '10 missions',      ico: '🗺️' },
+  { key: 'av_prologue', nom: 'Chercheur de vérité', ico: '🧭' }
 ];
 
 var BOTS = [ // classement fictif du mode démo uniquement
@@ -3433,7 +3545,7 @@ function defaultState(classe){
     prenom: '', avatar: AVATARS[0], classe: classe || 'ce1',
     xp: 0, pieces: 0, vies: CONFIG.VIES_MAX,
     comps: defaultComps(classe || 'ce1'), badges: [], missions: 0,
-    dailyDone: '', quizDone: '', tournoiWeek: '', streak: 0, lastPlay: '', lastDay: '', history: []
+    dailyDone: '', quizDone: '', tournoiWeek: '', streak: 0, lastPlay: '', lastDay: '', aventure: 0, history: []
   };
 }
 function saveState(){
@@ -3611,7 +3723,7 @@ function show(name){
   document.querySelectorAll('.nav-btn').forEach(function(b){
     b.classList.toggle('active', b.getAttribute('data-nav') === name);
   });
-  $('bottomNav').style.display = (name === 'login' || name === 'mission') ? 'none' : 'flex';
+  $('bottomNav').style.display = (name === 'login' || name === 'mission' || name === 'aventure') ? 'none' : 'flex';
   if(name === 'home') renderHome();
   if(name === 'world') renderWorld();
   if(name === 'profil') renderProfil();
@@ -3791,6 +3903,27 @@ function renderHome(){
         : '<div style="margin-top:10px"><span class="btn btn-gold" style="font-size:11px;padding:9px 20px">Participer</span></div>');
   tour.onclick = tDone ? function(){ show('classement'); } : function(){ startTournoi(); };
   grid.appendChild(tour);
+
+  // 🧭 L'Aventure : le voyage narratif
+  var avNum = state.aventure || 0;
+  var avCh = EDU_AVENTURE.chapitre(avNum);
+  var av = document.createElement('div');
+  av.className = 'daily-card';
+  if(avCh && !avCh.verrouille){
+    av.innerHTML = '<div class="daily-flame">' + avCh.ico + '</div>'
+      + '<div class="daily-title">L\u2019Aventure · Le Voyage</div>'
+      + '<div class="daily-xp">' + avCh.titre + ' — ' + avCh.sousTitre + '</div>'
+      + '<div style="margin-top:10px"><span class="btn btn-gold" style="font-size:11px;padding:9px 20px">'
+      + (avNum === 0 ? 'Commencer le voyage' : 'Continuer') + '</span></div>';
+    av.onclick = function(){ startAventure(avNum); };
+  } else {
+    var fait = EDU_AVENTURE.chapitre(avNum - 1);
+    av.innerHTML = '<div class="daily-flame">🧭</div>'
+      + '<div class="daily-title">L\u2019Aventure · Le Voyage</div>'
+      + '<div class="daily-xp">' + (fait ? fait.titre + ' terminé ✅' : '') + '</div>'
+      + '<div class="daily-done">La suite du voyage arrive bientôt\u2026 ' + (avCh ? avCh.ico + ' ' + avCh.sousTitre : '') + '</div>';
+  }
+  grid.appendChild(av);
 
   // Îles des mondes
   MATIERES.forEach(function(m){
@@ -4257,7 +4390,201 @@ setInterval(function(){
 }, 60000);
 
 // ── DÉMARRAGE ──────────────────────────────────────────────
+
+/* ═══════════ 🧭 MOTEUR DE L'AVENTURE ═══════════ */
+var av = null; // { ch, index, xp, chronoTimer }
+
+function startAventure(num){
+  var ch = EDU_AVENTURE.chapitre(num);
+  if(!ch || ch.verrouille){ toast('La suite du voyage arrive bientôt ! 🧭'); return; }
+  av = { ch: ch, index: 0, xp: 0, chronoTimer: null };
+  $('avTag').textContent = ch.ico + ' ' + ch.titre.toUpperCase() + ' · ' + ch.sousTitre.toUpperCase();
+  bindAvNext();
+  show('aventure');
+  renderScene();
+}
+
+function avProgress(){
+  $('avBar').style.width = Math.round(av.index / av.ch.scenes.length * 100) + '%';
+  $('avXp').textContent = '+' + av.xp + ' XP';
+}
+function avDone(explication, gagne){
+  if(av.chronoTimer){ clearInterval(av.chronoTimer); av.chronoTimer = null; }
+  if(gagne){ av.xp += 10; }
+  $('avFeedback').innerHTML = explication
+    ? '<div class="panel" style="border-color:' + (gagne === false ? 'rgba(255,120,73,.5)' : 'rgba(34,197,94,.5)') + '">'
+      + '<div style="font-size:13.5px;line-height:1.65">' + (gagne === false ? '❌ ' : gagne ? '✅ +10 XP · ' : '') + explication + '</div></div>'
+    : '';
+  $('avNext').style.display = 'block';
+  avProgress();
+}
+function bindAvNext(){
+  var btn = $('avNext');
+  btn.textContent = 'Continuer →';
+  btn.onclick = function(){
+    btn.style.display = 'none';
+    $('avFeedback').innerHTML = '';
+    av.index++;
+    if(av.index >= av.ch.scenes.length) finishAventure();
+    else renderScene();
+  };
+}
+
+function renderScene(){
+  avProgress();
+  var s = av.ch.scenes[av.index];
+  var box = $('avScene');
+
+  if(s.t === 'recit'){
+    box.innerHTML = '<div style="font-size:44px;text-align:center;margin:6px 0 14px">' + s.ico + '</div>'
+      + '<div style="font-size:14.5px;line-height:1.75;text-align:center">' + s.texte + '</div>';
+    avDone(null);
+    return;
+  }
+
+  var head = '<div style="font-size:34px;text-align:center;margin-bottom:10px">' + s.ico + '</div>'
+    + '<div style="font-weight:700;font-size:14.5px;line-height:1.6;text-align:center;margin-bottom:14px">' + (s.q || s.consigne) + '</div>';
+
+  if(s.t === 'qcm' || s.t === 'chrono'){
+    var chronoHtml = s.t === 'chrono' ? '<div id="avChrono" style="text-align:center;font-family:\'Exo 2\',sans-serif;font-weight:900;font-size:22px;color:var(--gold);margin-bottom:10px">' + s.secondes + 's</div>' : '';
+    box.innerHTML = head + chronoHtml + s.choices.map(function(c, i){
+      return '<button class="answer-btn" data-i="' + i + '">' + c + '</button>';
+    }).join('');
+    if(s.t === 'chrono'){
+      var reste = s.secondes;
+      av.chronoTimer = setInterval(function(){
+        reste--;
+        var el = $('avChrono');
+        if(el) el.textContent = reste + 's';
+        if(reste <= 0){
+          box.querySelectorAll('.answer-btn').forEach(function(b){ b.disabled = true; });
+          box.querySelectorAll('.answer-btn')[s.answer].classList.add('correct');
+          avDone('Temps écoulé ! La bonne réponse était : « ' + s.choices[s.answer] + ' ». ' + s.explication, false);
+        }
+      }, 1000);
+    }
+    box.querySelectorAll('.answer-btn').forEach(function(b){
+      b.onclick = function(){
+        box.querySelectorAll('.answer-btn').forEach(function(x){ x.disabled = true; });
+        var i = Number(b.getAttribute('data-i'));
+        var ok = i === s.answer;
+        b.classList.add(ok ? 'correct' : 'wrong');
+        if(!ok) box.querySelectorAll('.answer-btn')[s.answer].classList.add('correct');
+        avDone(s.explication, ok);
+      };
+    });
+    return;
+  }
+
+  if(s.t === 'vf'){
+    box.innerHTML = head
+      + '<div style="display:flex;gap:10px">'
+      + '<button class="answer-btn" data-v="true" style="flex:1;text-align:center">✔️ VRAI</button>'
+      + '<button class="answer-btn" data-v="false" style="flex:1;text-align:center">✖️ FAUX</button></div>';
+    box.querySelectorAll('.answer-btn').forEach(function(b){
+      b.onclick = function(){
+        box.querySelectorAll('.answer-btn').forEach(function(x){ x.disabled = true; });
+        var ok = (b.getAttribute('data-v') === 'true') === s.answer;
+        b.classList.add(ok ? 'correct' : 'wrong');
+        avDone(s.explication, ok);
+      };
+    });
+    return;
+  }
+
+  if(s.t === 'paires'){
+    var gauche = s.paires.map(function(p){ return p[0]; });
+    var droite = s.paires.map(function(p){ return p[1]; }).sort(function(){ return Math.random() - .5; });
+    var sel = null, faites = 0, fautesP = 0;
+    box.innerHTML = head + '<div style="display:flex;gap:10px;align-items:flex-start">'
+      + '<div style="flex:1">' + gauche.map(function(g){ return '<button class="answer-btn" data-g="' + g + '">' + g + '</button>'; }).join('') + '</div>'
+      + '<div style="flex:1">' + droite.map(function(d){ return '<button class="answer-btn" data-d="' + d + '">' + d + '</button>'; }).join('') + '</div></div>';
+    box.querySelectorAll('[data-g]').forEach(function(b){
+      b.onclick = function(){
+        box.querySelectorAll('[data-g]').forEach(function(x){ x.style.outline = ''; });
+        sel = b; b.style.outline = '2px solid var(--cyan)';
+      };
+    });
+    box.querySelectorAll('[data-d]').forEach(function(b){
+      b.onclick = function(){
+        if(!sel){ toast('Choisis d\u2019abord un élément à gauche 👈'); return; }
+        var attendu = s.paires.filter(function(p){ return p[0] === sel.getAttribute('data-g'); })[0][1];
+        if(b.getAttribute('data-d') === attendu){
+          sel.classList.add('correct'); b.classList.add('correct');
+          sel.disabled = true; b.disabled = true;
+          sel.style.outline = ''; sel = null;
+          faites++;
+          if(faites === s.paires.length) avDone(s.explication, fautesP === 0);
+        } else {
+          fautesP++;
+          b.classList.add('wrong');
+          setTimeout(function(){ b.classList.remove('wrong'); }, 500);
+        }
+      };
+    });
+    return;
+  }
+
+  if(s.t === 'ordre'){
+    var melange = s.items.slice().sort(function(){ return Math.random() - .5; });
+    if(melange.join('|') === s.items.join('|')) melange.reverse();
+    var attenduO = 0, fautesO = 0;
+    box.innerHTML = head + '<div id="avOrdreFait" style="min-height:20px;margin-bottom:10px;font-size:12.5px;color:var(--cyan);line-height:1.6"></div>'
+      + melange.map(function(it){ return '<button class="answer-btn" data-o="' + it + '">' + it + '</button>'; }).join('');
+    box.querySelectorAll('[data-o]').forEach(function(b){
+      b.onclick = function(){
+        if(b.getAttribute('data-o') === s.items[attenduO]){
+          b.classList.add('correct'); b.disabled = true;
+          attenduO++;
+          $('avOrdreFait').innerHTML = s.items.slice(0, attenduO).map(function(x, i){ return (i + 1) + '. ' + x; }).join('<br>');
+          if(attenduO === s.items.length) avDone(s.explication, fautesO === 0);
+        } else {
+          fautesO++;
+          b.classList.add('wrong');
+          setTimeout(function(){ b.classList.remove('wrong'); }, 500);
+        }
+      };
+    });
+    return;
+  }
+}
+
+function finishAventure(){
+  var ch = av.ch;
+  var xpTotal = av.xp + ch.xpBonus;
+  state.xp += xpTotal;
+  state.pieces += ch.pieces;
+  if(state.badges.indexOf(ch.badge) < 0) state.badges.push(ch.badge);
+  if((state.aventure || 0) <= ch.num) state.aventure = ch.num + 1;
+  state.history.unshift({ date: todayStr(), detail: ch.ico + ' Aventure · ' + ch.titre, xp: xpTotal });
+  if(state.history.length > 30) state.history.pop();
+  saveState();
+  apiSaveProgress(ch.ico + ' Aventure · ' + ch.titre + ' terminé', xpTotal);
+  apiSaveComps();
+
+  $('avScene').innerHTML = '<div style="text-align:center;padding:14px 4px">'
+    + '<div style="font-size:56px">🏆</div>'
+    + '<div style="font-family:\'Exo 2\',sans-serif;font-weight:900;font-size:20px;margin:10px 0">' + ch.titre + ' terminé !</div>'
+    + '<div style="font-size:14px;line-height:1.7">Tu gagnes <b style="color:var(--gold)">+' + xpTotal + ' XP</b> et <b>' + ch.pieces + ' pièces</b> 🪙<br>'
+    + 'Nouveau badge : <b>' + ch.ico + ' ' + ch.badgeNom + '</b></div></div>';
+  $('avFeedback').innerHTML = '';
+  $('avBar').style.width = '100%';
+  $('avXp').textContent = '+' + xpTotal + ' XP';
+  var btn = $('avNext');
+  btn.textContent = '🧭 Retour à la carte';
+  btn.style.display = 'block';
+  btn.onclick = function(){
+    av = null;
+    show('home'); renderHome();
+  };
+}
+
 (function boot(){
+  $('avQuit').onclick = function(){
+    if(av && av.chronoTimer) clearInterval(av.chronoTimer);
+    av = null;
+    show('home'); renderHome();
+  };
   session = loadSession();
   var saved = loadState();
 
